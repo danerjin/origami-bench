@@ -1,0 +1,197 @@
+{
+ "id": "af-bad-global-0",
+ "track": "analytic",
+ "difficulty": "hard",
+ "prompt": "Below is a crease pattern (also shown as an image). Fold every crease flat and report the folded model: the folded position of every vertex and, if you can, the layer order of overlapping faces. If the pattern cannot be folded flat, say so instead.",
+ "inputs": {
+  "crease_pattern": {
+   "vertices_coords": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     0.5,
+     0.0
+    ],
+    [
+     0.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     0.25,
+     0.0
+    ],
+    [
+     0.75,
+     0.0
+    ],
+    [
+     1.0,
+     0.384615
+    ],
+    [
+     0.0,
+     0.384615
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "edges_vertices": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     2,
+     7
+    ]
+   ],
+   "edges_assignment": [
+    "M",
+    "M",
+    "M",
+    "M",
+    "V",
+    "V",
+    "M",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B"
+   ],
+   "faces_vertices": [
+    [
+     0,
+     1,
+     5
+    ],
+    [
+     1,
+     0,
+     4
+    ],
+    [
+     0,
+     2,
+     4
+    ],
+    [
+     2,
+     0,
+     7
+    ],
+    [
+     0,
+     3,
+     6
+    ],
+    [
+     3,
+     0,
+     5
+    ],
+    [
+     0,
+     6,
+     8
+    ],
+    [
+     7,
+     0,
+     9
+    ]
+   ]
+  }
+ },
+ "images": [
+  "cp.png"
+ ],
+ "reference": {
+  "foldable": false,
+  "reason": "no valid layer order exists (self-intersection)",
+  "violation_vertices": [],
+  "baseline_score": 0.0
+ },
+ "meta": {
+  "source": "global_only_failure",
+  "num_creases": 7,
+  "num_faces": 8
+ }
+}

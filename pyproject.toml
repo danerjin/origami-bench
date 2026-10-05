@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "origami-bench"
+version = "0.1.0"
+description = "A benchmark of spatial and analytical reasoning for LLM agents, built on flat-foldable origami."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "shapely>=2.0",
+    "matplotlib>=3.8",
+    "networkx>=3.0",
+]
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=1.0"]
+openai = ["openai>=1.0"]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["origami_bench", "origami_bench.providers"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

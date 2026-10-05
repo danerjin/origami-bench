@@ -1,0 +1,176 @@
+{
+ "id": "di-ref-fish_base",
+ "track": "design_image",
+ "difficulty": "medium",
+ "prompt": "The image shows the outline (silhouette) of a flat-folded origami model, folded from a unit-square sheet; the grid unit equals the side of the original paper. The outline's polygon coordinates are also given (its position and rotation are arbitrary). Design a crease pattern that folds into this shape. You are graded on the overlap (IoU) between your folded silhouette and the target, after the best rigid alignment (mirror images allowed); scale is NOT normalised.",
+ "inputs": {
+  "target_silhouette": [
+   [
+    0.567769,
+    0.155574
+   ],
+   [
+    0.302168,
+    0.873378
+   ],
+   [
+    0.302168,
+    0.873378
+   ],
+   [
+    0.302168,
+    0.873378
+   ],
+   [
+    0.606062,
+    1.154841
+   ],
+   [
+    0.606062,
+    1.154841
+   ],
+   [
+    0.606062,
+    1.154841
+   ],
+   [
+    0.887525,
+    0.850946
+   ],
+   [
+    0.887525,
+    0.850946
+   ],
+   [
+    0.887525,
+    0.850946
+   ],
+   [
+    0.567769,
+    0.155574
+   ],
+   [
+    0.567769,
+    0.155574
+   ]
+  ]
+ },
+ "images": [
+  "target.png"
+ ],
+ "reference": {
+  "checks": [
+   {
+    "type": "iou",
+    "target": [
+     [
+      0.567769,
+      0.155574
+     ],
+     [
+      0.302168,
+      0.873378
+     ],
+     [
+      0.302168,
+      0.873378
+     ],
+     [
+      0.302168,
+      0.873378
+     ],
+     [
+      0.606062,
+      1.154841
+     ],
+     [
+      0.606062,
+      1.154841
+     ],
+     [
+      0.606062,
+      1.154841
+     ],
+     [
+      0.887525,
+      0.850946
+     ],
+     [
+      0.887525,
+      0.850946
+     ],
+     [
+      0.887525,
+      0.850946
+     ],
+     [
+      0.567769,
+      0.155574
+     ],
+     [
+      0.567769,
+      0.155574
+     ]
+    ],
+    "threshold": 0.95
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.0,
+    0.7071067811865475,
+    0.29289321881345237,
+    "V"
+   ],
+   [
+    0.0,
+    0.0,
+    0.29289321881345237,
+    0.7071067811865475,
+    "V"
+   ],
+   [
+    0.29289321881345237,
+    0.7071067811865475,
+    1.0,
+    1.0,
+    "M"
+   ],
+   [
+    0.7071067811865475,
+    0.29289321881345237,
+    1.0,
+    1.0,
+    "M"
+   ],
+   [
+    0.7071067811865475,
+    0.29289321881345237,
+    1.0,
+    0.0,
+    "V"
+   ],
+   [
+    0.7071067811865475,
+    0.29289321881345237,
+    0.29289321881345237,
+    0.7071067811865475,
+    "V"
+   ],
+   [
+    0.29289321881345237,
+    0.7071067811865475,
+    0.0,
+    1.0,
+    "V"
+   ]
+  ],
+  "baseline_score": 0.401289
+ },
+ "meta": {
+  "source": "reference",
+  "name": "fish_base",
+  "target_area": 0.2928932188134528
+ }
+}

@@ -1,0 +1,177 @@
+{
+ "id": "di-ref-preliminary_base",
+ "track": "design_image",
+ "difficulty": "medium",
+ "prompt": "The image shows the outline (silhouette) of a flat-folded origami model, folded from a unit-square sheet; the grid unit equals the side of the original paper. The outline's polygon coordinates are also given (its position and rotation are arbitrary). Design a crease pattern that folds into this shape. You are graded on the overlap (IoU) between your folded silhouette and the target, after the best rigid alignment (mirror images allowed); scale is NOT normalised.",
+ "inputs": {
+  "target_silhouette": [
+   [
+    0.18235,
+    0.372706
+   ],
+   [
+    0.18235,
+    0.372706
+   ],
+   [
+    0.631043,
+    0.593328
+   ],
+   [
+    0.631043,
+    0.593328
+   ],
+   [
+    0.631043,
+    0.593328
+   ],
+   [
+    0.851665,
+    0.144635
+   ],
+   [
+    0.851665,
+    0.144635
+   ],
+   [
+    0.851665,
+    0.144635
+   ],
+   [
+    0.851665,
+    0.144635
+   ],
+   [
+    0.402972,
+    -0.075987
+   ],
+   [
+    0.402972,
+    -0.075987
+   ],
+   [
+    0.402972,
+    -0.075987
+   ],
+   [
+    0.18235,
+    0.372706
+   ]
+  ]
+ },
+ "images": [
+  "target.png"
+ ],
+ "reference": {
+  "checks": [
+   {
+    "type": "iou",
+    "target": [
+     [
+      0.18235,
+      0.372706
+     ],
+     [
+      0.18235,
+      0.372706
+     ],
+     [
+      0.631043,
+      0.593328
+     ],
+     [
+      0.631043,
+      0.593328
+     ],
+     [
+      0.631043,
+      0.593328
+     ],
+     [
+      0.851665,
+      0.144635
+     ],
+     [
+      0.851665,
+      0.144635
+     ],
+     [
+      0.851665,
+      0.144635
+     ],
+     [
+      0.851665,
+      0.144635
+     ],
+     [
+      0.402972,
+      -0.075987
+     ],
+     [
+      0.402972,
+      -0.075987
+     ],
+     [
+      0.402972,
+      -0.075987
+     ],
+     [
+      0.18235,
+      0.372706
+     ]
+    ],
+    "threshold": 0.95
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.5,
+    0.5,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.5,
+    0.0,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.5,
+    1.0,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    0.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    "V"
+   ]
+  ],
+  "baseline_score": 0.333332
+ },
+ "meta": {
+  "source": "reference",
+  "name": "preliminary_base",
+  "target_area": 0.24999999999999997
+ }
+}

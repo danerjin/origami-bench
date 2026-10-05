@@ -1,0 +1,94 @@
+{
+ "id": "dt-corners-meet-square",
+ "track": "design_text",
+ "difficulty": "medium",
+ "prompt": "Fold the paper into a square with one quarter of the paper's area, in such a way that all four corners of the paper meet at a single point.",
+ "inputs": {},
+ "images": [],
+ "reference": {
+  "checks": [
+   {
+    "type": "coincident",
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "type": "area",
+    "min": 0.245,
+    "max": 0.255
+   },
+   {
+    "type": "rectangularity",
+    "min": 0.98
+   },
+   {
+    "type": "extent",
+    "max_length": 0.51
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.5,
+    0.5,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.5,
+    0.0,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.5,
+    1.0,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    0.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    "V"
+   ]
+  ],
+  "baseline_score": 0.25
+ },
+ "meta": {
+  "semantic": false
+ }
+}

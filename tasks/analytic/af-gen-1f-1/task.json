@@ -1,0 +1,186 @@
+{
+ "id": "af-gen-1f-1",
+ "track": "analytic",
+ "difficulty": "easy",
+ "prompt": "Below is a crease pattern (also shown as an image). Fold every crease flat and report the folded model: the folded position of every vertex and, if you can, the layer order of overlapping faces. If the pattern cannot be folded flat, say so instead.",
+ "inputs": {
+  "crease_pattern": {
+   "vertices_coords": [
+    [
+     1.0,
+     0.75
+    ],
+    [
+     0.0,
+     0.75
+    ],
+    [
+     0.0,
+     0.0
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "edges_vertices": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     1,
+     2
+    ]
+   ],
+   "edges_assignment": [
+    "V",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B"
+   ],
+   "faces_vertices": [
+    [
+     0,
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     0,
+     4,
+     5
+    ]
+   ]
+  }
+ },
+ "images": [
+  "cp.png"
+ ],
+ "reference": {
+  "foldable": true,
+  "reason": "flat-foldable",
+  "folded_vertices": [
+   [
+    1.0,
+    0.75
+   ],
+   [
+    0.0,
+    0.75
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    0.5
+   ],
+   [
+    0.0,
+    0.5
+   ]
+  ],
+  "silhouette": [
+   [
+    0.0,
+    0.75
+   ],
+   [
+    0.0,
+    0.75
+   ],
+   [
+    1.0,
+    0.75
+   ],
+   [
+    1.0,
+    0.75
+   ],
+   [
+    1.0,
+    0.75
+   ],
+   [
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    0.0
+   ],
+   [
+    1.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.75
+   ]
+  ],
+  "face_above": [
+   [
+    1,
+    0
+   ]
+  ],
+  "baseline_score": 0.45
+ },
+ "meta": {
+  "source": "simple_folds",
+  "folds": 1,
+  "seed": 1001,
+  "num_creases": 1,
+  "num_faces": 2
+ }
+}

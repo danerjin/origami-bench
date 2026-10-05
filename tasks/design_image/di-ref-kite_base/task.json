@@ -1,0 +1,173 @@
+{
+ "id": "di-ref-kite_base",
+ "track": "design_image",
+ "difficulty": "easy",
+ "prompt": "The image shows the outline (silhouette) of a flat-folded origami model, folded from a unit-square sheet; the grid unit equals the side of the original paper. The outline's polygon coordinates are also given (its position and rotation are arbitrary). Design a crease pattern that folds into this shape. You are graded on the overlap (IoU) between your folded silhouette and the target, after the best rigid alignment (mirror images allowed); scale is NOT normalised.",
+ "inputs": {
+  "target_silhouette": [
+   [
+    1.40045,
+    0.52466
+   ],
+   [
+    1.40045,
+    0.52466
+   ],
+   [
+    1.40045,
+    0.52466
+   ],
+   [
+    0.484075,
+    -0.051387
+   ],
+   [
+    0.484075,
+    -0.051387
+   ],
+   [
+    0.484075,
+    -0.051387
+   ],
+   [
+    0.484075,
+    -0.051387
+   ],
+   [
+    0.006265,
+    0.287498
+   ],
+   [
+    0.006265,
+    0.287498
+   ],
+   [
+    0.006265,
+    0.287498
+   ],
+   [
+    0.345149,
+    0.765309
+   ],
+   [
+    0.345149,
+    0.765309
+   ],
+   [
+    0.345149,
+    0.765309
+   ],
+   [
+    1.40045,
+    0.52466
+   ],
+   [
+    1.40045,
+    0.52466
+   ],
+   [
+    1.40045,
+    0.52466
+   ]
+  ]
+ },
+ "images": [
+  "target.png"
+ ],
+ "reference": {
+  "checks": [
+   {
+    "type": "iou",
+    "target": [
+     [
+      1.40045,
+      0.52466
+     ],
+     [
+      1.40045,
+      0.52466
+     ],
+     [
+      1.40045,
+      0.52466
+     ],
+     [
+      0.484075,
+      -0.051387
+     ],
+     [
+      0.484075,
+      -0.051387
+     ],
+     [
+      0.484075,
+      -0.051387
+     ],
+     [
+      0.484075,
+      -0.051387
+     ],
+     [
+      0.006265,
+      0.287498
+     ],
+     [
+      0.006265,
+      0.287498
+     ],
+     [
+      0.006265,
+      0.287498
+     ],
+     [
+      0.345149,
+      0.765309
+     ],
+     [
+      0.345149,
+      0.765309
+     ],
+     [
+      0.345149,
+      0.765309
+     ],
+     [
+      1.40045,
+      0.52466
+     ],
+     [
+      1.40045,
+      0.52466
+     ],
+     [
+      1.40045,
+      0.52466
+     ]
+    ],
+    "threshold": 0.95
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.0,
+    1.0,
+    0.41421356237309503,
+    "V"
+   ],
+   [
+    0.0,
+    0.0,
+    0.41421356237309503,
+    1.0,
+    "V"
+   ]
+  ],
+  "baseline_score": 0.254261
+ },
+ "meta": {
+  "source": "reference",
+  "name": "kite_base",
+  "target_area": 0.5857864376269049
+ }
+}

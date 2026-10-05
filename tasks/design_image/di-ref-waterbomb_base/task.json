@@ -1,0 +1,153 @@
+{
+ "id": "di-ref-waterbomb_base",
+ "track": "design_image",
+ "difficulty": "easy",
+ "prompt": "The image shows the outline (silhouette) of a flat-folded origami model, folded from a unit-square sheet; the grid unit equals the side of the original paper. The outline's polygon coordinates are also given (its position and rotation are arbitrary). Design a crease pattern that folds into this shape. You are graded on the overlap (IoU) between your folded silhouette and the target, after the best rigid alignment (mirror images allowed); scale is NOT normalised.",
+ "inputs": {
+  "target_silhouette": [
+   [
+    0.679113,
+    -0.323375
+   ],
+   [
+    0.679113,
+    -0.323375
+   ],
+   [
+    0.305777,
+    0.277141
+   ],
+   [
+    0.305777,
+    0.277141
+   ],
+   [
+    0.305777,
+    0.277141
+   ],
+   [
+    0.906293,
+    0.650478
+   ],
+   [
+    0.906293,
+    0.650478
+   ],
+   [
+    0.906293,
+    0.650478
+   ],
+   [
+    0.792703,
+    0.163551
+   ],
+   [
+    0.679113,
+    -0.323375
+   ]
+  ]
+ },
+ "images": [
+  "target.png"
+ ],
+ "reference": {
+  "checks": [
+   {
+    "type": "iou",
+    "target": [
+     [
+      0.679113,
+      -0.323375
+     ],
+     [
+      0.679113,
+      -0.323375
+     ],
+     [
+      0.305777,
+      0.277141
+     ],
+     [
+      0.305777,
+      0.277141
+     ],
+     [
+      0.305777,
+      0.277141
+     ],
+     [
+      0.906293,
+      0.650478
+     ],
+     [
+      0.906293,
+      0.650478
+     ],
+     [
+      0.906293,
+      0.650478
+     ],
+     [
+      0.792703,
+      0.163551
+     ],
+     [
+      0.679113,
+      -0.323375
+     ]
+    ],
+    "threshold": 0.95
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.0,
+    0.5,
+    0.5,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    1.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.5,
+    "M"
+   ]
+  ],
+  "baseline_score": 0.333333
+ },
+ "meta": {
+  "source": "reference",
+  "name": "waterbomb_base",
+  "target_area": 0.2500000000000001
+ }
+}

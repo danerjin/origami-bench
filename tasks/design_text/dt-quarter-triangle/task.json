@@ -1,0 +1,78 @@
+{
+ "id": "dt-quarter-triangle",
+ "track": "design_text",
+ "difficulty": "easy",
+ "prompt": "Fold the paper into a right isosceles triangle whose area is exactly one quarter of the paper.",
+ "inputs": {},
+ "images": [],
+ "reference": {
+  "checks": [
+   {
+    "type": "iou",
+    "target": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0.5,
+      0.5
+     ]
+    ],
+    "threshold": 0.97
+   }
+  ],
+  "solution": [
+   [
+    0.0,
+    0.0,
+    0.5,
+    0.5,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    1.0,
+    "V"
+   ],
+   [
+    0.5,
+    0.5,
+    0.0,
+    0.5,
+    "M"
+   ],
+   [
+    0.5,
+    0.5,
+    1.0,
+    0.5,
+    "M"
+   ]
+  ],
+  "baseline_score": 0.333071
+ },
+ "meta": {
+  "semantic": false
+ }
+}
