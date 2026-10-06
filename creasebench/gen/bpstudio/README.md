@@ -22,6 +22,8 @@ This folder runs the layout core of Box Pleating Studio (BP Studio) without the 
 | `build.mjs` | esbuild script that produces the bundle. |
 | `__init__.py` | Python wrapper: `generate(...)` and `diagnose(...)`. |
 | `make_samples.py` | Regenerates `samples/*.json`. |
+| `pleats.py` | `complete_pleats()`: crease completion (elevation pleats, excess-paper handling). |
+| `certify_samples.py` | Certifies the fixed and random designs and writes `samples/certified/`. |
 | `samples/` | Example outputs. |
 | `LICENSE-bpstudio` | Upstream MIT license. |
 
@@ -137,18 +139,44 @@ segs, pinfo = complete_pleats(generate(...), return_info=True)   # [x1,y1,x2,y2,
 
 `--inflate` lengthens random leaf edges until the layout is tight.
 
-RESULTS_PLACEHOLDER
+### Results (flat-folder timeout 60 s, one design at a time)
+
+These numbers come from `samples/certified/summary_*.json`. They were produced before the `skip_heuristic` shortcut existed, so every design went through `verify`. Timings are wall-clock for `certified_cp` (generate + pleats + verify). The `.fold` files store the M/V assignment, and reloading them with `verify()` passes.
+
+| design | result | creases | time |
+|---|---|---|---|
+| `star4_16` | certified | 120 | 1.2 s |
+| `lizard_32` (river) | certified | 305 | 5.9 s |
+| `three_flap_16` | certified | 113 | 1.8 s |
+| `star4_r6_16` (excess in the middle) | certified | 148 | 8.3 s |
+| `stretch_gops_13`, GOPS 3-4-5 | certified | 133 | 2.7 s |
+| `stretch_gops_14`, GOPS 3-4-5 | certified | 157 | 2.8 s |
+| `stretch_kamiya_13`, Kamiya | certified | 150 | 2.6 s |
+| `stretch_gops_16` | locally valid; flat-folder timed out | 175 | 60 s |
+| `stretch_3flap_relay_20` | locally valid; flat-folder timed out | 201 | 60 s |
+
+Random trees (3-6 leaves, star or two hubs joined by a river, flaps on the sheet border, grid 12-24):
+
+| set | certified | failed: local violations remain | failed: verify undetermined |
+|---|---|---|---|
+| `random` (seed 0, placements as sampled) | **8/20** | 1 | 11 |
+| `tight` (seed 0, same sampler + `--inflate`) | **12/20** | 1 | 7 |
+
+- Certified designs take 0.6-8 s each. Failures take 35-150 s, mostly the flat-folder timeout plus the Python fallback.
+- The failure mode is clear-cut:
+  - **Every** certified design used only the deterministic path: face families plus corner-bisector skeleton rays, with no Voronoi fill and no repair rays.
+  - **Every** design that needed the heuristic fallbacks became locally valid (even degree and Kawasaki hold) but did **not** certify: 0 out of 17.
+  - Those heuristic cases are excess paper with gaps between non-touching flaps, or a gap between two sibling flaps that opens into a river.
+  - So `certified_cp` now stops early on them (`skip_heuristic=True`).
+- The remaining failures on the deterministic path were 4 of 26 (`stretch_gops_16`, the relay, `random_0_04` and `tight_0_09`). Each has a large excess region around an interior flap, and flat-folder neither found a state nor proved there is none within 60 s.
+- flat-folder sometimes crashes with `Cannot read properties of undefined (reading '1')`. `verify()` then falls back to the pure-Python layer solver, whose budget `certified_cp` caps (`fallback_budget`).
+
 
 ## Limitations
 
-1. **The line set is not crease-complete. This is more than the M/V labels.** BP Studio's CP export contains only:
-   - flap and river *outer contours* (hinges)
-   - ridges
-   - gadget ridges and axis-parallels
-
-   It leaves out the axial and elevation pleats inside flaps and rivers, and the hinge-pleat creases a folder adds by hand. As a result, most interior vertices fail even-degree or Kawasaki (see the table). The lizard's degree-5 vertices at (8,8), (24,8) and so on are one example. So a pure M/V-assignment solver cannot succeed on these lines alone. Crease completion has to come first: add the axial lines at every integer level of each contour, then extend ridges through them. `diagnose()` lists exactly which vertices need it. Only trivial bases, such as `star4_16`, pass as exported.
+1. **The raw line set is not crease-complete.** BP Studio exports only hinges, ridges and gadget creases, with no elevation pleats, so the raw `lines` fail even-degree and Kawasaki at most interior vertices. `pleats.complete_pleats` adds the missing pleats. It is reliable for tight, pure-BP layouts and for stretches with little excess paper. It is heuristic, and so far never certifies, when excess paper needs the Voronoi fill or repair rays. See the results above.
 2. **The M/V labels cannot be trusted.** Every hinge is "auxiliary", every ridge is `M` and every axis-parallel is `V` by construction. These are conventions, not a folding assignment. Use `assignment` (all `U`) and treat `bp_assignment` as metadata.
-3. Paper outside every flap and river contour, the excess margin, gets no creases.
+3. In the raw BP Studio output, paper outside every flap and river contour (the excess margin) gets no creases. `complete_pleats` fills it as described above.
 4. There is one design per node process, because upstream `fullReset()` depends on DEBUG-only methods. The wrapper starts a fresh process for each call.
 5. The tool only checks validity: overlapping flaps and stretches without patterns are reported as errors. It does not optimize the layout. The flap coordinates must already form a valid BP layout. Stretches whose patterns BP Studio cannot find (its "general case" TODO) return `status: "error"`.
 6. Only rectangular sheets are supported. The diagonal grid type is not exposed.

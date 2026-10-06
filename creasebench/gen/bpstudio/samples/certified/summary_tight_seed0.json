@@ -1,0 +1,1455 @@
+{
+ "fixed": [],
+ "random": [
+  {
+   "name": "tight_0_00",
+   "tree": [
+    [
+     0,
+     1,
+     12
+    ],
+    [
+     0,
+     2,
+     12
+    ],
+    [
+     0,
+     3,
+     12
+    ],
+    [
+     0,
+     4,
+     12
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     2,
+     0,
+     24
+    ],
+    [
+     3,
+     24,
+     24
+    ],
+    [
+     4,
+     24,
+     0
+    ]
+   ],
+   "grid": 24,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 184,
+   "timings": {
+    "generate": 0.074,
+    "pleats": 0.049,
+    "verify": 2.89
+   },
+   "total_s": 3.22,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 88,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 0,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_01",
+   "tree": [
+    [
+     0,
+     1,
+     8
+    ],
+    [
+     0,
+     2,
+     8
+    ],
+    [
+     0,
+     3,
+     8
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     16,
+     16
+    ],
+    [
+     2,
+     0,
+     16
+    ],
+    [
+     3,
+     16,
+     0
+    ]
+   ],
+   "grid": 16,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 120,
+   "timings": {
+    "generate": 0.076,
+    "pleats": 0.038,
+    "verify": 1.028
+   },
+   "total_s": 1.18,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 56,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_02",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     7
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     2,
+     0,
+     16
+    ],
+    [
+     3,
+     16,
+     16
+    ]
+   ],
+   "grid": 16,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 144,
+   "timings": {
+    "generate": 0.073,
+    "pleats": 0.056,
+    "verify": 1.26
+   },
+   "total_s": 1.49,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 68,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 3,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_03",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     7
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     2,
+     0,
+     16
+    ],
+    [
+     3,
+     16,
+     0
+    ]
+   ],
+   "grid": 16,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 195,
+   "timings": {
+    "generate": 0.077,
+    "pleats": 0.503,
+    "verify": 42.088
+   },
+   "total_s": 42.75,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 115,
+    "search_rounds": 1,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_04",
+   "tree": [
+    [
+     0,
+     1,
+     3
+    ],
+    [
+     0,
+     2,
+     6
+    ],
+    [
+     0,
+     3,
+     6
+    ],
+    [
+     1,
+     4,
+     7
+    ],
+    [
+     1,
+     5,
+     7
+    ]
+   ],
+   "flaps": [
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     3,
+     16,
+     0
+    ],
+    [
+     4,
+     0,
+     16
+    ],
+    [
+     5,
+     16,
+     16
+    ]
+   ],
+   "grid": 16,
+   "stage": "pleats",
+   "reason": "2 interior vertices still violate even-degree/Kawasaki after completion",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": null,
+   "timings": {
+    "generate": 0.083,
+    "pleats": 2.448
+   },
+   "total_s": 2.53,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 168,
+    "search_rounds": 2,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 2
+  },
+  {
+   "name": "tight_0_05",
+   "tree": [
+    [
+     0,
+     1,
+     6
+    ],
+    [
+     0,
+     2,
+     6
+    ],
+    [
+     0,
+     3,
+     6
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     12,
+     0
+    ],
+    [
+     2,
+     0,
+     12
+    ],
+    [
+     3,
+     12,
+     12
+    ]
+   ],
+   "grid": 12,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 88,
+   "timings": {
+    "generate": 0.073,
+    "pleats": 0.031,
+    "verify": 0.535
+   },
+   "total_s": 0.66,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 40,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_06",
+   "tree": [
+    [
+     0,
+     1,
+     10
+    ],
+    [
+     0,
+     2,
+     10
+    ],
+    [
+     0,
+     3,
+     10
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     20,
+     20
+    ],
+    [
+     2,
+     0,
+     20
+    ],
+    [
+     3,
+     0,
+     0
+    ]
+   ],
+   "grid": 20,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 152,
+   "timings": {
+    "generate": 0.076,
+    "pleats": 0.082,
+    "verify": 1.788
+   },
+   "total_s": 2.01,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 72,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_07",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     7
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     2,
+     16,
+     0
+    ],
+    [
+     3,
+     0,
+     16
+    ]
+   ],
+   "grid": 16,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 195,
+   "timings": {
+    "generate": 0.084,
+    "pleats": 0.498,
+    "verify": 46.18
+   },
+   "total_s": 46.84,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 115,
+    "search_rounds": 1,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_08",
+   "tree": [
+    [
+     0,
+     1,
+     6
+    ],
+    [
+     0,
+     2,
+     6
+    ],
+    [
+     0,
+     3,
+     6
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     12
+    ],
+    [
+     2,
+     12,
+     12
+    ],
+    [
+     3,
+     0,
+     0
+    ]
+   ],
+   "grid": 12,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 88,
+   "timings": {
+    "generate": 0.099,
+    "pleats": 0.034,
+    "verify": 0.822
+   },
+   "total_s": 0.99,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 40,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_09",
+   "tree": [
+    [
+     0,
+     1,
+     5
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     9
+    ],
+    [
+     1,
+     4,
+     10
+    ],
+    [
+     1,
+     5,
+     10
+    ]
+   ],
+   "flaps": [
+    [
+     2,
+     0,
+     24
+    ],
+    [
+     3,
+     24,
+     0
+    ],
+    [
+     4,
+     24,
+     24
+    ],
+    [
+     5,
+     0,
+     0
+    ]
+   ],
+   "grid": 24,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 236,
+   "timings": {
+    "generate": 0.08,
+    "pleats": 0.074,
+    "verify": 60.049
+   },
+   "total_s": 60.37,
+   "pleat_info": {
+    "faces": 12,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 112,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 4,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_10",
+   "tree": [
+    [
+     0,
+     1,
+     8
+    ],
+    [
+     0,
+     2,
+     4
+    ],
+    [
+     0,
+     3,
+     4
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     12,
+     12
+    ],
+    [
+     2,
+     12,
+     0
+    ],
+    [
+     3,
+     0,
+     12
+    ]
+   ],
+   "grid": 12,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 98,
+   "timings": {
+    "generate": 0.098,
+    "pleats": 0.071,
+    "verify": 0.626
+   },
+   "total_s": 0.82,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 46,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 3,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_11",
+   "tree": [
+    [
+     0,
+     1,
+     11
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     9
+    ],
+    [
+     0,
+     4,
+     9
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     0,
+     20
+    ],
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     3,
+     20,
+     20
+    ],
+    [
+     4,
+     20,
+     0
+    ]
+   ],
+   "grid": 20,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 222,
+   "timings": {
+    "generate": 0.122,
+    "pleats": 1.696,
+    "verify": 136.59
+   },
+   "total_s": 138.53,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 118,
+    "search_rounds": 1,
+    "repair_rays_added": 2,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_12",
+   "tree": [
+    [
+     0,
+     1,
+     10
+    ],
+    [
+     0,
+     2,
+     14
+    ],
+    [
+     0,
+     3,
+     10
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     24,
+     24
+    ],
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     3,
+     24,
+     0
+    ]
+   ],
+   "grid": 24,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 358,
+   "timings": {
+    "generate": 0.079,
+    "pleats": 1.192,
+    "verify": 146.688
+   },
+   "total_s": 148.25,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 238,
+    "search_rounds": 1,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_13",
+   "tree": [
+    [
+     0,
+     1,
+     8
+    ],
+    [
+     0,
+     2,
+     8
+    ],
+    [
+     0,
+     3,
+     8
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     16,
+     16
+    ],
+    [
+     2,
+     16,
+     0
+    ],
+    [
+     3,
+     0,
+     16
+    ]
+   ],
+   "grid": 16,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 120,
+   "timings": {
+    "generate": 0.106,
+    "pleats": 0.066,
+    "verify": 1.123
+   },
+   "total_s": 1.36,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 56,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_14",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     5
+    ],
+    [
+     0,
+     3,
+     5
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     12,
+     0
+    ],
+    [
+     2,
+     0,
+     12
+    ],
+    [
+     3,
+     12,
+     12
+    ]
+   ],
+   "grid": 12,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 131,
+   "timings": {
+    "generate": 0.095,
+    "pleats": 0.342,
+    "verify": 34.198
+   },
+   "total_s": 34.68,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 71,
+    "search_rounds": 1,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_15",
+   "tree": [
+    [
+     0,
+     1,
+     3
+    ],
+    [
+     0,
+     2,
+     3
+    ],
+    [
+     0,
+     3,
+     3
+    ],
+    [
+     1,
+     4,
+     6
+    ],
+    [
+     1,
+     5,
+     6
+    ]
+   ],
+   "flaps": [
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     3,
+     12,
+     0
+    ],
+    [
+     4,
+     12,
+     12
+    ],
+    [
+     5,
+     0,
+     12
+    ]
+   ],
+   "grid": 12,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 108,
+   "timings": {
+    "generate": 0.103,
+    "pleats": 0.042,
+    "verify": 0.824
+   },
+   "total_s": 1.0,
+   "pleat_info": {
+    "faces": 12,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 48,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 2,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_16",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     7
+    ],
+    [
+     0,
+     3,
+     9
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     16,
+     0
+    ],
+    [
+     2,
+     16,
+     16
+    ],
+    [
+     3,
+     0,
+     0
+    ]
+   ],
+   "grid": 16,
+   "stage": "verify",
+   "reason": "layer solver budget exceeded (undetermined)",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 195,
+   "timings": {
+    "generate": 0.084,
+    "pleats": 0.6,
+    "verify": 69.081
+   },
+   "total_s": 69.91,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 2,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 115,
+    "search_rounds": 1,
+    "repair_rays_added": 1,
+    "skeleton_rays": 0,
+    "strategy": "voronoi"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_17",
+   "tree": [
+    [
+     0,
+     1,
+     6
+    ],
+    [
+     0,
+     2,
+     6
+    ],
+    [
+     0,
+     3,
+     6
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     12,
+     0
+    ],
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     3,
+     0,
+     12
+    ]
+   ],
+   "grid": 12,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 88,
+   "timings": {
+    "generate": 0.082,
+    "pleats": 0.036,
+    "verify": 0.734
+   },
+   "total_s": 0.87,
+   "pleat_info": {
+    "faces": 8,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 40,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 1,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_18",
+   "tree": [
+    [
+     0,
+     1,
+     10
+    ],
+    [
+     0,
+     2,
+     6
+    ],
+    [
+     0,
+     3,
+     6
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     16,
+     16
+    ],
+    [
+     2,
+     16,
+     0
+    ],
+    [
+     3,
+     0,
+     16
+    ]
+   ],
+   "grid": 16,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 138,
+   "timings": {
+    "generate": 0.095,
+    "pleats": 0.08,
+    "verify": 1.34
+   },
+   "total_s": 1.57,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 66,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 3,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  },
+  {
+   "name": "tight_0_19",
+   "tree": [
+    [
+     0,
+     1,
+     7
+    ],
+    [
+     0,
+     2,
+     9
+    ],
+    [
+     0,
+     3,
+     7
+    ]
+   ],
+   "flaps": [
+    [
+     1,
+     16,
+     16
+    ],
+    [
+     2,
+     16,
+     0
+    ],
+    [
+     3,
+     0,
+     0
+    ]
+   ],
+   "grid": 16,
+   "stage": "ok",
+   "reason": "flat-foldable",
+   "stretches": 0,
+   "gadget_types": [],
+   "n_creases": 144,
+   "timings": {
+    "generate": 0.108,
+    "pleats": 0.092,
+    "verify": 1.349
+   },
+   "total_s": 1.65,
+   "pleat_info": {
+    "faces": 10,
+    "ambiguous_faces": 0,
+    "families": [
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "pleat_edges": 68,
+    "search_rounds": 0,
+    "repair_rays_added": 0,
+    "skeleton_rays": 3,
+    "strategy": "skeleton"
+   },
+   "n_violations": 0
+  }
+ ],
+ "random_success": "12/20",
+ "random_failure_stages": {
+  "pleats": 1,
+  "ok": 12,
+  "verify": 7
+ }
+}

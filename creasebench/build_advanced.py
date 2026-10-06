@@ -330,7 +330,9 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
         if name in by:
             tasks.append(analytic_adv_task(by[name], out))
     for s, kind in [(by.get("bird-2x2"), "flip"), (by.get("tiling-1"), "nudge"), (by.get("bird-border"), "flip"),
-                    (by.get("tiling-2"), "global"), (by.get("bird-2x2"), "global")]:
+                    (by.get("tiling-2"), "global"), (by.get("bird-2x2"), "global"),
+                    (by.get("bp-lizard-32"), "flip"), (by.get("bp-stretch-gops-14"), "nudge"),
+                    (by.get("bp-three-flap-16"), "global")]:
         if s is not None:
             t = bug_task(s, out, rng, kind)
             if t is not None:
@@ -361,6 +363,15 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
                              style_req={"kind": "box_pleat", "max_grid": 32},
                              extra="The crease pattern must be box-pleated on a grid of at most 32 x 32.",
                              meta={"style": "box_pleat"}))
+    for name, grid in (("bp-lizard-32", 32), ("bp-tight-0-00", 24), ("bp-three-flap-16", 16)):
+        if name in by:
+            src = by[name]
+            edges = [[f"n{u}", f"n{v}", float(l)] for u, v, l in src["meta"]["tree"]]
+            tasks.append(design_task(
+                f"adv-style-{name}", edges, "a box-pleated base (tree lengths in grid units)", out,
+                reference_cp=src["cp"], style_req={"kind": "box_pleat", "max_grid": grid},
+                extra=f"The crease pattern must be box-pleated on a grid of at most {grid} x {grid}.",
+                meta={"style": "box_pleat", "source": name}))
     tasks.append(design_task("adv-style-stretch-beetle", SEMANTIC_TREES["beetle"]["edges"],
                              SEMANTIC_TREES["beetle"]["description"], out,
                              style_req={"kind": "pythagorean_stretch", "max_grid": 48},

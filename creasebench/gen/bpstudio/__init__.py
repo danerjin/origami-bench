@@ -197,7 +197,8 @@ def diagnose(result: dict) -> dict:
 
 
 def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: float = 60.0,
-                 pattern_choice=None, config_choice=None, pleat_options: Mapping | None = None):
+                 pattern_choice=None, config_choice=None, pleat_options: Mapping | None = None,
+                 fallback_budget: int = 20_000, skip_heuristic: bool = True):
     """generate -> complete_pleats -> flat-folder M/V completion.
 
     Returns ``(cp, info)``. ``cp`` is a :class:`creasebench.cp.CreasePattern` on
@@ -210,6 +211,15 @@ def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: f
     * ``pleats``: the info returned by complete_pleats.
     * ``verify``: the summary of creasebench.verify.verify.
     * ``n_creases`` and the timings.
+
+    ``skip_heuristic`` (default True): if the pleat completion needed its
+    heuristic fallbacks (the Voronoi excess fill or greedy repair rays), stop
+    with ``stage="pleats"`` and do not verify. In the benchmark runs none of
+    those cases certified (see README), and verifying them costs 1-5 minutes each.
+
+    ``fallback_budget`` is the decision budget of the pure-Python layer solver.
+    ``verify`` only uses that solver when flat-folder errors; a small budget keeps
+    those cases from running for many minutes.
 
     Note: this calls ``verify(cp)`` once and derives the M/V assignment from
     its layer order exactly as ``creasebench.verify.complete_assignment``
@@ -240,6 +250,11 @@ def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: f
         info.update(stage="pleats", reason=f"{len(pinfo['violations'])} interior vertices still violate "
                                            f"even-degree/Kawasaki after completion")
         return None, info
+    pinfo["heuristic"] = pinfo["strategy"] == "voronoi" or pinfo.get("repair_rays_added", 0) > 0
+    if skip_heuristic and pinfo["heuristic"]:
+        info.update(stage="pleats", reason="completion needed heuristic excess-paper repair "
+                                           "(Voronoi fill / repair rays); not verified (skip_heuristic=True)")
+        return None, info
 
     W, H = res["sheet"]["width"], res["sheet"]["height"]
     unit = [[x1 / W, y1 / H, x2 / W, y2 / H, "B" if k == "border" else "U"] for x1, y1, x2, y2, k in segs]
@@ -248,7 +263,7 @@ def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: f
     info["cp_warnings"] = list(cp.warnings)
 
     t0 = time.perf_counter()
-    rep = verify(cp, timeout=timeout)
+    rep = verify(cp, timeout=timeout, budget=fallback_budget)
     info["timings"]["verify"] = round(time.perf_counter() - t0, 3)
     info["verify"] = rep.summary()
     if not rep.foldable or rep.layers is None or rep.layers.assignments is None:
@@ -260,3 +275,32 @@ def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: f
     out.warnings = list(cp.warnings)
     info.update(stage="ok", reason="flat-foldable")
     return out, info
+
+
+REFERENCE_SAMPLES = ("lizard_32", "star4_16", "three_flap_16", "star4_r6_16", "stretch_gops_13",
+                     "stretch_gops_14", "stretch_kamiya_13", "tight_0_00", "tight_0_05", "random_0_02")
+
+
+def reference_designs(names=REFERENCE_SAMPLES) -> list[dict]:
+    """Certified box-pleated crease patterns shipped in samples/certified (generated with
+    certified_cp; regenerate with ``python -m creasebench.gen.bpstudio.certify_samples``).
+    They are re-verified on load."""
+    import json
+
+    from ...cp import CreasePattern
+    from ...verify import verify
+
+    out = []
+    root = Path(__file__).with_name("samples") / "certified"
+    for name in names:
+        p = root / f"{name}.fold"
+        if not p.exists():
+            continue
+        d = json.loads(p.read_text())
+        cp = CreasePattern.from_fold(d, rebuild=False)
+        if not verify(cp, timeout=120).foldable:
+            continue
+        out.append({"name": f"bp-{name}".replace("_", "-"), "cp": cp,
+                    "meta": {"generator": "Box Pleating Studio core + pleat completion",
+                             **d.get("creasebench_source", {})}})
+    return out
