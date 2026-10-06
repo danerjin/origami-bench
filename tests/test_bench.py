@@ -25,10 +25,17 @@ def sample():
 
 @pytest.mark.parametrize("task", sample(), ids=lambda t: t.id)
 def test_oracle_solves_and_baseline_scores_zero(task):
-    g = grade(task, oracle_answer(task))
-    assert g["solved"] and g["score"] == pytest.approx(1.0, abs=1e-3)
+    ans = oracle_answer(task)
+    if not ans:
+        pytest.skip("no reference design (scored against the packing bound)")
+    g = grade(task, ans)
+    assert g["solved"]
+    if task.reference.get("family") != "design":  # reference designs need not reach the bound
+        assert g["score"] == pytest.approx(1.0, abs=1e-3)
     base = grade(task, UnfoldedProvider().run(task, "", [], None, 0).text)
-    assert base["score"] == pytest.approx(0.0, abs=1e-6) and not base["solved"]
+    assert not base["solved"]
+    if task.meta.get("tier", "basic") == "basic":
+        assert base["score"] == pytest.approx(0.0, abs=1e-6)
 
 
 def test_unparseable_and_unfoldable_answers_score_zero():

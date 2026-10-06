@@ -342,8 +342,10 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
         tasks.append(pack_task(name, SEMANTIC_TREES[name], "linf", out))
     log("advanced: design tasks")
     for name, spec in SEMANTIC_TREES.items():
+        ref = by.get(f"tm-{name}")
         tasks.append(design_task(f"adv-design-{name}", spec["edges"], spec["description"], out,
-                                 meta={"subject": name}))
+                                 reference_cp=ref["cp"] if ref else None,
+                                 meta={"subject": name, "reference": ref["meta"] if ref else None}))
     for name in ("bird-2x2", "tiling-1", "bird-border"):
         if name in by:
             edges, _ = simplified_tree(by[name]["cp"])
