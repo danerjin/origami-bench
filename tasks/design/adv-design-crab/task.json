@@ -1,0 +1,84 @@
+{
+ "id": "adv-design-crab",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a crab: two claws, eight legs, eyes on stalks).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "body",
+     "left_claw",
+     3
+    ],
+    [
+     "body",
+     "right_claw",
+     3
+    ],
+    [
+     "body",
+     "left_eye",
+     1
+    ],
+    [
+     "body",
+     "right_eye",
+     1
+    ],
+    [
+     "body",
+     "leg1",
+     2
+    ],
+    [
+     "body",
+     "leg2",
+     2
+    ],
+    [
+     "body",
+     "leg3",
+     2
+    ],
+    [
+     "body",
+     "leg4",
+     2
+    ],
+    [
+     "body",
+     "leg5",
+     2
+    ],
+    [
+     "body",
+     "leg6",
+     2
+    ],
+    [
+     "body",
+     "leg7",
+     2
+    ],
+    [
+     "body",
+     "leg8",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.09858290266551836,
+  "packing_bound_l2": 0.09858290266551836,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "crab",
+  "tier": "advanced"
+ }
+}

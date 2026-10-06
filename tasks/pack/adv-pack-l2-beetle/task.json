@@ -1,0 +1,121 @@
+{
+ "id": "adv-pack-l2-beetle",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. Distances are Euclidean (circle packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "head",
+     "left_antenna",
+     2
+    ],
+    [
+     "head",
+     "right_antenna",
+     2
+    ],
+    [
+     "head",
+     "t1",
+     1
+    ],
+    [
+     "t1",
+     "leg1_l",
+     2
+    ],
+    [
+     "t1",
+     "leg1_r",
+     2
+    ],
+    [
+     "t1",
+     "t2",
+     1
+    ],
+    [
+     "t2",
+     "leg2_l",
+     2
+    ],
+    [
+     "t2",
+     "leg2_r",
+     2
+    ],
+    [
+     "t2",
+     "t3",
+     1
+    ],
+    [
+     "t3",
+     "leg3_l",
+     2
+    ],
+    [
+     "t3",
+     "leg3_r",
+     2
+    ],
+    [
+     "t3",
+     "abdomen_tip",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "l2",
+  "bound": 0.09424845705795871,
+  "solution": {
+   "abdomen_tip": [
+    0.4675184007859455,
+    1.0
+   ],
+   "left_antenna": [
+    4.8975084603854126e-17,
+    6.410961682072986e-19
+   ],
+   "leg1_l": [
+    0.4798739041234664,
+    0.4346442525103865
+   ],
+   "leg1_r": [
+    0.46767823390728586,
+    0.057847739584811625
+   ],
+   "leg2_l": [
+    0.0,
+    0.9408744017175051
+   ],
+   "leg2_r": [
+    0.026975958755767814,
+    0.5648469503604236
+   ],
+   "leg3_l": [
+    1.0,
+    0.6565645626906341
+   ],
+   "leg3_r": [
+    0.8445122290177803,
+    1.0
+   ],
+   "right_antenna": [
+    0.9353564678145715,
+    0.0
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "beetle",
+  "tier": "advanced"
+ }
+}

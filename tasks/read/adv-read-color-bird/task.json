@@ -1,0 +1,493 @@
+{
+ "id": "adv-read-color-bird",
+ "track": "read",
+ "difficulty": "hard",
+ "prompt": "The crease pattern below is folded from two-tone paper. The side facing you in the drawing is 'front', the other side 'back'. For each listed flap tip (given by its position on the unfolded paper), say which side of the paper is visible at that tip in the folded base, seen from above and from below (the folded model is viewed with the paper of the largest face, near its crease-pattern position, still showing its front side upward). Where layer order is a choice, the listed tips are ones whose colour does not depend on it.",
+ "inputs": {
+  "crease_pattern": {
+   "vertices_coords": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.35355339,
+     0.35355339
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.64644661,
+     0.64644661
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     0.64644661,
+     0.35355339
+    ],
+    [
+     0.35355339,
+     0.64644661
+    ],
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.5,
+     0.0
+    ],
+    [
+     0.5,
+     0.20710678
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.79289322,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     0.5,
+     0.79289322
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.20710678,
+     0.5
+    ]
+   ],
+   "edges_vertices": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     2,
+     12
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     2,
+     14
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     2,
+     16
+    ],
+    [
+     6,
+     10
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     3,
+     12
+    ],
+    [
+     3,
+     14
+    ],
+    [
+     7,
+     14
+    ],
+    [
+     7,
+     16
+    ],
+    [
+     1,
+     16
+    ],
+    [
+     1,
+     10
+    ],
+    [
+     0,
+     16
+    ],
+    [
+     0,
+     10
+    ],
+    [
+     5,
+     10
+    ],
+    [
+     5,
+     12
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     4,
+     14
+    ],
+    [
+     8,
+     14
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     8,
+     13
+    ],
+    [
+     8,
+     15
+    ],
+    [
+     0,
+     15
+    ]
+   ],
+   "edges_assignment": [
+    "V",
+    "M",
+    "V",
+    "M",
+    "V",
+    "M",
+    "M",
+    "M",
+    "M",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "M",
+    "M",
+    "V",
+    "V",
+    "M",
+    "V",
+    "M",
+    "M",
+    "V",
+    "M",
+    "V",
+    "M",
+    "V",
+    "M",
+    "V",
+    "M",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B"
+   ],
+   "faces_vertices": [
+    [
+     0,
+     1,
+     16
+    ],
+    [
+     1,
+     0,
+     10
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     2,
+     1,
+     10
+    ],
+    [
+     2,
+     3,
+     14
+    ],
+    [
+     3,
+     2,
+     12
+    ],
+    [
+     3,
+     4,
+     14
+    ],
+    [
+     4,
+     3,
+     12
+    ],
+    [
+     5,
+     6,
+     10
+    ],
+    [
+     6,
+     5,
+     12
+    ],
+    [
+     2,
+     6,
+     12
+    ],
+    [
+     6,
+     2,
+     10
+    ],
+    [
+     2,
+     7,
+     16
+    ],
+    [
+     7,
+     2,
+     14
+    ],
+    [
+     7,
+     8,
+     16
+    ],
+    [
+     8,
+     7,
+     14
+    ],
+    [
+     9,
+     10,
+     0
+    ],
+    [
+     10,
+     9,
+     5
+    ],
+    [
+     11,
+     12,
+     5
+    ],
+    [
+     12,
+     11,
+     4
+    ],
+    [
+     13,
+     14,
+     4
+    ],
+    [
+     14,
+     13,
+     8
+    ],
+    [
+     15,
+     16,
+     8
+    ],
+    [
+     16,
+     15,
+     0
+    ]
+   ]
+  },
+  "flap_tips": {
+   "tip0": [
+    0.0,
+    0.0
+   ],
+   "tip1": [
+    0.5,
+    0.5
+   ],
+   "tip2": [
+    1.0,
+    1.0
+   ],
+   "tip3": [
+    1.0,
+    0.0
+   ],
+   "tip4": [
+    0.0,
+    1.0
+   ],
+   "tip5": [
+    0.5,
+    0.207107
+   ],
+   "tip6": [
+    0.792893,
+    0.5
+   ],
+   "tip7": [
+    0.5,
+    0.792893
+   ],
+   "tip8": [
+    0.207107,
+    0.5
+   ]
+  }
+ },
+ "images": [
+  "cp.png"
+ ],
+ "reference": {
+  "family": "read-color",
+  "colors": {
+   "tip0": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip1": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip2": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip3": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip4": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip5": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip6": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip7": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip8": {
+    "above": "back",
+    "below": "back"
+   }
+  }
+ },
+ "meta": {
+  "source": "bird",
+  "generator": "bases22.bird",
+  "tier": "advanced"
+ }
+}

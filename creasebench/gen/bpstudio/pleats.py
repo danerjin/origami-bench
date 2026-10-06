@@ -40,6 +40,7 @@ where kind is one of border, hinge, ridge, axis-parallel or pleat.
 from __future__ import annotations
 
 import math
+import time
 from fractions import Fraction
 from itertools import combinations, product
 from math import gcd, isqrt
@@ -503,7 +504,8 @@ def _ray_hit(v, d, segs):
 
 # ---------------------------------------------------------------- main entry
 def complete_pleats(result: dict, max_rounds: int = 6, return_info: bool = False,
-                    split_excess: bool | None = None, grid_fallback: bool = True):
+                    split_excess: bool | None = None, grid_fallback: bool = True,
+                    repair_budget: float = 10.0):
     """Add elevation pleats to a BP Studio result (output of ``generate``).
 
     Returns a list of ``[x1, y1, x2, y2, kind]`` (floats, grid units). With
@@ -515,11 +517,12 @@ def complete_pleats(result: dict, max_rounds: int = 6, return_info: bool = False
     default None tries the skeleton first, since it gives fewer creases and
     flat-folder handles it much faster. It falls back to the Voronoi fill if
     local violations remain, and keeps whichever result has fewer.
+    ``repair_budget`` caps the seconds spent in the greedy ray repair per strategy.
     """
     if split_excess is None:
         best = None
         for se in (True, False):
-            segs, info = _complete_once(result, max_rounds, se, grid_fallback)
+            segs, info = _complete_once(result, max_rounds, se, grid_fallback, repair_budget)
             info["strategy"] = "skeleton" if se else "voronoi"
             score = (len(info["violations"]), len(segs))
             if best is None or score < best[0]:
@@ -528,12 +531,13 @@ def complete_pleats(result: dict, max_rounds: int = 6, return_info: bool = False
                 break
         _, segs, info = best
     else:
-        segs, info = _complete_once(result, max_rounds, split_excess, grid_fallback)
+        segs, info = _complete_once(result, max_rounds, split_excess, grid_fallback, repair_budget)
         info["strategy"] = "skeleton" if split_excess else "voronoi"
     return (segs, info) if return_info else segs
 
 
-def _complete_once(result: dict, max_rounds: int, split_excess: bool, grid_fallback: bool):
+def _complete_once(result: dict, max_rounds: int, split_excess: bool, grid_fallback: bool,
+                   repair_budget: float = 10.0):
     sheet = result.get("sheet") or {}
     W = _fr(sheet.get("width", result.get("grid")))
     H = _fr(sheet.get("height", result.get("grid")))
@@ -655,11 +659,12 @@ def _complete_once(result: dict, max_rounds: int, split_excess: bool, grid_fallb
     # the violation count. Typical fixes: the 45-degree corner ridge in excess
     # paper, and the midline of a gap between two parallel hinges.
     added_rays = 0
+    t_start = time.monotonic()
     if bad:
         stops = list(base_edges.keys())
         compass = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
         for _ in range(4 * len(bad) + 4):
-            if not bad:
+            if not bad or time.monotonic() - t_start > repair_budget:
                 break
             adj: dict[Pt, set] = {}
             for (a, b) in edges:
@@ -683,6 +688,8 @@ def _complete_once(result: dict, max_rounds: int, split_excess: bool, grid_fallb
                     kind = "pleat" if d[0] == 0 or d[1] == 0 else "ridge"
                     # candidate endpoints: every existing vertex/crossing on the way, then the stop
                     ends = _crossings(v, end, edges)[:12] + [end]
+                    if time.monotonic() - t_start > repair_budget:
+                        break
                     for e_ in dict.fromkeys(ends):
                         trial = _add_segment(edges, (v, e_, kind))
                         nb = len(_violations(trial, W, H))

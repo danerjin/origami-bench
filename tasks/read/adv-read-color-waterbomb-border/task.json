@@ -1,0 +1,305 @@
+{
+ "id": "adv-read-color-waterbomb-border",
+ "track": "read",
+ "difficulty": "hard",
+ "prompt": "The crease pattern below is folded from two-tone paper. The side facing you in the drawing is 'front', the other side 'back'. For each listed flap tip (given by its position on the unfolded paper), say which side of the paper is visible at that tip in the folded base, seen from above and from below (the folded model is viewed with the paper of the largest face, near its crease-pattern position, still showing its front side upward). Where layer order is a choice, the listed tips are ones whose colour does not depend on it.",
+ "inputs": {
+  "crease_pattern": {
+   "vertices_coords": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.1,
+     0.1
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.9,
+     0.9
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     0.9,
+     0.1
+    ],
+    [
+     1.0,
+     0.0
+    ],
+    [
+     0.1,
+     0.9
+    ],
+    [
+     0.0,
+     1.0
+    ],
+    [
+     0.1,
+     0.5
+    ],
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.9,
+     0.5
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "edges_vertices": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     3,
+     11
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     1,
+     9
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     4,
+     8
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "edges_assignment": [
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "M",
+    "M",
+    "M",
+    "M",
+    "M",
+    "V",
+    "M",
+    "V",
+    "M",
+    "V",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B",
+    "B"
+   ],
+   "faces_vertices": [
+    [
+     0,
+     1,
+     9,
+     10
+    ],
+    [
+     1,
+     0,
+     6,
+     5
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     1,
+     5
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     3,
+     2,
+     11
+    ],
+    [
+     3,
+     4,
+     8,
+     7
+    ],
+    [
+     4,
+     3,
+     11,
+     12
+    ],
+    [
+     2,
+     5,
+     11
+    ],
+    [
+     5,
+     6,
+     12,
+     11
+    ],
+    [
+     2,
+     7,
+     9
+    ],
+    [
+     7,
+     8,
+     10,
+     9
+    ]
+   ]
+  },
+  "flap_tips": {
+   "tip0": [
+    0.0,
+    0.0
+   ],
+   "tip1": [
+    1.0,
+    1.0
+   ],
+   "tip2": [
+    1.0,
+    0.0
+   ],
+   "tip3": [
+    0.0,
+    1.0
+   ]
+  }
+ },
+ "images": [
+  "cp.png"
+ ],
+ "reference": {
+  "family": "read-color",
+  "colors": {
+   "tip0": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip1": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip2": {
+    "above": "back",
+    "below": "back"
+   },
+   "tip3": {
+    "above": "back",
+    "below": "back"
+   }
+  }
+ },
+ "meta": {
+  "source": "waterbomb-border",
+  "generator": "graft.border_graft",
+  "base": "waterbomb",
+  "w": 0.125,
+  "tier": "advanced"
+ }
+}

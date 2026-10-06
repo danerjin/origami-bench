@@ -1,0 +1,144 @@
+{
+ "id": "adv-pack-l2-scorpion",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. Distances are Euclidean (circle packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "prosoma",
+     "left_pincer",
+     3
+    ],
+    [
+     "prosoma",
+     "right_pincer",
+     3
+    ],
+    [
+     "prosoma",
+     "a",
+     1
+    ],
+    [
+     "a",
+     "leg1_l",
+     2
+    ],
+    [
+     "a",
+     "leg1_r",
+     2
+    ],
+    [
+     "a",
+     "b",
+     1
+    ],
+    [
+     "b",
+     "leg2_l",
+     2
+    ],
+    [
+     "b",
+     "leg2_r",
+     2
+    ],
+    [
+     "b",
+     "c",
+     1
+    ],
+    [
+     "c",
+     "leg3_l",
+     2
+    ],
+    [
+     "c",
+     "leg3_r",
+     2
+    ],
+    [
+     "c",
+     "d",
+     1
+    ],
+    [
+     "d",
+     "leg4_l",
+     2
+    ],
+    [
+     "d",
+     "leg4_r",
+     2
+    ],
+    [
+     "d",
+     "stinger",
+     5
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "l2",
+  "bound": 0.06732132276081745,
+  "solution": {
+   "left_pincer": [
+    0.8075237229238009,
+    1.0
+   ],
+   "leg1_l": [
+    0.0,
+    0.9332112420697956
+   ],
+   "leg1_r": [
+    0.2608712896935943,
+    0.9999999999999999
+   ],
+   "leg2_l": [
+    0.8271388224466403,
+    0.2064790092651661
+   ],
+   "leg2_r": [
+    1.0,
+    0.0
+   ],
+   "leg3_l": [
+    0.5612997147327976,
+    0.0
+   ],
+   "leg3_r": [
+    0.0653023908181064,
+    0.5345969225925957
+   ],
+   "leg4_l": [
+    0.3775427018707538,
+    0.2820237094310251
+   ],
+   "leg4_r": [
+    0.401545452526069,
+    0.550237124332736
+   ],
+   "right_pincer": [
+    0.9999999999999999,
+    0.6448793716189976
+   ],
+   "stinger": [
+    0.0,
+    0.0
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "scorpion",
+  "tier": "advanced"
+ }
+}

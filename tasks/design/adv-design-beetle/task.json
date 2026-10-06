@@ -1,0 +1,84 @@
+{
+ "id": "adv-design-beetle",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a beetle: head with two antennae, six legs (two per thoracic segment), abdomen).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "head",
+     "left_antenna",
+     2
+    ],
+    [
+     "head",
+     "right_antenna",
+     2
+    ],
+    [
+     "head",
+     "t1",
+     1
+    ],
+    [
+     "t1",
+     "leg1_l",
+     2
+    ],
+    [
+     "t1",
+     "leg1_r",
+     2
+    ],
+    [
+     "t1",
+     "t2",
+     1
+    ],
+    [
+     "t2",
+     "leg2_l",
+     2
+    ],
+    [
+     "t2",
+     "leg2_r",
+     2
+    ],
+    [
+     "t2",
+     "t3",
+     1
+    ],
+    [
+     "t3",
+     "leg3_l",
+     2
+    ],
+    [
+     "t3",
+     "leg3_r",
+     2
+    ],
+    [
+     "t3",
+     "abdomen_tip",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.09424845705795871,
+  "packing_bound_l2": 0.09424845705795871,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "beetle",
+  "tier": "advanced"
+ }
+}

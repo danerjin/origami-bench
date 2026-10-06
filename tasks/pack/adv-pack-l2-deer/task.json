@@ -1,0 +1,126 @@
+{
+ "id": "adv-pack-l2-deer",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. Distances are Euclidean (circle packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "neck",
+     "head",
+     1
+    ],
+    [
+     "head",
+     "antler_l",
+     1
+    ],
+    [
+     "antler_l",
+     "tine_l1",
+     1.5
+    ],
+    [
+     "antler_l",
+     "tine_l2",
+     1.5
+    ],
+    [
+     "head",
+     "antler_r",
+     1
+    ],
+    [
+     "antler_r",
+     "tine_r1",
+     1.5
+    ],
+    [
+     "antler_r",
+     "tine_r2",
+     1.5
+    ],
+    [
+     "neck",
+     "front_left",
+     3
+    ],
+    [
+     "neck",
+     "front_right",
+     3
+    ],
+    [
+     "neck",
+     "hips",
+     3
+    ],
+    [
+     "hips",
+     "hind_left",
+     3
+    ],
+    [
+     "hips",
+     "hind_right",
+     3
+    ],
+    [
+     "hips",
+     "tail",
+     1
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "l2",
+  "bound": 0.07485049013311233,
+  "solution": {
+   "front_left": [
+    0.9999999999999984,
+    0.5508970592013084
+   ],
+   "front_right": [
+    0.9999999999995163,
+    0.9999999999999823
+   ],
+   "hind_left": [
+    0.6122852905683436,
+    1.7856156713824933e-13
+   ],
+   "hind_right": [
+    0.16318234976964452,
+    5.70938078032691e-14
+   ],
+   "tail": [
+    0.9586327727637143,
+    0.028578585441928716
+   ],
+   "tine_l1": [
+    0.5134718141340145,
+    0.9999999999996972
+   ],
+   "tine_l2": [
+    0.5683910186457387,
+    0.7754485295957538
+   ],
+   "tine_r1": [
+    3.1011190908282505e-14,
+    0.6921024478471685
+   ],
+   "tine_r2": [
+    0.19516587822475104,
+    0.8031593838961685
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "deer",
+  "tier": "advanced"
+ }
+}

@@ -348,7 +348,11 @@ def main(argv=None) -> None:
             print(f"--   {t.id:32} {t.difficulty:6} (no reference design; bound only)")
             continue
         g = grade(t, ans)
-        status = "ok" if g.get("solved") and g["score"] > 0.999 else "FAIL"
+        if t.reference.get("family") == "design":
+            # reference designs need not reach the packing bound; they must solve the task
+            status = "ok" if g.get("solved") else "FAIL"
+        else:
+            status = "ok" if g.get("solved") and g["score"] > 0.999 else "FAIL"
         if status != "ok":
             bad.append(t.id)
         print(f"{status:4} {t.id:32} {t.difficulty:6} score={g['score']:.3f}")

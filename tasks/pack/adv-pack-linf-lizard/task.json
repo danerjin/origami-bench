@@ -1,0 +1,84 @@
+{
+ "id": "adv-pack-linf-lizard",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. This is BOX PLEATING: distances use the L-infinity norm max(|dx|, |dy|) (square packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "shoulders",
+     "head",
+     2
+    ],
+    [
+     "shoulders",
+     "front_left_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "front_right_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "hips",
+     3
+    ],
+    [
+     "hips",
+     "hind_left_foot",
+     2
+    ],
+    [
+     "hips",
+     "hind_right_foot",
+     2
+    ],
+    [
+     "hips",
+     "tail_tip",
+     4
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "linf",
+  "bound": 0.09999999999999998,
+  "solution": {
+   "front_left_foot": [
+    0.5999999999999996,
+    0.999998717531069
+   ],
+   "front_right_foot": [
+    0.9999999999999998,
+    0.9805177504896462
+   ],
+   "head": [
+    0.0006214380901988488,
+    0.7003284302277564
+   ],
+   "hind_left_foot": [
+    0.4000000000000002,
+    2.1293993711753335e-06
+   ],
+   "hind_right_foot": [
+    0.0,
+    1.5531196818248986e-17
+   ],
+   "tail_tip": [
+    1.0,
+    0.08051733173868991
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "lizard",
+  "tier": "advanced"
+ }
+}

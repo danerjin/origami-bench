@@ -1,0 +1,84 @@
+{
+ "id": "adv-pack-l2-lizard",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. Distances are Euclidean (circle packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "shoulders",
+     "head",
+     2
+    ],
+    [
+     "shoulders",
+     "front_left_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "front_right_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "hips",
+     3
+    ],
+    [
+     "hips",
+     "hind_left_foot",
+     2
+    ],
+    [
+     "hips",
+     "hind_right_foot",
+     2
+    ],
+    [
+     "hips",
+     "tail_tip",
+     4
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "l2",
+  "bound": 0.11115599861057818,
+  "solution": {
+   "front_left_foot": [
+    0.9999999999999966,
+    0.5269482339184958
+   ],
+   "front_right_foot": [
+    0.9999999999999998,
+    0.9715722283608085
+   ],
+   "head": [
+    0.9394229693019436,
+    0.02824386723655472
+   ],
+   "hind_left_foot": [
+    1.2028739171755713e-15,
+    1.5608540226827116e-15
+   ],
+   "hind_right_foot": [
+    0.236602690431494,
+    0.3764434397282277
+   ],
+   "tail_tip": [
+    1.5361035704800104e-15,
+    0.9999999999999977
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "lizard",
+  "tier": "advanced"
+ }
+}

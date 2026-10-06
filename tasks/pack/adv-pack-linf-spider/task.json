@@ -1,0 +1,115 @@
+{
+ "id": "adv-pack-linf-spider",
+ "track": "pack",
+ "difficulty": "medium",
+ "prompt": "Target tree for an origami base (the stick figure of the model). Choose where each flap tip lies on the unit-square sheet so that the scale m is as large as possible, where m is the largest value with dist(u_i, u_j) >= m * d_tree(i, j) for every pair of leaves. This is BOX PLEATING: distances use the L-infinity norm max(|dx|, |dy|) (square packing).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "c",
+     "leg1",
+     3
+    ],
+    [
+     "c",
+     "leg2",
+     3
+    ],
+    [
+     "c",
+     "leg3",
+     3
+    ],
+    [
+     "c",
+     "leg4",
+     3
+    ],
+    [
+     "c",
+     "leg5",
+     3
+    ],
+    [
+     "c",
+     "leg6",
+     3
+    ],
+    [
+     "c",
+     "leg7",
+     3
+    ],
+    [
+     "c",
+     "leg8",
+     3
+    ],
+    [
+     "c",
+     "head",
+     1
+    ],
+    [
+     "c",
+     "abdomen",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "pack",
+  "norm": "linf",
+  "bound": 0.08333333328831412,
+  "solution": {
+   "abdomen": [
+    1.0,
+    0.583333333196183
+   ],
+   "head": [
+    0.9216180185934971,
+    0.3333333333312406
+   ],
+   "leg1": [
+    0.4999999999999982,
+    1.0
+   ],
+   "leg2": [
+    0.5327136101131067,
+    0.5000000000000037
+   ],
+   "leg3": [
+    0.0,
+    0.0
+   ],
+   "leg4": [
+    1.0,
+    0.9999999998628533
+   ],
+   "leg5": [
+    1.0,
+    0.0
+   ],
+   "leg6": [
+    0.0,
+    1.0
+   ],
+   "leg7": [
+    0.02026251407706766,
+    0.5
+   ],
+   "leg8": [
+    0.4999999999999986,
+    0.0
+   ]
+  },
+  "solve_threshold": 0.98
+ },
+ "meta": {
+  "subject": "spider",
+  "tier": "advanced"
+ }
+}

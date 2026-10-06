@@ -1,0 +1,74 @@
+{
+ "id": "adv-design-spider",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a spider: eight equal legs, a small head and an abdomen).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "c",
+     "leg1",
+     3
+    ],
+    [
+     "c",
+     "leg2",
+     3
+    ],
+    [
+     "c",
+     "leg3",
+     3
+    ],
+    [
+     "c",
+     "leg4",
+     3
+    ],
+    [
+     "c",
+     "leg5",
+     3
+    ],
+    [
+     "c",
+     "leg6",
+     3
+    ],
+    [
+     "c",
+     "leg7",
+     3
+    ],
+    [
+     "c",
+     "leg8",
+     3
+    ],
+    [
+     "c",
+     "head",
+     1
+    ],
+    [
+     "c",
+     "abdomen",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.08387542748271797,
+  "packing_bound_l2": 0.08387542748271797,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "spider",
+  "tier": "advanced"
+ }
+}
