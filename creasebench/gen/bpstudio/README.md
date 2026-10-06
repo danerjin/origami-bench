@@ -110,6 +110,35 @@ res["lines_unit"]   # lines divided by the sheet width/height (unit square for s
 - The numbers of configurations, patterns and devices in the samples match the upstream mocha expectations: 2 patterns for the 7/4 pair at (8,9), and 1/1/2 for the relay.
 - Each call takes about 0.1 s. Almost all of that is node startup.
 
+## Crease completion and certification (`pleats.py`, `certified_cp`)
+
+```python
+from creasebench.gen.bpstudio import certified_cp
+cp, info = certified_cp(tree_edges, flaps, grid, timeout=120)   # cp: CreasePattern (M/V) or None
+info["stage"]   # "ok" | "generate" | "pleats" (local violations remain) | "verify" (flat-folder failed/timed out)
+
+from creasebench.gen.bpstudio.pleats import complete_pleats
+segs, pinfo = complete_pleats(generate(...), return_info=True)   # [x1,y1,x2,y2,kind] in grid units
+```
+
+`complete_pleats` adds the creases that BP Studio leaves out. All arithmetic is exact (`fractions.Fraction`).
+
+- **Elevation pleats.** In each face of BP Studio's arrangement, the pleats are the integer level lines perpendicular to the face's hinges. This is COrigami F.1's "keep grid segments perpendicular to an intersecting hinge", applied face by face. Inside a stretch, the pleats follow the gadget's own axis-parallels, at the same phase and unit spacing. This works exactly for Pythagorean directions such as 3-4-5.
+- **Excess paper**, meaning paper outside every contour:
+  - It is first split by corner-bisector rays, a straight-skeleton step.
+  - If local violations remain, the code falls back to a nearest-hinge (L∞) Voronoi fill on a quarter-cell grid.
+- **Diagnose-driven repair.** A local search re-picks the families of ambiguous faces, then greedily adds straight rays from vertices that still violate even degree or Kawasaki.
+
+`certified_cp` then builds `CreasePattern.from_segments(..., tol=1e-9)` with every non-border crease set to `U`, and runs `creasebench.verify.verify` once (vendored flat-folder). It derives the M/V assignment from the layer order exactly as `complete_assignment` does.
+
+`python -m creasebench.gen.bpstudio.certify_samples [--trials N --seed S --inflate]` writes:
+- the certified FOLD files to `samples/certified/`
+- per-design results to `samples/certified/summary_*.json`
+
+`--inflate` lengthens random leaf edges until the layout is tight.
+
+RESULTS_PLACEHOLDER
+
 ## Limitations
 
 1. **The line set is not crease-complete. This is more than the M/V labels.** BP Studio's CP export contains only:

@@ -267,28 +267,42 @@ def design_task(tid: str, target_edges, subject: str, out: Path, *, reference_cp
     return _save(t, out, base_cp if graft else None)
 
 
-def simplified_tree(cp: CreasePattern, min_frac: float = 0.08):
-    """Tree of a certified base with short leaves pruned (used as a design target)."""
+def simplified_tree(cp: CreasePattern, min_frac: float = 0.15, max_leaves: int = 12):
+    """Tree of a certified base with short leaves pruned (used as a design target).
+
+    Leaves shorter than ``min_frac`` of the longest edge are removed, then the shortest
+    remaining leaves until at most ``max_leaves`` are left. The base still realizes the
+    pruned tree (it only drops flaps), so it stays a valid reference design."""
     import networkx as nx
 
     rep = verify(cp)
     tree = base_tree(rep)
     g = tree.graph.copy()
     longest = max(l for *_, l in g.edges(data="length"))
-    changed = True
-    while changed:
-        changed = False
-        for n in [n for n in g if g.degree(n) == 1]:
-            (p,) = list(g.neighbors(n))
-            if g.edges[n, p]["length"] < min_frac * longest and sum(1 for m in g if g.degree(m) == 1) > 2:
-                g.remove_node(n)
-                changed = True
+
+    def leaves():
+        return [n for n in g if g.degree(n) == 1]
+
+    def leaf_len(n):
+        (p,) = list(g.neighbors(n))
+        return g.edges[n, p]["length"]
+
+    def contract():
         for n in [n for n in g if g.degree(n) == 2]:
             a, b = list(g.neighbors(n))
             if not g.has_edge(a, b):
                 g.add_edge(a, b, length=g.edges[n, a]["length"] + g.edges[n, b]["length"])
                 g.remove_node(n)
-                changed = True
+
+    while True:
+        lv = leaves()
+        short = [n for n in lv if leaf_len(n) < min_frac * longest]
+        if len(lv) > max_leaves and not short:
+            short = [min(lv, key=leaf_len)]
+        if not short or len(lv) <= 2:
+            break
+        g.remove_node(min(short, key=leaf_len))
+        contract()
     names = {n: f"n{i}" for i, n in enumerate(sorted(g))}
     return [[names[u], names[v], round(l / longest * 4, 3)] for u, v, l in g.edges(data="length")], tree
 

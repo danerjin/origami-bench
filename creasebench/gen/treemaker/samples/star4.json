@@ -1,0 +1,460 @@
+{
+ "ok": true,
+ "status": "HAS_FULL_CP",
+ "scale": 0.5,
+ "creases": [
+  [
+   0.5,
+   1.0,
+   0.5000000074,
+   0.5000000074,
+   "V",
+   "hinge"
+  ],
+  [
+   0.0,
+   0.5,
+   0.5000000074,
+   0.5000000074,
+   "M",
+   "hinge"
+  ],
+  [
+   0.5,
+   0.0,
+   0.5000000074,
+   0.5000000074,
+   "M",
+   "hinge"
+  ],
+  [
+   1.0,
+   0.5,
+   0.5000000074,
+   0.5000000074,
+   "M",
+   "hinge"
+  ],
+  [
+   1.0,
+   1.0,
+   0.5000000074,
+   0.5000000074,
+   "V",
+   "ridge"
+  ],
+  [
+   0.5000000074,
+   0.5000000074,
+   0.0,
+   1.0,
+   "V",
+   "ridge"
+  ],
+  [
+   0.0,
+   1.0,
+   0.5,
+   1.0,
+   "B",
+   "axial"
+  ],
+  [
+   0.5,
+   1.0,
+   1.0,
+   1.0,
+   "B",
+   "axial"
+  ],
+  [
+   0.5000000074,
+   0.5000000074,
+   0.0,
+   0.0,
+   "V",
+   "ridge"
+  ],
+  [
+   0.0,
+   0.0,
+   0.0,
+   0.5,
+   "B",
+   "axial"
+  ],
+  [
+   0.0,
+   0.5,
+   0.0,
+   1.0,
+   "B",
+   "axial"
+  ],
+  [
+   0.5000000074,
+   0.5000000074,
+   1.0,
+   0.0,
+   "V",
+   "ridge"
+  ],
+  [
+   1.0,
+   0.0,
+   0.5,
+   0.0,
+   "B",
+   "axial"
+  ],
+  [
+   0.5,
+   0.0,
+   0.0,
+   0.0,
+   "B",
+   "axial"
+  ],
+  [
+   1.0,
+   0.0,
+   1.0,
+   0.5,
+   "B",
+   "axial"
+  ],
+  [
+   1.0,
+   0.5,
+   1.0,
+   1.0,
+   "B",
+   "axial"
+  ]
+ ],
+ "leaves": {
+  "f0": [
+   1.0,
+   1.0
+  ],
+  "f1": [
+   0.0,
+   1.0
+  ],
+  "f2": [
+   0.0,
+   0.0
+  ],
+  "f3": [
+   1.0,
+   0.0
+  ]
+ },
+ "nodes": [
+  {
+   "id": "c",
+   "x": 0.5295055147,
+   "y": 0.4873258301,
+   "leaf": false,
+   "sub": false,
+   "pinned": false,
+   "border": false,
+   "depth": 0,
+   "elevation": 0
+  },
+  {
+   "id": "f0",
+   "x": 1.0,
+   "y": 1.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.5,
+   "elevation": 0
+  },
+  {
+   "id": "f1",
+   "x": 0.0,
+   "y": 1.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.5,
+   "elevation": 0
+  },
+  {
+   "id": "f2",
+   "x": 0.0,
+   "y": 0.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.5,
+   "elevation": 0
+  },
+  {
+   "id": "f3",
+   "x": 1.0,
+   "y": 0.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.5,
+   "elevation": 0
+  },
+  {
+   "id": "sub_0",
+   "x": 0.5000000074,
+   "y": 0.5000000074,
+   "leaf": false,
+   "sub": true,
+   "pinned": false,
+   "border": false,
+   "depth": -999,
+   "elevation": 0.4999999926
+  }
+ ],
+ "vertices": [
+  {
+   "x": 0.0,
+   "y": 1.0,
+   "tree_node": "f1",
+   "elevation": 0,
+   "depth": 0.5,
+   "border": true
+  },
+  {
+   "x": 1.0,
+   "y": 1.0,
+   "tree_node": "f0",
+   "elevation": 0,
+   "depth": 0.5,
+   "border": true
+  },
+  {
+   "x": 0.5,
+   "y": 1.0,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 0,
+   "border": true
+  },
+  {
+   "x": 0.5000000074,
+   "y": 0.5000000074,
+   "tree_node": "c",
+   "elevation": 0.4999999926,
+   "depth": 7.447878203e-09,
+   "border": false
+  },
+  {
+   "x": 0.0,
+   "y": 0.0,
+   "tree_node": "f2",
+   "elevation": 0,
+   "depth": 0.5,
+   "border": true
+  },
+  {
+   "x": 0.0,
+   "y": 0.5,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 0,
+   "border": true
+  },
+  {
+   "x": 1.0,
+   "y": 0.0,
+   "tree_node": "f3",
+   "elevation": 0,
+   "depth": 0.5,
+   "border": true
+  },
+  {
+   "x": 0.5,
+   "y": 0.0,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 0,
+   "border": true
+  },
+  {
+   "x": 1.0,
+   "y": 0.5,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 0,
+   "border": true
+  }
+ ],
+ "facets": [
+  {
+   "v": [
+    1,
+    2,
+    3
+   ],
+   "color": "white_up",
+   "order": 7,
+   "corridor_edge": [
+    "c",
+    "f0"
+   ]
+  },
+  {
+   "v": [
+    2,
+    0,
+    3
+   ],
+   "color": "color_up",
+   "order": 0,
+   "corridor_edge": [
+    "c",
+    "f1"
+   ]
+  },
+  {
+   "v": [
+    0,
+    5,
+    3
+   ],
+   "color": "white_up",
+   "order": 1,
+   "corridor_edge": [
+    "c",
+    "f1"
+   ]
+  },
+  {
+   "v": [
+    5,
+    4,
+    3
+   ],
+   "color": "color_up",
+   "order": 2,
+   "corridor_edge": [
+    "c",
+    "f2"
+   ]
+  },
+  {
+   "v": [
+    4,
+    7,
+    3
+   ],
+   "color": "white_up",
+   "order": 3,
+   "corridor_edge": [
+    "c",
+    "f2"
+   ]
+  },
+  {
+   "v": [
+    7,
+    6,
+    3
+   ],
+   "color": "color_up",
+   "order": 4,
+   "corridor_edge": [
+    "c",
+    "f3"
+   ]
+  },
+  {
+   "v": [
+    6,
+    8,
+    3
+   ],
+   "color": "white_up",
+   "order": 5,
+   "corridor_edge": [
+    "c",
+    "f3"
+   ]
+  },
+  {
+   "v": [
+    8,
+    1,
+    3
+   ],
+   "color": "color_up",
+   "order": 6,
+   "corridor_edge": [
+    "c",
+    "f0"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "a": "c",
+   "b": "f0",
+   "length": 1,
+   "strain": 0,
+   "strained_length": 1
+  },
+  {
+   "a": "c",
+   "b": "f1",
+   "length": 1,
+   "strain": 0,
+   "strained_length": 1
+  },
+  {
+   "a": "c",
+   "b": "f2",
+   "length": 1,
+   "strain": 0,
+   "strained_length": 1
+  },
+  {
+   "a": "c",
+   "b": "f3",
+   "length": 1,
+   "strain": 0,
+   "strained_length": 1
+  }
+ ],
+ "hull_area": 1.0,
+ "covers_square": true,
+ "local_ok": true,
+ "num_stubs_added": 0,
+ "seconds": 0.10871617799989508,
+ "corners": [],
+ "input_edges": [
+  [
+   "c",
+   "f0",
+   1
+  ],
+  [
+   "c",
+   "f1",
+   1
+  ],
+  [
+   "c",
+   "f2",
+   1
+  ],
+  [
+   "c",
+   "f3",
+   1
+  ]
+ ],
+ "name": "star4"
+}

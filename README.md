@@ -1,94 +1,103 @@
-# Origami Bench
+# CreaseBench: Expert Crease-Pattern Analysis and Design, Verified by Folding
 
-A benchmark that tests the **spatial and analytical reasoning** of general-purpose LLM agents
-through origami. It works much like PCB-design benchmarks: the model has to produce a precise
-geometric artifact, and a simulator, not an LLM, decides whether the artifact works.
+CreaseBench tests whether general-purpose LLM agents can do **real origami design**. That means
+the expert techniques used for intricate models: tree theory and circle/river packing, box
+pleating on N-grids, 22.5° design, Pythagorean stretches, grafting and two-tone color change.
+The constraint is always the same: **one uncut square sheet**.
 
-| Track | Input | Output | Graded by |
+It is graded the way a PCB benchmark runs DRC and simulation on a netlist. Every answer is
+**folded for real**:
+
+1. **Local checks:** Maekawa, Kawasaki and crimp/big-little-big.
+2. **Global layer order:** solved by Jason Ku's flat-folder, vendored (MIT).
+3. **Structural measurement:** the folded state is measured, not shown to a judge. That covers
+   the base's stick-figure tree (via a Reeb graph), the scale factor it achieves, the design
+   system it uses, and which paper side shows at each flap.
+
+The headline scores never depend on an LLM or VLM judge.
+
+## Tiers and task families
+
+| Tier | Family (track) | Input → output | Graded by |
 |---|---|---|---|
-| **Analytic folding** (`af`) | crease pattern (FOLD JSON + image) | folded vertex positions (+ layer order), or "not foldable" | exact comparison with the simulated fold |
-| **Design from text** (`dt`) | a description ("fold an equilateral triangle", "a fish") | crease pattern | folding the answer, then checking a geometric rubric (+ optional vision judge) |
-| **Design from image** (`di`) | silhouette of a folded model (image + polygon) | crease pattern | folding the answer, then silhouette IoU against the target |
+| basic | `af` analytic folding | crease pattern → folded vertices + layer order, or "not foldable" | exact geometry after rigid alignment; layer claims checked by solver |
+| basic | `dt` / `di` shape design | text / silhouette → crease pattern | fold → rubric / IoU |
+| **advanced** | `read-tree` | expert CP (22.5°, tilings, grafts, TreeMaker, box pleating) → tree of its base | isomorphism + lengths |
+| advanced | `read-tech` | CP → box pleating grid N / 22.5° / Pythagorean-stretch triples | exact analyzers |
+| advanced | `read-color` | CP on two-tone paper → side visible at each flap tip | layer-order analysis (only order-independent tips) |
+| advanced | `af` (adv) | advanced CP → folded geometry; or find an injected defect (flipped crease, moved vertex, locally valid but globally impossible) | exact |
+| advanced | `solve` | expert CP geometry with every crease unassigned → full M/V | flat-folder |
+| advanced | `pack` | target tree → flap-tip positions (circle or box-pleating square packing) | scale m / best known packing |
+| advanced | `design` | target tree (lizard, beetle, scorpion, spider, deer with antlers, dragon, crab, bird...) → CP | fold → extract tree → **efficiency = m / best known**; optional technique (22.5°, BP grid, Pythagorean stretch), grafting, color-change and layer limits |
 
-Every answer is graded by **actually folding it**. A design answer must be flat-foldable: it must
-pass Maekawa's and Kawasaki's theorems at every vertex, and a SAT solver must find a valid,
-non-self-intersecting layer order. Only then is its folded shape compared with the goal.
+**Scale m.** A design realizes a target tree at scale m when its flap tips match the target's
+leaves so that the tree distance between every pair of tips is at least m times the target
+distance. This is Lang's path condition. Efficiency compares m with the best circle/river
+packing found by multi-start optimization, or with a reference design, whichever is higher.
+Optimal packing is NP-hard, so efficiency is reported relative to that best-known value rather
+than a proven optimum.
 
 ## Quickstart
 
 ```bash
-pip install -e ".[anthropic,openai,dev]"
-python -m creasebench.build            # regenerate tasks/ (already committed) and self-check them
-pytest                                   # 41 tests
+pip install -e ".[anthropic,openai,dev]"     # Node.js >= 18 recommended (flat-folder); falls back to Python
+python -m creasebench.build                   # rebuild tasks/ and self-check every reference answer
+pytest
 
-# sanity checks: the oracle should score 1.0, the trivial baseline 0.0
-python -m creasebench.run --provider oracle
-python -m creasebench.run --provider unfolded
+python -m creasebench.run --provider oracle      # reference answers: 1.0 wherever a reference exists
+python -m creasebench.run --provider unfolded    # trivial baseline: 0
+python -m creasebench.run --provider heuristic   # non-LLM baseline (edge-flap packing)
 
-# evaluate a model
-python -m creasebench.run --provider anthropic --model claude-opus-5-5 --mode closed
-python -m creasebench.run --provider anthropic --model claude-opus-5-5 --mode agentic
-python -m creasebench.run --provider openai --model <name> --base-url <url> --mode agentic
+python -m creasebench.run --provider anthropic --model claude-opus-5-5 --mode agentic --tiers advanced
+python -m creasebench.run --provider openai --model <name> --base-url <url> --mode closed
 ```
 
-Useful flags: `--tracks af,di`, `--difficulty hard`, `--ids af-gen`, `--limit 5`,
-`--no-images` (text only), `--image-only` (design-from-image with just the picture),
-`--judge-provider anthropic` (semantic judge for the fish/arrow tasks), `--save-transcripts`.
-Results are written to `results/<run>/{results.jsonl,summary.md}`.
+**Modes.** `closed` is a single response. `agentic` gives the model a Python tool (numpy and
+shapely) for up to `--max-steps` rounds; that is the realistic way to write a 500-crease
+pattern. Model code runs in a local subprocess, so use a container.
 
-### Modes
+## Where the crease patterns come from
 
-- **closed**: one response, no tools. Pure reasoning.
-- **agentic**: the model gets a `python` tool (numpy and shapely, with the task inputs as files)
-  for up to `--max-steps` rounds. The benchmark's own simulator is *not* exposed, so the agent
-  has to build whatever folding machinery it needs. Model-written code runs in a local
-  subprocess, which is **not** a security boundary. Run agentic evaluations in a container.
+Every shipped crease pattern is **generated**. Origami designers hold copyright on their crease
+patterns, so none are scraped. Each generated pattern is certified flat-foldable before use.
 
-### Inspecting things by hand
+| Generator | Produces | Notes |
+|---|---|---|
+| `gen/bases22.py` | bird base and other 22.5° modules; mirror and mixed tilings | exact Q(√2) geometry; M/V found by the solver |
+| `gen/graft.py` | strip and border grafts; point grafts at strip crossings | the border graft with its edge folded back gives a color change |
+| `gen/defects.py` | single defects for error-finding tasks | |
+| `gen/bpstudio/` | box-pleated layouts with Kamiya / GOPS stretch gadgets | headless driver for Box Pleating Studio (Mu-Tsun Tsai, MIT) plus pleat completion |
+| `gen/treemaker/` | tree-method bases (universal molecule) | optional; a build script compiles Robert Lang's TreeMaker 5 (GPL) locally; only generated outputs ship |
 
-```bash
-python -m creasebench verify my_answer.json --render out   # flat-foldability report + PNGs
-python -m creasebench grade tasks/design_text/dt-house reply.txt
-```
+## Related work
 
-## Seed task set (49 tasks)
+| Work | What it is | How it grades |
+|---|---|---|
+| **OrigamiBench** (Agarwal et al., LM4Plan @ ICML 2026) | interactive environment in which vision models add creases toward a target image | Flat-Folder validity; IoU and CLIP similarity |
+| **COrigami** (Zahavy et al., DeepMind 2026) | text → stick figure → box-pleated base → shaping; an algorithmic packer and solver do the crease work | VLM judge; flat-foldability by construction |
+| **OrigamiSpace** (NeurIPS 2025) | multiple-choice spatial reasoning, plus image → CP code | Hausdorff and topology similarity |
+| **GamiBench** (AAAI 2026 workshops) | multiple choice on simple CPs, including impossible ones | exact match |
 
-- **Analytic (31):** 11 traditional folds and bases (book, blintz, kite, waterbomb, preliminary,
-  fish, double blintz, ...); 16 procedurally generated patterns from 1–7 random simple folds;
-  4 *non-foldable* patterns: Maekawa violations, a Kawasaki violation, and one that passes
-  every local test but has no valid layer order.
-- **Design from image (9):** silhouettes of reference bases and generated models, randomly
-  rotated and translated.
-- **Design from text (9):** precise shape goals (corner to centre, quarter-area triangle, square
-  where all corners meet, long strip, equilateral triangle, regular hexagon, house) and two
-  semantic goals (fish, arrow).
-
-The build step proves every task is solvable: the hidden reference answer must score 1.0. It
-also records the score of a trivial baseline (paper left unfolded, or a single book fold), which
-grading rescales to 0.
-
-## Scoring at a glance
-
-Each task gets a `score` in [0, 1] and a boolean `solved`. **Report the solved rate as the
-headline number**, broken down by track and difficulty. The mean score is a secondary metric.
-Full formulas, tolerances and answer formats are in [`docs/SPEC.md`](docs/SPEC.md).
+COrigami reports that fine-tuned LLMs writing crease patterns directly plateau near 60%
+flat-foldability, and that automated TreeMaker builds succeeded on 1.1% of complex stick
+figures. CreaseBench asks the agent to do the expert work itself: packing, river routing,
+stretches and M/V assignment. It scores **efficiency**, which COrigami deliberately trades away,
+and it adds techniques COrigami lists as future work (Pythagorean stretches, level shifters),
+reading tasks on expert-scale patterns, and exact answers.
 
 ## Layout
 
 ```
 creasebench/
-  cp.py           crease patterns: planar arrangement, faces, FOLD I/O
-  foldability.py  Maekawa / Kawasaki
-  simulate.py     folded geometry (composition of reflections)
-  layers.py, sat.py  global flat-foldability: layer-order constraints + DPLL solver
-  verify.py       one-call verification
-  generate.py     random simple-fold generator, symmetric search
-  reference.py    traditional bases; fold-to-convex-polygon constructor
-  compare.py      rigid alignment, silhouette IoU, shape features
-  graders.py      per-track graders
-  prompts.py      shared conventions + answer formats
-  providers/      anthropic, openai-compatible, oracle and unfolded baselines
-  build.py        builds tasks/ ; run.py runs a benchmark ; judge.py optional VLM judge
-tasks/            the committed seed set (task.json + images)
-tests/
+  cp.py, foldability.py, simulate.py   crease patterns, local checks (incl. crimp), folding
+  ffolder/                             vendored flat-folder (MIT) + Node driver;  verify.py: backends
+  layers.py, sat.py                    pure-Python layer-order solver (fallback / cross-check)
+  tree.py, treefit.py, packing.py      Reeb-graph tree extraction, scale factor, packing bounds
+  style.py, color.py                   technique detection, grafting check, two-tone colours
+  gen/                                 generators (22.5° modules, grafts, defects, BP Studio, TreeMaker)
+  trees.py                             semantic target trees
+  build.py, build_advanced.py          task builders with oracle self-check
+  graders.py, advanced.py, prompts.py  grading and prompts;  run.py runner;  providers/
+tasks/                                 the committed task set
+docs/SPEC.md                           full specification
 ```

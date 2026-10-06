@@ -1,0 +1,359 @@
+{
+ "ok": true,
+ "status": "HAS_FULL_CP",
+ "scale": 0.8036659851,
+ "creases": [
+  [
+   0.4947724671,
+   0.6250001019,
+   0.3024018741,
+   0.4694942448,
+   "V",
+   "hinge"
+  ],
+  [
+   0.06387884028,
+   0.5350326223,
+   0.3024018741,
+   0.4694942448,
+   "M",
+   "hinge"
+  ],
+  [
+   0.2307693694,
+   0.2327300142,
+   0.3024018741,
+   0.4694942448,
+   "M",
+   "hinge"
+  ],
+  [
+   1.0,
+   0.0,
+   0.3024018741,
+   0.4694942448,
+   "V",
+   "ridge"
+  ],
+  [
+   0.3024018741,
+   0.4694942448,
+   0.1916361709,
+   1.0,
+   "V",
+   "ridge"
+  ],
+  [
+   0.1916361709,
+   1.0,
+   0.4947724671,
+   0.6250001019,
+   "U",
+   "axial"
+  ],
+  [
+   0.4947724671,
+   0.6250001019,
+   1.0,
+   0.0,
+   "U",
+   "axial"
+  ],
+  [
+   0.3024018741,
+   0.4694942448,
+   0.0,
+   0.3025490139,
+   "V",
+   "ridge"
+  ],
+  [
+   0.0,
+   0.3025490139,
+   0.06387884028,
+   0.5350326223,
+   "U",
+   "axial"
+  ],
+  [
+   0.06387884028,
+   0.5350326223,
+   0.1916361709,
+   1.0,
+   "U",
+   "axial"
+  ],
+  [
+   0.0,
+   0.3025490139,
+   0.2307693694,
+   0.2327300142,
+   "U",
+   "axial"
+  ],
+  [
+   0.2307693694,
+   0.2327300142,
+   1.0,
+   0.0,
+   "U",
+   "axial"
+  ]
+ ],
+ "leaves": {
+  "a": [
+   1.0,
+   0.0
+  ],
+  "b": [
+   0.1916361709,
+   1.0
+  ],
+  "d": [
+   0.0,
+   0.3025490139
+  ]
+ },
+ "nodes": [
+  {
+   "id": "c",
+   "x": 0.5056743206,
+   "y": 0.4808676498,
+   "leaf": false,
+   "sub": false,
+   "pinned": false,
+   "border": false,
+   "depth": 0,
+   "elevation": 0
+  },
+  {
+   "id": "a",
+   "x": 1.0,
+   "y": 0.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.8036659851,
+   "elevation": 0
+  },
+  {
+   "id": "b",
+   "x": 0.1916361709,
+   "y": 1.0,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.4821995911,
+   "elevation": 0
+  },
+  {
+   "id": "d",
+   "x": 0.0,
+   "y": 0.3025490139,
+   "leaf": true,
+   "sub": false,
+   "pinned": true,
+   "border": true,
+   "depth": 0.2410997955,
+   "elevation": 0
+  },
+  {
+   "id": "sub_0",
+   "x": 0.3024018741,
+   "y": 0.4694942448,
+   "leaf": false,
+   "sub": true,
+   "pinned": false,
+   "border": false,
+   "depth": -999,
+   "elevation": 0.247363127
+  }
+ ],
+ "vertices": [
+  {
+   "x": 0.1916361709,
+   "y": 1.0,
+   "tree_node": "b",
+   "elevation": 0,
+   "depth": 0.4821996306,
+   "border": true
+  },
+  {
+   "x": 1.0,
+   "y": 0.0,
+   "tree_node": "a",
+   "elevation": 0,
+   "depth": 0.8036659851,
+   "border": true
+  },
+  {
+   "x": 0.4947724671,
+   "y": 0.6250001019,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 1.110223025e-16,
+   "border": true
+  },
+  {
+   "x": 0.3024018741,
+   "y": 0.4694942448,
+   "tree_node": "c",
+   "elevation": 0.247363127,
+   "depth": 2.766952757e-07,
+   "border": false
+  },
+  {
+   "x": 0.0,
+   "y": 0.3025490139,
+   "tree_node": "d",
+   "elevation": 0,
+   "depth": 0.2410997955,
+   "border": true
+  },
+  {
+   "x": 0.06387884028,
+   "y": 0.5350326223,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 8.326672685e-17,
+   "border": true
+  },
+  {
+   "x": 0.2307693694,
+   "y": 0.2327300142,
+   "tree_node": "c",
+   "elevation": 0,
+   "depth": 5.551115123e-17,
+   "border": true
+  }
+ ],
+ "facets": [
+  {
+   "v": [
+    1,
+    2,
+    3
+   ],
+   "color": "white_up",
+   "order": 5,
+   "corridor_edge": [
+    "c",
+    "a"
+   ]
+  },
+  {
+   "v": [
+    2,
+    0,
+    3
+   ],
+   "color": "color_up",
+   "order": 0,
+   "corridor_edge": [
+    "c",
+    "b"
+   ]
+  },
+  {
+   "v": [
+    0,
+    5,
+    3
+   ],
+   "color": "white_up",
+   "order": 1,
+   "corridor_edge": [
+    "c",
+    "b"
+   ]
+  },
+  {
+   "v": [
+    5,
+    4,
+    3
+   ],
+   "color": "color_up",
+   "order": 2,
+   "corridor_edge": [
+    "c",
+    "d"
+   ]
+  },
+  {
+   "v": [
+    4,
+    6,
+    3
+   ],
+   "color": "white_up",
+   "order": 3,
+   "corridor_edge": [
+    "c",
+    "d"
+   ]
+  },
+  {
+   "v": [
+    6,
+    1,
+    3
+   ],
+   "color": "color_up",
+   "order": 4,
+   "corridor_edge": [
+    "c",
+    "a"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "a": "c",
+   "b": "a",
+   "length": 1,
+   "strain": 0,
+   "strained_length": 1
+  },
+  {
+   "a": "c",
+   "b": "b",
+   "length": 0.6,
+   "strain": 0,
+   "strained_length": 0.6
+  },
+  {
+   "a": "c",
+   "b": "d",
+   "length": 0.3,
+   "strain": 0,
+   "strained_length": 0.3
+  }
+ ],
+ "hull_area": 0.3777150631047135,
+ "covers_square": false,
+ "local_ok": true,
+ "num_stubs_added": 0,
+ "seconds": 0.023393503000079363,
+ "corners": [],
+ "input_edges": [
+  [
+   "c",
+   "a",
+   1.0
+  ],
+  [
+   "c",
+   "b",
+   0.6
+  ],
+  [
+   "c",
+   "d",
+   0.3
+  ]
+ ],
+ "name": "three_unequal"
+}

@@ -14,7 +14,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
-__all__ = ["generate", "diagnose", "BUNDLE_PATH", "BPStudioError"]
+__all__ = ["generate", "diagnose", "certified_cp", "BUNDLE_PATH", "BPStudioError"]
 
 BUNDLE_PATH = Path(__file__).resolve().parent / "bp_core.bundle.mjs"
 
@@ -194,3 +194,69 @@ def diagnose(result: dict) -> dict:
             violations.append([float(v[0]), float(v[1]), f"kawasaki alt-sum {math.degrees(s):.3f} deg"])
     return {"planar_edges": len(edges), "interior_vertices": n,
             "violations": violations, "locally_flat_foldable": not violations}
+
+
+def certified_cp(tree_edges, flaps, grid, timeout: float = 120.0, gen_timeout: float = 60.0,
+                 pattern_choice=None, config_choice=None, pleat_options: Mapping | None = None):
+    """generate -> complete_pleats -> flat-folder M/V completion.
+
+    Returns ``(cp, info)``. ``cp`` is a :class:`creasebench.cp.CreasePattern` on
+    the unit square with every crease assigned M or V, or ``None`` if
+    certification failed. ``info`` holds:
+
+    * ``stage``: one of generate, pleats, local, verify or ok. This is the
+      stage that failed, or ok.
+    * ``reason`` and ``bp``: the generate() result without its lines.
+    * ``pleats``: the info returned by complete_pleats.
+    * ``verify``: the summary of creasebench.verify.verify.
+    * ``n_creases`` and the timings.
+
+    Note: this calls ``verify(cp)`` once and derives the M/V assignment from
+    its layer order exactly as ``creasebench.verify.complete_assignment``
+    does. That avoids running the flat-folder twice.
+    """
+    import time
+
+    from creasebench.cp import CreasePattern
+    from creasebench.verify import verify
+
+    from .pleats import complete_pleats
+
+    info: dict[str, Any] = {"timings": {}}
+    t0 = time.perf_counter()
+    res = generate(tree_edges, flaps, grid, timeout=gen_timeout,
+                   pattern_choice=pattern_choice, config_choice=config_choice)
+    info["timings"]["generate"] = round(time.perf_counter() - t0, 3)
+    info["bp"] = {k: v for k, v in res.items() if k not in ("lines", "lines_unit", "assignment", "bp_assignment")}
+    if res.get("status") != "ok":
+        info.update(stage="generate", reason="; ".join(res.get("errors", [])))
+        return None, info
+
+    t0 = time.perf_counter()
+    segs, pinfo = complete_pleats(res, return_info=True, **dict(pleat_options or {}))
+    info["timings"]["pleats"] = round(time.perf_counter() - t0, 3)
+    info["pleats"] = pinfo
+    if pinfo["violations"]:
+        info.update(stage="pleats", reason=f"{len(pinfo['violations'])} interior vertices still violate "
+                                           f"even-degree/Kawasaki after completion")
+        return None, info
+
+    W, H = res["sheet"]["width"], res["sheet"]["height"]
+    unit = [[x1 / W, y1 / H, x2 / W, y2 / H, "B" if k == "border" else "U"] for x1, y1, x2, y2, k in segs]
+    cp = CreasePattern.from_segments(unit, tol=1e-9)
+    info["n_creases"] = cp.num_creases()
+    info["cp_warnings"] = list(cp.warnings)
+
+    t0 = time.perf_counter()
+    rep = verify(cp, timeout=timeout)
+    info["timings"]["verify"] = round(time.perf_counter() - t0, 3)
+    info["verify"] = rep.summary()
+    if not rep.foldable or rep.layers is None or rep.layers.assignments is None:
+        info.update(stage="local" if rep.local is not None and not rep.local.ok else "verify",
+                    reason=rep.reason)
+        return None, info
+    out = CreasePattern(cp.vertices.copy(), list(cp.edges), list(rep.layers.assignments),
+                        [list(f) for f in cp.faces])
+    out.warnings = list(cp.warnings)
+    info.update(stage="ok", reason="flat-foldable")
+    return out, info

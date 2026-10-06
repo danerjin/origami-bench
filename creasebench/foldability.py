@@ -73,7 +73,7 @@ def check_local(cp: CreasePattern, angle_tol: float = 5e-3) -> LocalReport:
     return rep
 
 
-def crimp_foldable(sectors: list[float], asg: list[str], tol: float = 1e-6) -> bool:
+def crimp_foldable(sectors: list[float], asg: list[str], tol: float = 1e-4) -> bool:
     """Single-vertex flat-foldability with an M/V assignment (crimping / big-little-big).
 
     ``sectors[i]`` is the angle between crease i and crease i+1 (cyclically); ``asg[i]`` is

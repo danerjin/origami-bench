@@ -1,4 +1,4 @@
-# Origami Bench specification (v0.1)
+# CreaseBench specification (v0.2)
 
 ## 1. Motivation
 
@@ -141,3 +141,103 @@ column so the main score stays deterministic.
 - **Solver budget.** Very large layer instances may exhaust the solver budget. These are
   reported as "undetermined" and graded as not foldable.
 - **Human baselines** have not been collected yet.
+
+---
+
+## 7. Advanced tier (v0.2)
+
+### 7.1 Verification at scale
+- **Global layer order** is decided by Jason Ku's *flat-folder*, vendored unmodified (MIT) under
+  `creasebench/ffolder/vendor`. It runs headless through Node.js (`ff_solve.mjs`).
+  - It uses the facewise formulation of Akitaya, Demaine & Ku (OSME 2024): taco-taco,
+    taco-tortilla and tortilla-tortilla constraints with lazily reduced transitivity, unit
+    propagation, then component-wise search.
+  - flat-folder may fold from a different root face. Its layer order is converted to our frame
+    by comparing per-face flip states.
+  - `U` creases are solved together with the layer order, and their M/V is read back from the
+    order (`verify.assignments_from_order`).
+  - Without Node, the pure-Python solver is used. Both solvers agree on every v0.1 instance, and
+    flat-folder's orders validate in the Python constraint model (`tests/test_advanced.py`).
+- **Local sufficiency** is checked with the crimp algorithm (big-little-big) on top of Maekawa
+  and Kawasaki.
+- Instances get time caps. A cap hit is reported as "undetermined", which is distinct from
+  "not foldable".
+
+### 7.2 The tree of a folded base (`tree.py`)
+- **Definition.** For an axis direction a, let g(p) be the coordinate along a of the folded
+  image of paper point p. g is affine on each face. The base's tree is the **Reeb graph of g on
+  the paper**: every connected component of every level set collapses to a point, and edge
+  lengths are differences of g.
+- **Computation.** The paper is a disk, so this is the contour tree. It is computed with Carr,
+  Snoeyink & Axen's join/split-tree algorithm on an ear-clipped triangulation of the faces.
+  Ties are resolved by simulation of simplicity, zero-length edges are merged, and degree-2
+  nodes are contracted.
+- **Why it is sound.** Folding is a piecewise isometry and projection is 1-Lipschitz, so the
+  tree distance between two paper points never exceeds their distance on the paper. A design
+  therefore cannot claim more than the paper allows.
+- **Uniaxial bases.** For a uniaxial base folded with its flaps along the axis, this tree is
+  exactly Lang's tree. For example, the bird base gives four flaps of length 0.5, the optimum
+  for a 4-star.
+- **Axis.** Candidate axes are the dominant folded crease directions. Reading tasks use the
+  axis with the longest tree; design grading uses the axis that best fits the target.
+
+### 7.3 Scale and efficiency (`treefit.py`, `packing.py`)
+- **Scale m.** m is the largest value for which an injective leaf map φ exists with
+  d_A(φ i, φ j) ≥ m·d_T(i, j) for all target leaf pairs. It is found by binary search over the
+  candidate ratios, with backtracking.
+- **Best-known bound.** Multi-start SLSQP on ‖u_i − u_j‖ ≥ m·d_ij with u_i ∈ [0,1]². The L∞
+  variant is used for box pleating. This is an *estimate* of the circle-packing optimum, which
+  is NP-hard to compute. The bound is raised to a reference design's scale when one is better.
+- **Efficiency** is m divided by the best known value, capped at 1. Values above 1 are recorded
+  as "beats reference".
+- **Solving a design task** requires efficiency ≥ 0.6, plus every technique, color, graft and
+  layer requirement.
+
+### 7.4 Technique compliance (`style.py`)
+| Technique | Check |
+|---|---|
+| box pleating (grid N) | every crease direction is in {0, 45, 90, 135}°, and every vertex lies on the 1/N lattice (smallest N ≤ 512) |
+| 22.5° | every crease direction is a multiple of 22.5° (coordinates checked in Z[√2]/2^k) |
+| Pythagorean stretch | the pattern is rational and box-pleated except for lattice directions whose slopes come from a primitive triple (a, b, c) with c ≤ 65: b/a, a/b, b/(a+c), a/(b+c) and their inverses; at least one such crease must be present |
+| hex | crease directions are multiples of 30°, with at least one direction off the 90° family |
+| graft | the task states a piecewise transform (scale + offsets per region). The fraction of base crease length found in the answer at the transformed positions must reach the threshold. M/V may be globally swapped. |
+
+### 7.5 Colour (`color.py`)
+- "Front" is the side shown in the crease-pattern drawing. A face that is not flipped shows its
+  front upward.
+- From above you see the top-most face covering a point; from below, the bottom-most face's
+  other side.
+- Flap tips are sampled just inside each leaf of the extracted tree.
+- A requirement holds if **some** valid layer order meets it. This is decided by SAT, with
+  auxiliary "face f is outermost here" literals.
+- Reading tasks only ask about tips whose colour is the same in every valid order.
+
+### 7.6 Generators (all output certified before use)
+- **22.5° modules and tilings** (`gen/bases22.py`).
+  - The bird base is written in exact Q(√2) geometry, with M/V assigned by the solver.
+  - In n×n tilings, mirrored cells swap M/V. Seams are first tried with module assignments,
+    then with seam creases unassigned.
+- **Grafting** (`gen/graft.py`).
+  - Strip grafts run along lines where every crossing crease is perpendicular and every vertex
+    on the line carries only perpendicular creases.
+  - Border grafts extend the edge creases outward; when the old edge is folded too, this
+    produces a color change.
+  - Point grafts place a module where two strips cross.
+- **Defects** (`gen/defects.py`): flip one crease, move one vertex, or flip creases around a
+  face so every vertex stays locally valid while the pattern becomes globally impossible.
+- **Box Pleating Studio** (`gen/bpstudio`).
+  - Tree and flap rectangles go to BP Studio's core (bundled), which returns contours, ridges
+    and stretch gadgets (GOPS, Kamiya).
+  - The pleats are then completed, and M/V is assigned by flat-folder.
+- **TreeMaker 5** (`gen/treemaker`, optional and built locally from Lang's GPL source). Its
+  pipeline is scale optimization, pinning, universal-molecule creases, and facet ordering.
+  Patterns must cover the square and pass flat-folder.
+
+### 7.7 Limitations
+- Only flat bases are graded. 3D shaping, which COrigami's shaping stage covers, is out of
+  scope.
+- The packing bounds are estimates, not proven optima.
+- Flap separability is not enforced beyond the Reeb tree and the layer order. Bundling flaps is
+  allowed, as in tree theory.
+- Color reading is restricted to patterns with at most 250 faces, where uniqueness can be
+  proven with the Python SAT model.

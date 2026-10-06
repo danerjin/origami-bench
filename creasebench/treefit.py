@@ -12,7 +12,6 @@ flaps) sufficient condition of tree theory. We report the largest such m.
 
 from __future__ import annotations
 
-import itertools
 from dataclasses import dataclass
 
 import networkx as nx
@@ -66,54 +65,79 @@ class Fit:
     axis_deg: float | None = None
 
 
-def fit_scale(base: BaseTree, target: TargetTree) -> Fit:
+def fit_scale(base: BaseTree, target: TargetTree, node_budget: int = 200_000) -> Fit:
+    """Largest m with an injective leaf map satisfying every pairwise path condition.
+
+    Binary search over the finitely many candidate ratios; feasibility by backtracking
+    with forward checking (most-constrained target leaf first). The node budget makes
+    the search deterministic; exhausting it counts as infeasible (a conservative score).
+    """
+    import numpy as np
+
     tl = target.leaves
     bl = base.leaves
     if len(tl) > len(bl) or len(tl) < 2:
         return Fit(0.0, {})
-    dt = target.leaf_distances()
-    db = base.leaf_distances()
-
-    def dB(a, b):
-        return db[(a, b)] if (a, b) in db else db[(b, a)]
-
-    def dT(a, b):
-        return dt[(a, b)] if (a, b) in dt else dt[(b, a)]
-
-    # candidate scale values: every ratio d_B / d_T
-    cands = sorted({dB(a, b) / dT(i, j) for i, j in itertools.combinations(tl, 2)
-                    for a, b in itertools.combinations(bl, 2)})
+    nt, nb = len(tl), len(bl)
+    DT = np.zeros((nt, nt))
+    for (a, b), v in target.leaf_distances().items():
+        i, j = tl.index(a), tl.index(b)
+        DT[i, j] = DT[j, i] = v
+    DB = np.zeros((nb, nb))
+    for (a, b), v in base.leaf_distances().items():
+        i, j = bl.index(a), bl.index(b)
+        DB[i, j] = DB[j, i] = v
+    iu = np.triu_indices(nt, 1)
+    ju = np.triu_indices(nb, 1)
+    cands = np.unique(np.round(np.outer(DB[ju], 1.0 / DT[iu]).ravel(), 12))
 
     def feasible(m: float):
-        order = sorted(tl, key=lambda x: -sum(dT(x, y) for y in tl if y != x))
-        assign: dict[str, int] = {}
-        used: set[int] = set()
+        # compat[i][j] : (nb x nb) boolean, base pair (a, b) allowed for target pair (i, j)
+        ok = DB[None, None, :, :] >= m * DT[:, :, None, None] - 1e-9
+        eye = np.eye(nb, dtype=bool)
+        domains = [np.ones(nb, bool) for _ in range(nt)]
+        assign = [-1] * nt
+        nodes = [0]
 
-        def rec(k):
-            if k == len(order):
+        def rec(doms, used):
+            if nodes[0] > node_budget:
+                return False
+            free = [i for i in range(nt) if assign[i] < 0]
+            if not free:
                 return True
-            i = order[k]
-            for a in bl:
-                if a in used:
+            i = min(free, key=lambda k: int((doms[k] & ~used).sum()))
+            for a in np.flatnonzero(doms[i] & ~used):
+                nodes[0] += 1
+                new = list(doms)
+                dead = False
+                for k in free:
+                    if k == i:
+                        continue
+                    new[k] = doms[k] & ok[i, k, a] & ~eye[a]
+                    if not (new[k] & ~used).any():
+                        dead = True
+                        break
+                if dead:
                     continue
-                if all(dB(a, assign[j]) >= m * dT(i, j) - 1e-9 for j in assign):
-                    assign[i] = a
-                    used.add(a)
-                    if rec(k + 1):
-                        return True
-                    del assign[i]
-                    used.discard(a)
+                assign[i] = int(a)
+                u2 = used.copy()
+                u2[a] = True
+                if rec(new, u2):
+                    return True
+                assign[i] = -1
             return False
 
-        return dict(assign) if rec(0) else None
+        if rec(domains, np.zeros(nb, bool)):
+            return {tl[i]: bl[assign[i]] for i in range(nt)}
+        return None
 
     lo, hi = 0, len(cands) - 1
     best = Fit(0.0, {})
     while lo <= hi:
         mid = (lo + hi) // 2
-        sol = feasible(cands[mid])
+        sol = feasible(float(cands[mid]))
         if sol is not None:
-            best = Fit(cands[mid], sol, base.axis_deg)
+            best = Fit(float(cands[mid]), sol, base.axis_deg)
             lo = mid + 1
         else:
             hi = mid - 1
