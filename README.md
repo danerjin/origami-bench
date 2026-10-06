@@ -37,6 +37,22 @@ packing found by multi-start optimization, or with a reference design, whichever
 Optimal packing is NP-hard, so efficiency is reported relative to that best-known value rather
 than a proven optimum.
 
+## The committed task set (135 tasks)
+
+| Tier | Family | n | Notes |
+|---|---|---|---|
+| basic | analytic / design_text / design_image | 31 / 9 / 9 | the v0.1 warm-up set |
+| advanced | `read-tree` / `solve` | 17 / 17 | one per certified source: 22.5° bases and tilings, border grafts, 10 Box Pleating Studio designs (incl. GOPS 3-4-5 and Kamiya stretches, up to 305 creases), 2 TreeMaker bases |
+| advanced | `read-tech` / `read-color` | 16 / 3 | box-pleating grid, 22.5°, stretch triples; two-tone colour at flap tips |
+| advanced | `af` (folding + defects) | 8 | exact folds and injected defects: flipped crease, moved vertex, locally valid but globally impossible |
+| advanced | `pack` | 6 | circle (L2) and box-pleating (L∞) packing of semantic trees |
+| advanced | `design` | 19 | semantic trees (lizard, beetle, scorpion, spider, deer, bird, crab, dragon), trees of generated bases, 22.5° / box-pleat (≤ N grid) / Pythagorean-stretch styles, border grafting, colour change, composite |
+
+The build self-check passes every task that has a reference answer: 49/49 basic and 78/86
+advanced. The remaining 8 advanced design tasks have no reference design, so they are scored
+against the packing bound alone. The non-LLM `heuristic` provider reaches 0.68 mean efficiency
+on `pack` and 0 elsewhere.
+
 ## Quickstart
 
 ```bash
