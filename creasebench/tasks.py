@@ -11,7 +11,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-TRACKS = ("analytic", "design_text", "design_image")
+TRACKS = ("analytic", "design_text", "design_image", "read", "solve", "pack", "design")
 TRACK_ALIASES = {"af": "analytic", "dt": "design_text", "di": "design_image"}
 
 
@@ -52,7 +52,7 @@ def load_task(path: str | Path) -> Task:
     return t
 
 
-def load_tasks(root: str | Path = "tasks", tracks=None, ids=None, difficulty=None) -> list[Task]:
+def load_tasks(root: str | Path = "tasks", tracks=None, ids=None, difficulty=None, tiers=None) -> list[Task]:
     root = Path(root)
     tracks = [TRACK_ALIASES.get(t, t) for t in (tracks or TRACKS)]
     out = []
@@ -63,6 +63,8 @@ def load_tasks(root: str | Path = "tasks", tracks=None, ids=None, difficulty=Non
         if ids and not any(t.id == i or t.id.startswith(i) for i in ids):
             continue
         if difficulty and t.difficulty not in difficulty:
+            continue
+        if tiers and t.meta.get("tier", "basic") not in tiers:
             continue
         out.append(t)
     return out

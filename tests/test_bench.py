@@ -4,15 +4,15 @@ from types import SimpleNamespace
 
 import pytest
 
-from origami_bench.build import oracle_answer
-from origami_bench.graders import extract_json, grade
-from origami_bench.prompts import build_prompt
-from origami_bench.providers import PythonSandbox
-from origami_bench.providers.baselines import UnfoldedProvider
-from origami_bench.tasks import load_tasks
+from creasebench.build import oracle_answer
+from creasebench.graders import extract_json, grade
+from creasebench.prompts import build_prompt
+from creasebench.providers import PythonSandbox
+from creasebench.providers.baselines import UnfoldedProvider
+from creasebench.tasks import load_tasks
 
 TASKS = Path(__file__).resolve().parents[1] / "tasks"
-pytestmark = pytest.mark.skipif(not TASKS.exists(), reason="run `python -m origami_bench.build` first")
+pytestmark = pytest.mark.skipif(not TASKS.exists(), reason="run `python -m creasebench.build` first")
 
 
 def sample():
@@ -65,7 +65,7 @@ def test_python_sandbox_sees_inputs():
 
 
 def test_anthropic_tool_loop_with_fake_client(monkeypatch):
-    from origami_bench.providers import anthropic_provider as ap
+    from creasebench.providers import anthropic_provider as ap
 
     task = next(t for t in load_tasks(TASKS, tracks=["af"]))
 

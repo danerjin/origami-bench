@@ -1,7 +1,7 @@
 """Utility CLI for working with crease patterns.
 
-    python -m origami_bench verify pattern.json [--render out_prefix]
-    python -m origami_bench grade <task_dir> answer.txt
+    python -m creasebench verify pattern.json [--render out_prefix]
+    python -m creasebench grade <task_dir> answer.txt
 
 ``pattern.json`` may be a FOLD file or a design answer ({"creases": [...]}).
 """

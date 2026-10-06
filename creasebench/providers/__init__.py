@@ -17,6 +17,10 @@ def make_provider(name: str, model: str | None = None, base_url: str | None = No
         from .baselines import OracleProvider
 
         return OracleProvider()
+    if name == "heuristic":
+        from .baselines import HeuristicProvider
+
+        return HeuristicProvider()
     if name == "unfolded":
         from .baselines import UnfoldedProvider
 

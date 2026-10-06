@@ -18,17 +18,17 @@ non-self-intersecting layer order. Only then is its folded shape compared with t
 
 ```bash
 pip install -e ".[anthropic,openai,dev]"
-python -m origami_bench.build            # regenerate tasks/ (already committed) and self-check them
+python -m creasebench.build            # regenerate tasks/ (already committed) and self-check them
 pytest                                   # 41 tests
 
 # sanity checks: the oracle should score 1.0, the trivial baseline 0.0
-python -m origami_bench.run --provider oracle
-python -m origami_bench.run --provider unfolded
+python -m creasebench.run --provider oracle
+python -m creasebench.run --provider unfolded
 
 # evaluate a model
-python -m origami_bench.run --provider anthropic --model claude-opus-5-5 --mode closed
-python -m origami_bench.run --provider anthropic --model claude-opus-5-5 --mode agentic
-python -m origami_bench.run --provider openai --model <name> --base-url <url> --mode agentic
+python -m creasebench.run --provider anthropic --model claude-opus-5-5 --mode closed
+python -m creasebench.run --provider anthropic --model claude-opus-5-5 --mode agentic
+python -m creasebench.run --provider openai --model <name> --base-url <url> --mode agentic
 ```
 
 Useful flags: `--tracks af,di`, `--difficulty hard`, `--ids af-gen`, `--limit 5`,
@@ -47,8 +47,8 @@ Results are written to `results/<run>/{results.jsonl,summary.md}`.
 ### Inspecting things by hand
 
 ```bash
-python -m origami_bench verify my_answer.json --render out   # flat-foldability report + PNGs
-python -m origami_bench grade tasks/design_text/dt-house reply.txt
+python -m creasebench verify my_answer.json --render out   # flat-foldability report + PNGs
+python -m creasebench grade tasks/design_text/dt-house reply.txt
 ```
 
 ## Seed task set (49 tasks)
@@ -76,7 +76,7 @@ Full formulas, tolerances and answer formats are in [`docs/SPEC.md`](docs/SPEC.m
 ## Layout
 
 ```
-origami_bench/
+creasebench/
   cp.py           crease patterns: planar arrangement, faces, FOLD I/O
   foldability.py  Maekawa / Kawasaki
   simulate.py     folded geometry (composition of reflections)

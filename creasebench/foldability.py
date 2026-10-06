@@ -66,4 +66,35 @@ def check_local(cp: CreasePattern, angle_tol: float = 5e-3) -> LocalReport:
             m, v = asg.count("M"), asg.count("V")
             if abs(m - v) != 2:
                 rep.violations.append(VertexViolation(vi, "maekawa", f"M={m}, V={v}; |M-V| must be 2"))
+            elif abs(alt) <= angle_tol and not crimp_foldable(sectors, asg):
+                rep.violations.append(VertexViolation(
+                    vi, "big_little_big", "no valid crimp sequence (a locally smallest sector is "
+                    "bounded by two creases of the same type)"))
     return rep
+
+
+def crimp_foldable(sectors: list[float], asg: list[str], tol: float = 1e-6) -> bool:
+    """Single-vertex flat-foldability with an M/V assignment (crimping / big-little-big).
+
+    ``sectors[i]`` is the angle between crease i and crease i+1 (cyclically); ``asg[i]`` is
+    crease i's assignment. Repeatedly crimp a sector that is no larger than both neighbours
+    and bounded by opposite creases; the vertex folds flat iff this reduces to two sectors
+    bounded by equal creases. (Algorithm as in Demaine & O'Rourke; cf. COrigami Alg. 1.)
+    """
+    secs = list(sectors)
+    left = list(asg)  # crease before sector i
+    right = [asg[(i + 1) % len(asg)] for i in range(len(asg))]  # crease after sector i
+    while len(secs) > 2:
+        n = len(secs)
+        for i in range(n):
+            if (left[i] != right[i] and secs[i] <= secs[i - 1] + tol
+                    and secs[i] <= secs[(i + 1) % n] + tol):
+                j, k = (i - 1) % n, (i + 1) % n
+                secs[j] = secs[j] - secs[i] + secs[k]
+                right[j] = right[k]
+                for idx in sorted({i, k}, reverse=True):
+                    del secs[idx], left[idx], right[idx]
+                break
+        else:
+            return False
+    return len(secs) == 2 and left[0] == right[0] == left[1] == right[1]

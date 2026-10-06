@@ -5,12 +5,12 @@ import pytest
 from shapely import affinity
 from shapely.geometry import Polygon
 
-from origami_bench import reference as R
-from origami_bench.compare import geometry_score, mirror_symmetry, sharp_points, silhouette_iou
-from origami_bench.cp import CreasePattern
-from origami_bench.foldability import check_local
-from origami_bench.simulate import fold
-from origami_bench.verify import verify
+from creasebench import reference as R
+from creasebench.compare import geometry_score, mirror_symmetry, sharp_points, silhouette_iou
+from creasebench.cp import CreasePattern
+from creasebench.foldability import check_local
+from creasebench.simulate import fold
+from creasebench.verify import verify
 
 
 def test_arrangement_splits_crossings_and_adds_border():

@@ -2,12 +2,12 @@ import random
 
 import pytest
 
-from origami_bench import reference as R
-from origami_bench.build import global_only_failure
-from origami_bench.generate import random_simple_folds
-from origami_bench.layers import build_problem, check_claimed_order
-from origami_bench.simulate import fold
-from origami_bench.verify import verify
+from creasebench import reference as R
+from creasebench.build import global_only_failure
+from creasebench.generate import random_simple_folds
+from creasebench.layers import build_problem, check_claimed_order
+from creasebench.simulate import fold
+from creasebench.verify import verify
 
 
 @pytest.mark.parametrize("n,seed", [(1, 0), (2, 1), (3, 2), (4, 3), (5, 4)])

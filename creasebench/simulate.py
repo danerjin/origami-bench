@@ -50,9 +50,9 @@ class FoldedState:
         d["frame_classes"] = ["foldedForm"]
         d["vertices_coords"] = [[round(float(x), precision), round(float(y), precision)]
                                 for x, y in self.vertices]
-        d["origami_bench:faces_flipped"] = [self.face_flipped(i) for i in range(len(self.cp.faces))]
+        d["creasebench:faces_flipped"] = [self.face_flipped(i) for i in range(len(self.cp.faces))]
         if face_orders is not None:
-            d["origami_bench:face_above"] = [[int(a), int(b)] for a, b in face_orders]
+            d["creasebench:face_above"] = [[int(a), int(b)] for a, b in face_orders]
         return d
 
 

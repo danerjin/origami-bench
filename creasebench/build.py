@@ -1,6 +1,6 @@
 """Build the seed task set into ``tasks/``.
 
-    python -m origami_bench.build [--out tasks] [--seed 0]
+    python -m creasebench.build [--out tasks] [--seed 0]
 
 Every task is checked on build: the oracle answer must score 1.0 (solved).
 """
@@ -278,7 +278,20 @@ def build_design_text(out: Path) -> list[Task]:
 
 # ----------------------------------------------------------------- oracle answers
 def oracle_answer(task: Task) -> str:
-    if task.track == "analytic":
+    fam = task.reference.get("family")
+    if fam == "read-tree":
+        ans = {"tree": task.reference["tree"]}
+    elif fam == "read-tech":
+        ans = dict(task.reference["tech"])
+    elif fam == "read-color":
+        ans = {"colors": task.reference["colors"]}
+    elif fam == "pack":
+        ans = {"positions": task.reference["solution"]}
+    elif fam in ("solve", "design"):
+        if "solution" not in task.reference:
+            return ""  # no reference design: scored against the packing bound only
+        ans = {"creases": task.reference["solution"]}
+    elif task.track == "analytic":
         ref = task.reference
         if not ref["foldable"]:
             ans = {"foldable": False, "violation_vertices": ref["violation_vertices"]}
@@ -294,23 +307,47 @@ def main(argv=None) -> None:
     ap.add_argument("--out", default="tasks")
     ap.add_argument("--seed", type=int, default=0,
                     help="0 reproduces the public seed set; any other value builds a fresh private split")
+    ap.add_argument("--tiers", default="basic,advanced", help="comma list of basic,advanced")
     args = ap.parse_args(argv)
+    tiers = args.tiers.split(",")
     global SEED_OFFSET
     SEED_OFFSET = 1_000_000 * args.seed
     out = Path(args.out)
-    for sub in ("analytic", "design_image", "design_text"):
-        shutil.rmtree(out / sub, ignore_errors=True)
     rng = random.Random(args.seed)
-    tasks = build_analytic(out, rng) + build_design_image(out, rng) + build_design_text(out)
+    tasks: list[Task] = []
+    if "basic" in tiers:
+        for sub in ("design_image", "design_text"):
+            shutil.rmtree(out / sub, ignore_errors=True)
+        for d in (out / "analytic").glob("af-*"):
+            shutil.rmtree(d)
+        basic = build_analytic(out, rng) + build_design_image(out, rng) + build_design_text(out)
+        for t in basic:
+            t.meta["tier"] = "basic"
+            t.save(t.root)
+        tasks += basic
+    if "advanced" in tiers:
+        from .build_advanced import build_advanced
+
+        for sub in ("read", "solve", "pack", "design"):
+            shutil.rmtree(out / sub, ignore_errors=True)
+        for d in (out / "analytic").glob("adv-*"):
+            shutil.rmtree(d)
+        tasks += build_advanced(out, seed=args.seed)
     from .providers.baselines import UnfoldedProvider
 
     for t in tasks:  # record the trivial baseline's raw score so grading can rescale it to 0
+        if t.meta.get("tier") == "advanced":
+            continue
         t.reference.pop("baseline_score", None)
         t.reference["baseline_score"] = round(grade(t, UnfoldedProvider().run(t, "", [], None, 0).text)["score"], 6)
         t.save(t.root)
     bad = []
     for t in tasks:
-        g = grade(t, oracle_answer(t))
+        ans = oracle_answer(t)
+        if not ans:
+            print(f"--   {t.id:32} {t.difficulty:6} (no reference design; bound only)")
+            continue
+        g = grade(t, ans)
         status = "ok" if g.get("solved") and g["score"] > 0.999 else "FAIL"
         if status != "ok":
             bad.append(t.id)

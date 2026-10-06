@@ -62,7 +62,13 @@ def grade(task: Task, response_text: str) -> dict:
     if not isinstance(answer, dict):
         return _fail("answer is not a JSON object")
     try:
-        out = grade_analytic(task, answer) if task.track == "analytic" else grade_design(task, answer)
+        family = task.reference.get("family")
+        if family is not None:
+            from .advanced import GRADERS
+
+            out = GRADERS[family](task, answer)
+        else:
+            out = grade_analytic(task, answer) if task.track == "analytic" else grade_design(task, answer)
     except (CPError, ValueError, TypeError, KeyError, IndexError) as e:
         return _fail(f"invalid answer: {type(e).__name__}: {e}")
     # Rescale so that the trivial baseline (paper left unfolded / a single book fold) scores 0.
