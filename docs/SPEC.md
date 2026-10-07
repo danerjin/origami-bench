@@ -270,4 +270,10 @@ column so the main score stays deterministic.
   - Measured layer counts do not separate cheap whole-stack designs (16-64 layers) from
     reference designs (18-96).
   - Those cheap designs are already scored below the square-packing bound.
+- **Larger generated patterns: open.**
+  - Box Pleating Studio layouts for the semantic trees on 32-40 grids were placed from their L∞
+    packings, so the layouts are valid.
+  - All 36 failed at pleat completion (`gen/bpstudio/pleats.py`).
+  - The largest certified pattern is still 305 creases. Extending pleat completion to these
+    layouts is the next step for bigger solve and read-tree instances.
 

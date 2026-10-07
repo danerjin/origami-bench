@@ -1,0 +1,121 @@
+{
+ "id": "adv-design-lobster",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a lobster: two big claws, long antennae, antennules, eight walking legs, a three-lobed tail fan).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "head",
+     "antenna_l",
+     6
+    ],
+    [
+     "head",
+     "antenna_r",
+     6
+    ],
+    [
+     "head",
+     "antennule_l",
+     2
+    ],
+    [
+     "head",
+     "antennule_r",
+     2
+    ],
+    [
+     "head",
+     "thorax",
+     1
+    ],
+    [
+     "thorax",
+     "claw_l",
+     4
+    ],
+    [
+     "thorax",
+     "claw_r",
+     4
+    ],
+    [
+     "thorax",
+     "leg1",
+     2
+    ],
+    [
+     "thorax",
+     "leg2",
+     2
+    ],
+    [
+     "thorax",
+     "leg3",
+     2
+    ],
+    [
+     "thorax",
+     "leg4",
+     2
+    ],
+    [
+     "thorax",
+     "leg5",
+     2
+    ],
+    [
+     "thorax",
+     "leg6",
+     2
+    ],
+    [
+     "thorax",
+     "leg7",
+     2
+    ],
+    [
+     "thorax",
+     "leg8",
+     2
+    ],
+    [
+     "thorax",
+     "tail",
+     4
+    ],
+    [
+     "tail",
+     "fan_l",
+     1.5
+    ],
+    [
+     "tail",
+     "fan_m",
+     1.5
+    ],
+    [
+     "tail",
+     "fan_r",
+     1.5
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.048587386820885446,
+  "packing_bound_l2": 0.048587386820885446,
+  "packing_bound_linf": 0.03987593531077288,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "lobster",
+  "size": "big",
+  "tier": "advanced"
+ }
+}

@@ -1,0 +1,121 @@
+{
+ "id": "adv-design-pegasus",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a pegasus: head with two ears and a muzzle, wings with three primary feathers each, four legs, a tail).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "neck",
+     "head",
+     2
+    ],
+    [
+     "head",
+     "ear_l",
+     0.75
+    ],
+    [
+     "head",
+     "ear_r",
+     0.75
+    ],
+    [
+     "head",
+     "muzzle",
+     1
+    ],
+    [
+     "neck",
+     "withers",
+     1
+    ],
+    [
+     "withers",
+     "wing_l",
+     3
+    ],
+    [
+     "wing_l",
+     "prim_l1",
+     2
+    ],
+    [
+     "wing_l",
+     "prim_l2",
+     2.5
+    ],
+    [
+     "wing_l",
+     "prim_l3",
+     2
+    ],
+    [
+     "withers",
+     "wing_r",
+     3
+    ],
+    [
+     "wing_r",
+     "prim_r1",
+     2
+    ],
+    [
+     "wing_r",
+     "prim_r2",
+     2.5
+    ],
+    [
+     "wing_r",
+     "prim_r3",
+     2
+    ],
+    [
+     "withers",
+     "front_l",
+     4
+    ],
+    [
+     "withers",
+     "front_r",
+     4
+    ],
+    [
+     "withers",
+     "hips",
+     3
+    ],
+    [
+     "hips",
+     "hind_l",
+     4
+    ],
+    [
+     "hips",
+     "hind_r",
+     4
+    ],
+    [
+     "hips",
+     "tail",
+     3
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.04530610439349936,
+  "packing_bound_l2": 0.04530610439349936,
+  "packing_bound_linf": 0.03700179603767078,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "pegasus",
+  "size": "big",
+  "tier": "advanced"
+ }
+}

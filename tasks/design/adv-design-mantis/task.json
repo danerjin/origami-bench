@@ -1,0 +1,116 @@
+{
+ "id": "adv-design-mantis",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a praying mantis: antennae, raptorial forelegs, four walking legs, four wings, abdomen with two cerci).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "head",
+     "antenna_l",
+     3
+    ],
+    [
+     "head",
+     "antenna_r",
+     3
+    ],
+    [
+     "head",
+     "prothorax",
+     2
+    ],
+    [
+     "prothorax",
+     "raptor_l",
+     4
+    ],
+    [
+     "prothorax",
+     "raptor_r",
+     4
+    ],
+    [
+     "prothorax",
+     "meso",
+     1
+    ],
+    [
+     "meso",
+     "mid_l",
+     3
+    ],
+    [
+     "meso",
+     "mid_r",
+     3
+    ],
+    [
+     "meso",
+     "forewing_l",
+     3
+    ],
+    [
+     "meso",
+     "forewing_r",
+     3
+    ],
+    [
+     "meso",
+     "meta",
+     1
+    ],
+    [
+     "meta",
+     "hind_l",
+     3.5
+    ],
+    [
+     "meta",
+     "hind_r",
+     3.5
+    ],
+    [
+     "meta",
+     "hindwing_l",
+     3
+    ],
+    [
+     "meta",
+     "hindwing_r",
+     3
+    ],
+    [
+     "meta",
+     "abdomen",
+     2
+    ],
+    [
+     "abdomen",
+     "cercus_l",
+     1
+    ],
+    [
+     "abdomen",
+     "cercus_r",
+     1
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.04630640612290804,
+  "packing_bound_l2": 0.04630640612290804,
+  "packing_bound_linf": 0.039207746360726235,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "mantis",
+  "size": "big",
+  "tier": "advanced"
+ }
+}

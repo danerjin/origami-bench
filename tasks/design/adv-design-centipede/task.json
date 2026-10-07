@@ -1,0 +1,186 @@
+{
+ "id": "adv-design-centipede",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a centipede: antennae, forcipules, nine pairs of legs along a segmented body, long tail legs).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "s0",
+     "antenna_l",
+     2.5
+    ],
+    [
+     "s0",
+     "antenna_r",
+     2.5
+    ],
+    [
+     "s0",
+     "forcipule_l",
+     1
+    ],
+    [
+     "s0",
+     "forcipule_r",
+     1
+    ],
+    [
+     "s0",
+     "s1",
+     1
+    ],
+    [
+     "s1",
+     "s2",
+     1
+    ],
+    [
+     "s2",
+     "s3",
+     1
+    ],
+    [
+     "s3",
+     "s4",
+     1
+    ],
+    [
+     "s4",
+     "s5",
+     1
+    ],
+    [
+     "s5",
+     "s6",
+     1
+    ],
+    [
+     "s6",
+     "s7",
+     1
+    ],
+    [
+     "s7",
+     "s8",
+     1
+    ],
+    [
+     "s0",
+     "leg0_l",
+     2
+    ],
+    [
+     "s0",
+     "leg0_r",
+     2
+    ],
+    [
+     "s1",
+     "leg1_l",
+     2
+    ],
+    [
+     "s1",
+     "leg1_r",
+     2
+    ],
+    [
+     "s2",
+     "leg2_l",
+     2
+    ],
+    [
+     "s2",
+     "leg2_r",
+     2
+    ],
+    [
+     "s3",
+     "leg3_l",
+     2
+    ],
+    [
+     "s3",
+     "leg3_r",
+     2
+    ],
+    [
+     "s4",
+     "leg4_l",
+     2
+    ],
+    [
+     "s4",
+     "leg4_r",
+     2
+    ],
+    [
+     "s5",
+     "leg5_l",
+     2
+    ],
+    [
+     "s5",
+     "leg5_r",
+     2
+    ],
+    [
+     "s6",
+     "leg6_l",
+     2
+    ],
+    [
+     "s6",
+     "leg6_r",
+     2
+    ],
+    [
+     "s7",
+     "leg7_l",
+     2
+    ],
+    [
+     "s7",
+     "leg7_r",
+     2
+    ],
+    [
+     "s8",
+     "leg8_l",
+     2
+    ],
+    [
+     "s8",
+     "leg8_r",
+     2
+    ],
+    [
+     "s8",
+     "tail_leg_l",
+     3
+    ],
+    [
+     "s8",
+     "tail_leg_r",
+     3
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.03766283370127663,
+  "packing_bound_l2": 0.03766283370127663,
+  "packing_bound_linf": 0.02981322851896695,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "centipede",
+  "size": "big",
+  "tier": "advanced"
+ }
+}

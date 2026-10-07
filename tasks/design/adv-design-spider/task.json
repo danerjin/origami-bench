@@ -64,6 +64,7 @@
   "family": "design",
   "bound": 0.08387542748271797,
   "packing_bound_l2": 0.08387542748271797,
+  "packing_bound_linf": 0.08333333328831412,
   "reference_scale": null,
   "solve_efficiency": 0.6
  },

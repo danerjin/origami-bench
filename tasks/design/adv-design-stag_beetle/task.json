@@ -1,0 +1,116 @@
+{
+ "id": "adv-design-stag_beetle",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a stag beetle: long mandibles, antennae, palps, six legs, two elytra (wings), abdomen).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "head",
+     "mandible_l",
+     4
+    ],
+    [
+     "head",
+     "mandible_r",
+     4
+    ],
+    [
+     "head",
+     "antenna_l",
+     2
+    ],
+    [
+     "head",
+     "antenna_r",
+     2
+    ],
+    [
+     "head",
+     "palp_l",
+     1
+    ],
+    [
+     "head",
+     "palp_r",
+     1
+    ],
+    [
+     "head",
+     "t1",
+     1
+    ],
+    [
+     "t1",
+     "leg1_l",
+     3
+    ],
+    [
+     "t1",
+     "leg1_r",
+     3
+    ],
+    [
+     "t1",
+     "t2",
+     1
+    ],
+    [
+     "t2",
+     "leg2_l",
+     3
+    ],
+    [
+     "t2",
+     "leg2_r",
+     3
+    ],
+    [
+     "t2",
+     "elytron_l",
+     3
+    ],
+    [
+     "t2",
+     "elytron_r",
+     3
+    ],
+    [
+     "t2",
+     "t3",
+     1
+    ],
+    [
+     "t3",
+     "leg3_l",
+     3
+    ],
+    [
+     "t3",
+     "leg3_r",
+     3
+    ],
+    [
+     "t3",
+     "abdomen_tip",
+     2
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.05392065338905818,
+  "packing_bound_l2": 0.05392065338905818,
+  "packing_bound_linf": 0.047612047724512184,
+  "reference_scale": null,
+  "solve_efficiency": 0.6
+ },
+ "meta": {
+  "subject": "stag_beetle",
+  "size": "big",
+  "tier": "advanced"
+ }
+}

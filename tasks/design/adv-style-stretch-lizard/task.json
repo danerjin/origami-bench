@@ -1,0 +1,64 @@
+{
+ "id": "adv-style-stretch-lizard",
+ "track": "design",
+ "difficulty": "hard",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a lizard: head, four legs, a long tail and a body). Use box pleating with at least one Pythagorean stretch (grid at most 48).",
+ "inputs": {
+  "tree": {
+   "edges": [
+    [
+     "shoulders",
+     "head",
+     2
+    ],
+    [
+     "shoulders",
+     "front_left_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "front_right_foot",
+     2
+    ],
+    [
+     "shoulders",
+     "hips",
+     3
+    ],
+    [
+     "hips",
+     "hind_left_foot",
+     2
+    ],
+    [
+     "hips",
+     "hind_right_foot",
+     2
+    ],
+    [
+     "hips",
+     "tail_tip",
+     4
+    ]
+   ]
+  }
+ },
+ "images": [],
+ "reference": {
+  "family": "design",
+  "bound": 0.11115599861057818,
+  "packing_bound_l2": 0.11115599861057818,
+  "packing_bound_linf": 0.09999999999999998,
+  "reference_scale": null,
+  "solve_efficiency": 0.6,
+  "style": {
+   "kind": "pythagorean_stretch",
+   "max_grid": 48
+  }
+ },
+ "meta": {
+  "style": "stretch",
+  "tier": "advanced"
+ }
+}

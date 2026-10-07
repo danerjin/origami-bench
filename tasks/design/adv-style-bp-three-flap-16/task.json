@@ -2,7 +2,7 @@
  "id": "adv-style-bp-three-flap-16",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a box-pleated base (tree lengths in grid units)). The crease pattern must be box-pleated on a grid of at most 16 x 16.",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a box-pleated base (tree lengths in grid units)). The crease pattern must be box-pleated on an N x N grid with 8 <= N <= 16.",
  "inputs": {
   "tree": {
    "edges": [
@@ -29,6 +29,7 @@
   "family": "design",
   "bound": 0.06470476127563017,
   "packing_bound_l2": null,
+  "packing_bound_linf": 0.0625,
   "reference_scale": 0.0625,
   "solve_efficiency": 0.6,
   "solution": [
@@ -826,6 +827,7 @@
   ],
   "style": {
    "kind": "box_pleat",
+   "min_grid": 8,
    "max_grid": 16
   }
  },

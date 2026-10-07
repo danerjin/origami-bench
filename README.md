@@ -37,21 +37,41 @@ packing found by multi-start optimization, or with a reference design, whichever
 Optimal packing is NP-hard, so efficiency is reported relative to that best-known value rather
 than a proven optimum.
 
-## The committed task set (135 tasks)
+## The committed task set (140 tasks)
 
 | Tier | Family | n | Notes |
 |---|---|---|---|
 | basic | analytic / design_text / design_image | 31 / 9 / 9 | the v0.1 warm-up set |
-| advanced | `read-tree` / `solve` | 17 / 17 | one per certified source: 22.5° bases and tilings, border grafts, 10 Box Pleating Studio designs (incl. GOPS 3-4-5 and Kamiya stretches, up to 305 creases), 2 TreeMaker bases |
+| advanced | `read-tree` / `solve` | 15 / 17 | one per certified source: 22.5° bases, border grafts, 10 Box Pleating Studio designs (incl. GOPS 3-4-5 and Kamiya stretches, up to 305 creases), 2 TreeMaker bases; `solve` also covers the 2×2 tilings (not uniaxial, so they have no read-tree task) |
 | advanced | `read-tech` / `read-color` | 16 / 3 | box-pleating grid, 22.5°, stretch triples; two-tone colour at flap tips |
 | advanced | `af` (folding + defects) | 8 | exact folds and injected defects: flipped crease, moved vertex, locally valid but globally impossible |
 | advanced | `pack` | 6 | circle (L2) and box-pleating (L∞) packing of semantic trees |
-| advanced | `design` | 19 | semantic trees (lizard, beetle, scorpion, spider, deer, bird, crab, dragon), trees of generated bases, 22.5° / box-pleat (≤ N grid) / Pythagorean-stretch styles, border grafting, colour change, composite |
+| advanced | `design` | 26 | semantic trees (lizard, beetle, scorpion, spider, deer, bird, crab, dragon) and six 14-24 flap animals (stag beetle, mantis, lobster, centipede, pegasus, tarantula); trees of generated bases; 22.5°, box-pleat (grid window `min..max`) and Pythagorean-stretch styles; border grafting; colour change; composite |
 
-The build self-check passes every task that has a reference answer: 49/49 basic and 78/86
-advanced. The remaining 8 advanced design tasks have no reference design, so they are scored
-against the packing bound alone. The non-LLM `heuristic` provider reaches 0.68 mean efficiency
-on `pack` and 0 elsewhere.
+**Splits.** Results are reported per split, and **`hard` is the headline number**:
+
+| Split | n | Contents |
+|---|---|---|
+| `hard` | 47 | design targets with at least 6 flaps; solve, read-tree and af on patterns of at least 100 creases |
+| `core` | 44 | the rest of the advanced tier, including pack, read-tech and read-color at any size |
+| `warmup` | 49 | the basic tier |
+
+The build self-check passes every task that has a reference answer: 49/49 basic and 76/91
+advanced. The remaining 15 advanced design tasks have no reference design, so they are scored
+against the packing bound alone.
+
+Design grades also report `beats_square_packing`. This marks a scale above the best square (L∞)
+packing, which the cheap box-pleating-style routes cannot exceed.
+
+The non-LLM baselines score 0 on the hard split. The `heuristic` provider reaches 0.68 mean
+efficiency on `pack`.
+
+Claude Opus 5.5 results so far are in [docs/eval-opus-5.5-2026-10.md](docs/eval-opus-5.5-2026-10.md):
+
+| | closed | agentic |
+|---|---|---|
+| 24-task pilot | 0.96 | 0.92 |
+| 14 hard tasks | 0.64 | 0.65 |
 
 ## Quickstart
 

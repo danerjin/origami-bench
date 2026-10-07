@@ -2,7 +2,7 @@
  "id": "adv-style-bp-lizard",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a lizard: head, four legs, a long tail and a body). The crease pattern must be box-pleated on a grid of at most 32 x 32.",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below at the largest scale you can (the stick figure of a lizard: head, four legs, a long tail and a body). The crease pattern must be box-pleated on an N x N grid with 8 <= N <= 32.",
  "inputs": {
   "tree": {
    "edges": [
@@ -49,10 +49,12 @@
   "family": "design",
   "bound": 0.11115599861057818,
   "packing_bound_l2": 0.11115599861057818,
+  "packing_bound_linf": 0.09999999999999998,
   "reference_scale": null,
   "solve_efficiency": 0.6,
   "style": {
    "kind": "box_pleat",
+   "min_grid": 8,
    "max_grid": 32
   }
  },

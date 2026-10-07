@@ -208,3 +208,28 @@ everything" threshold (0.8). So:
 - give style tasks a minimum grid.
 
 Raw results: `results/opus-5.5-hard-closed/` and `results/opus-5.5-hard-agentic/`.
+
+## v0.3 changes after this evaluation
+
+The task set was hardened following the decision above (see `docs/SPEC.md` §7.8):
+
+- **Tasks:** 2×2 tilings were removed from read-tree, and six 14-24 flap animal designs were
+  added.
+- **Style tasks:** they now carry grid windows. Box-pleating tasks require N ≥ half the
+  reference grid, and the bound-only BP lizard requires 8 ≤ N ≤ 32. A second Pythagorean-stretch
+  task was added.
+- **New field:** `beats_square_packing`, an unscored milestone.
+
+These hard-split answers were regraded against the rebuilt tasks, without re-running the model:
+
+| | closed | agentic |
+|---|---|---|
+| mean score (13 tasks; bird-2x2 read-tree removed) | 0.621 | 0.689 |
+
+- **The one change.** The closed-book BP lizard used a 4-grid. That is now outside the 8-32
+  window, so the task scores 0. The answer was written under the old prompt, which had no
+  minimum.
+- **Square-packing milestone.** Only the closed-book graft beats it, by reusing the grafted bird
+  base. No from-scratch design does.
+- **Baselines.** The heuristic and unfolded baselines score 0 on all 47 hard tasks.
+- **Not yet run.** The six new large designs have not been evaluated.
