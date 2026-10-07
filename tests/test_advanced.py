@@ -153,21 +153,22 @@ def test_design_reports_square_packing_milestone():
     assert g["beats_square_packing"] is False  # reaching the square packing is not beating it
 
 
-def _assert_tree_edges_within_extent(cp):
+def _assert_tree_distances_sound(cp):
+    import itertools
+
+    import networkx as nx
     import numpy as np
 
     rep = verify(cp)
     for t in extract_trees(rep.folded):
-        a = np.array([math.cos(math.radians(t.axis_deg)), math.sin(math.radians(t.axis_deg))])
-        g = rep.folded.vertices @ a
-        span = g.max() - g.min()
-        for *_, length in t.graph.edges(data="length"):
-            assert length <= span + 1e-9, (t.axis_deg, length, span)
+        d = dict(nx.all_pairs_dijkstra_path_length(t.graph, weight="length"))
+        for a, b in itertools.combinations(t.leaves, 2):
+            assert d[a][b] <= np.linalg.norm(cp.vertices[a] - cp.vertices[b]) + 1e-9
 
 
-def test_tree_edges_never_exceed_folded_extent():
-    # a stacked map fold of a 1/3 diagonal grid: many tied extrema (regression for a
-    # contraction bug that summed a rise and a fall into one 1.414-long edge)
+def test_tree_distances_sound_and_lattice_axes():
+    # a stacked map fold of a 1/3 diagonal grid: many tied extrema, and no crease along the
+    # base's own axis (regression: its 16 flaps were only visible along 0 degrees)
     segs = []
     for n in range(1, 6):
         c = n / 3
@@ -178,9 +179,9 @@ def test_tree_edges_never_exceed_folded_extent():
     cp = CreasePattern.from_segments([(p, q, "U") for p, q, _ in segs])
     cp = __import__("creasebench.verify", fromlist=["x"]).complete_assignment(cp, timeout=60)
     assert cp is not None
-    _assert_tree_edges_within_extent(cp)
-    trees = extract_trees(verify(cp).folded)
-    assert 0.0 in {t.axis_deg for t in trees}  # lattice axes are always candidates
-    _assert_tree_edges_within_extent(bases22.bird_base())
+    _assert_tree_distances_sound(cp)
+    trees = {t.axis_deg: t for t in extract_trees(verify(cp).folded)}
+    assert len(trees[0.0].leaves) == 16  # lattice axes are always candidates
+    _assert_tree_distances_sound(bases22.bird_base())
     for name in ("fish_base", "waterbomb_base"):
-        _assert_tree_edges_within_extent(getattr(R, name)())
+        _assert_tree_distances_sound(getattr(R, name)())

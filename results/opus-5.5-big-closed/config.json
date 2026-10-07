@@ -1,0 +1,30 @@
+{
+ "provider": "file",
+ "model": null,
+ "answers": "/tmp/claude-0/-home-user-origami-bench/fdb66e3c-31cd-57d9-a440-23afaf14674f/scratchpad/eval-big/closed",
+ "base_url": null,
+ "effort": null,
+ "mode": "closed",
+ "max_steps": 20,
+ "tasks_dir": "tasks",
+ "tracks": "af,dt,di,read,solve,pack,design",
+ "tiers": "basic,advanced",
+ "ids": [
+  "adv-design-stag_beetle",
+  "adv-design-mantis",
+  "adv-design-lobster",
+  "adv-design-centipede",
+  "adv-design-pegasus",
+  "adv-design-tarantula",
+  "adv-style-stretch-lizard"
+ ],
+ "difficulty": null,
+ "limit": null,
+ "images": true,
+ "image_only": false,
+ "concurrency": 4,
+ "judge_provider": null,
+ "judge_model": null,
+ "save_transcripts": false,
+ "out": "results/opus-5.5-big-closed"
+}

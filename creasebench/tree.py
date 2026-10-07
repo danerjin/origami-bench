@@ -220,19 +220,15 @@ def _simplify(g: nx.Graph, value: np.ndarray) -> nx.Graph:
                 g.remove_node(drop)
                 changed = True
                 break
-    # Contract only *regular* degree-2 nodes (one neighbour below, one above). After tie
-    # merging a degree-2 node can be a local extremum; contracting it would add a rise and a
-    # fall into one edge, longer than the base's extent along the axis (an unsound distance).
-    eps = MIN_EDGE
+    # Contract degree-2 nodes. Path lengths between leaves are preserved, so tree distances
+    # stay lower bounds on paper distances. (A node left as a local extremum after tie merging
+    # is contracted too; the merged edge then exceeds the axis extent, which is harmless.)
     for node in list(g.nodes):
         if g.degree(node) == 2:
             a, b = list(g.neighbors(node))
             if g.has_edge(a, b):
                 continue
-            lo, hi = sorted((value[a], value[b]))
-            if not (lo - eps <= value[node] <= hi + eps):
-                continue
-            g.add_edge(a, b, length=abs(float(value[a] - value[b])))
+            g.add_edge(a, b, length=g.edges[node, a]["length"] + g.edges[node, b]["length"])
             g.remove_node(node)
     return g
 

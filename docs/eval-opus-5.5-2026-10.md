@@ -233,3 +233,61 @@ These hard-split answers were regraded against the rebuilt tasks, without re-run
   base. No from-scratch design does.
 - **Baselines.** The heuristic and unfolded baselines score 0 on all 47 hard tasks.
 - **Not yet run.** The six new large designs have not been evaluated.
+
+## Large designs (14-24 flaps) and a grader fix
+
+These are the six new animal targets plus `adv-style-stretch-lizard`. Setup is the same: one
+sample per task, run as Claude Code subagents.
+
+| task | flaps | closed | agentic |
+|---|---|---|---|
+| adv-design-stag_beetle | 15 | 0.618 (36 creases) | 0.618 (36) |
+| adv-design-mantis | 14 | 0.686 (96) | **0.895** (129); beats square packing |
+| adv-design-lobster | 17 | 0.466 (65) | 0.388 (96) |
+| adv-design-centipede | 24 | 0.492 (176) | 0.738 (434) |
+| adv-design-pegasus | 14 | 0.589 (48) | 0.000 (312): layer order undetermined within the budget |
+| adv-design-tarantula | 14 | 0.709 (60) | 0.000 (1104): layer order undetermined within the 180 s budget; flat-folder certifies it given 546 s |
+| adv-style-stretch-lizard | 6 | 0.000: no stretch | 0.900 |
+| **mean** | | **0.508** | **0.505** |
+
+What happened:
+
+- **Most agents chose safety over efficiency.** Most agents explicitly picked a "provably
+  foldable" grid design: a map fold or a whole-stack accordion with a diagonal fold. They said a
+  tree-specific design would be too risky without a folding checker. These designs reach 0.4-0.7
+  of the packing bound.
+- **The best answer used an optimizer.** The agentic mantis tuned pleat widths and the
+  leaf-to-tip assignment by annealing and reached 0.895. It is the only from-scratch design so
+  far that beats the square-packing milestone.
+- **Large-pattern answers hit the verifier budget.** Two agentic answers (312 and 1104 creases)
+  scored 0 because the layer-order solver ran out of budget. Answers have to be verifiable
+  within the grading budget. The tarantula does fold, so the budget, or a faster check for
+  whole-stack patterns, is worth revisiting.
+- **The stretch check is gameable.** The agentic stretch lizard passed the Pythagorean-stretch
+  check with a 3-4-5 pleat that it describes as "not a true stretch", added only to satisfy the
+  rule. The style check confirms that 3-4-5 directions occur, not that the stretch does
+  anything. Tightening it, for example by requiring the stretch to change the flap layout, is
+  open work.
+- **Grader fix found by this run.**
+  - **Symptom:** both stag-beetle answers first scored 0 ("does not realize the target tree").
+  - **Cause:** they are map folds whose creases are all diagonal. Candidate axes came only from
+    crease directions, so the 0°/90° axis, along which the base's 16 flaps lie, was never tried.
+  - **Fix:** `candidate_axes` now always includes 0°, 45°, 90° and 135°. A regression test
+    covers it.
+  - **Side effects:** rebuilding with the fix changes no committed task. All Opus answers were
+    regraded with it, and only the stag beetles changed (0 → 0.618).
+
+### Hard split, all Opus 5.5 answers so far (final grader)
+
+| | closed | agentic |
+|---|---|---|
+| hard-split tasks graded | 25 | 25 |
+| mean score | **0.656** | **0.677** |
+| designs (19) | 0.573 | 0.575 |
+| analysis (6: 113-305 crease solves, defect finding, stretch tree reading) | 0.917 | 1.000 |
+| designs beating the square-packing milestone | 2 | 1 |
+
+The remaining 22 hard-split tasks have not been run yet. They are mostly 100-300 crease
+read-tree, af and solve instances, and a few designs. The design half of the benchmark has clear
+headroom, with no from-scratch design near the circle-packing bound. The large analysis tasks
+are close to saturation for this model.
