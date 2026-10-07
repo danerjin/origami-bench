@@ -88,6 +88,7 @@ Report the tree of the folded base (all leaves, including short ones; lengths to
 ```json
 {"box_pleat": true, "grid": 16, "angles_22_5": false, "pythagorean_stretch": false, "stretch_triples": []}
 ```
+`box_pleat` is true only if every crease is at 0/45/90/135 degrees (a pattern with stretch gadgets is not);
 `grid` is the smallest N such that all vertices lie on the 1/N lattice (null if none <= 512);
 `stretch_triples` lists the Pythagorean triples [a, b, c] whose directions occur.""",
     "read-color": """Answer format:

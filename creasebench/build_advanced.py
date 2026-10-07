@@ -59,8 +59,19 @@ def segs_json(cp: CreasePattern) -> list:
     return [[round(p[0], 10), round(p[1], 10), round(q[0], 10), round(q[1], 10), a] for p, q, a in cp.segments()]
 
 
+def _longest_leaf_edge(t) -> float:
+    g = t.graph
+    return max((l for u, v, l in g.edges(data="length") if g.degree(u) == 1 or g.degree(v) == 1), default=0.0)
+
+
 def base_tree(rep):
-    return max(extract_trees(rep.folded), key=lambda t: t.total_length())
+    """The base's tree along its own axis.
+
+    Projecting onto a tilted axis shortens every flap and adds spurious short stubs, which
+    can inflate the *total* length. So the axis is chosen where the longest flap
+    keeps its full length (largest longest-leaf edge), with ties broken by total length."""
+    return max(extract_trees(rep.folded),
+               key=lambda t: (round(_longest_leaf_edge(t), 4), round(t.total_length(), 6)))
 
 
 def _save(task: Task, out: Path, cp: CreasePattern | None = None, unassigned=False) -> Task:
