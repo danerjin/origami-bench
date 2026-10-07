@@ -72,6 +72,18 @@ python -m creasebench.run --provider openai --model <name> --base-url <url> --mo
 shapely) for up to `--max-steps` rounds; that is the realistic way to write a 500-crease
 pattern. Model code runs in a local subprocess, so use a container.
 
+**Offline / external agents.** To evaluate an agent that the runner can't call directly
+(a coding agent, a human, another harness), export the prompts, let the agent write
+`answer.txt` into each task folder, then grade the folder:
+
+```bash
+python -m creasebench.export --out eval/ --ids adv-design-lizard adv-pack-l2-lizard [--agentic]
+# ... agent writes eval/<task_id>/answer.txt ...
+python -m creasebench.run --provider file --answers eval/ --ids adv-design-lizard adv-pack-l2-lizard
+```
+
+The export contains only the prompt, images and inputs, never reference answers.
+
 ## Where the crease patterns come from
 
 Every shipped crease pattern is **generated**. Origami designers hold copyright on their crease

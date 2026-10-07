@@ -73,3 +73,19 @@ class HeuristicProvider(Provider):
             pos[leaf] = [round(xy[0], 6), round(xy[1], 6)]
             acc += step
         return RunResult(_wrap({"positions": pos}))
+
+
+class FileProvider(Provider):
+    """Reads answers written by an external agent: ``<answers_dir>/<task_id>/answer.txt``."""
+
+    name = "file"
+
+    def __init__(self, answers_dir: str):
+        self.root = Path(answers_dir)
+
+    def run(self, task: Task, prompt: str, images: list[Path], sandbox: PythonSandbox | None,
+            max_steps: int) -> RunResult:
+        p = self.root / task.id / "answer.txt"
+        if not p.exists():
+            return RunResult("", error="no answer file")
+        return RunResult(p.read_text())

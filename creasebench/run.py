@@ -73,8 +73,9 @@ def summarize(records: list[dict]) -> str:
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--provider", required=True, choices=["anthropic", "openai", "oracle", "unfolded", "heuristic"])
+    ap.add_argument("--provider", required=True, choices=["anthropic", "openai", "oracle", "unfolded", "heuristic", "file"])
     ap.add_argument("--model")
+    ap.add_argument("--answers", help="file provider: directory with <task_id>/answer.txt")
     ap.add_argument("--base-url", help="OpenAI-compatible endpoint")
     ap.add_argument("--effort", help="reasoning effort passed to the provider")
     ap.add_argument("--mode", choices=["closed", "agentic"], default="closed")
@@ -98,11 +99,14 @@ def main(argv=None) -> None:
 
     tasks = load_tasks(args.tasks_dir, tracks=args.tracks.split(","), ids=args.ids, difficulty=args.difficulty,
                        tiers=args.tiers.split(","))
+    if args.ids:
+        exact = [t for t in tasks if t.id in set(args.ids)]
+        tasks = exact or tasks
     if args.limit:
         tasks = tasks[: args.limit]
     if not tasks:
         raise SystemExit("no tasks selected (did you run `python -m creasebench.build`?)")
-    provider = make_provider(args.provider, args.model, args.base_url, args.effort)
+    provider = make_provider(args.provider, args.model, args.base_url, args.effort, args.answers)
     name = f"{args.provider}-{args.model or 'default'}-{args.mode}-{time.strftime('%Y%m%d-%H%M%S')}"
     out = Path(args.out or Path("results") / name.replace("/", "_"))
     out.mkdir(parents=True, exist_ok=True)
