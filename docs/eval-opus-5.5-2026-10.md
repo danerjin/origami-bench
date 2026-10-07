@@ -291,3 +291,48 @@ The remaining 22 hard-split tasks have not been run yet. They are mostly 100-300
 read-tree, af and solve instances, and a few designs. The design half of the benchmark has clear
 headroom, with no from-scratch design near the circle-packing bound. The large analysis tasks
 are close to saturation for this model.
+
+## Complete hard split (all 47 tasks)
+
+The last 22 hard tasks are graded under the same protocol:
+- 4 defect-finding tasks on 113-157 crease patterns;
+- 7 tree readings on 104-305 crease patterns;
+- 7 solves on 104-184 crease patterns;
+- 4 designs.
+
+| | closed | agentic |
+|---|---|---|
+| these 22 tasks | 0.841 (17/22 solved) | 0.868 (19/22) |
+| **hard split, all 47 tasks** | **0.742** (33/47) | **0.766** (39/47) |
+| designs (23) | 0.581 | 0.588 |
+| analysis (24: af, read-tree, solve) | 0.897 | 0.938 |
+| excluding the 5 tasks whose id leaks the answer (see below) | 0.712 (42 tasks) | 0.762 |
+| designs beating the square-packing milestone | 3 | 2 |
+
+Misses among the 22:
+
+- **Closed solves.**
+  - star4-r6: 0.44; a Maekawa violation.
+  - gops-13 and gops-14: 0.5 each; locally valid, but no global layer order exists.
+  - bird-2x2: 0.5; the layer solver ran out of budget, so the result is undetermined, not proven wrong.
+  - closed star4-r6 read-tree: 0.6.
+- **Agentic.**
+  - gops-13 solve: 0.5; no layer order exists.
+  - bird-2x2 global-defect task: 0. The agent's own SAT layer search accepted a pattern that has no valid layer order. Both of our solvers (flat-folder and the Python SAT model) agree it has none, so its checker was missing a constraint.
+- **`adv-style-bp-lizard-32`** scored 0 in both settings. The 14-crease answers reach the best-known scale, but on grids below the required minimum of 16.
+
+The agentic setting solved 13 of 14 large read-tree and solve tasks perfectly. These large analysis tasks are close to saturated for an agent with Python. Design is not: no from-scratch design is near the circle-packing bound.
+
+### Task ids leaked into the prompts
+
+- **How it leaked.** Exports named each task folder after its task id, so agents could see it. Some ids state the answer:
+  - `adv-bug-global-*`, `adv-bug-flip-*` (the defect type);
+  - `af-bad-global-0`;
+  - `af-ref-waterbomb_base` and `di-ref-fish_base` (the base);
+  - `adv-read-tech-bp-stretch-gops-13` (box pleating, a stretch, the grid);
+  - `adv-read-tree-tm-lizard`.
+- **Agents used it.** One closed-book agent wrote that it answered "globally unfoldable" mainly because of the folder name. On `adv-bug-global-bird-2x2`, the closed-book agent, which could see the name, scored 1. The agentic one, which checked the pattern itself, scored 0.
+- **Fixed.** `creasebench.export` now uses opaque folder names (`task-<hash>`). The id map is written outside the export directory, and a test checks that no exported file names its task.
+- **Effect on the hard split.** Five hard-split tasks have answer-revealing ids. Without them, the hard split scores 0.712 closed and 0.762 agentic, against 0.742 / 0.766 with them.
+- **Other runs.** The pilot's basic af/di tasks and its read-tech, read-color and tm read-tree tasks were affected the same way. Treat those scores as upper bounds.
+- **Re-running.** A clean re-run of the affected analysis tasks needs only the new export.

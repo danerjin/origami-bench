@@ -71,8 +71,12 @@ Claude Opus 5.5 results so far are in [docs/eval-opus-5.5-2026-10.md](docs/eval-
 | | closed | agentic |
 |---|---|---|
 | 24-task pilot | 0.96 | 0.92 |
-| hard split, 25 of 47 tasks | 0.66 | 0.68 |
-| hard-split designs | 0.57 | 0.58 |
+| hard split, all 47 tasks | 0.74 | 0.77 |
+| hard-split designs (23) | 0.58 | 0.59 |
+| hard-split analysis (24) | 0.90 | 0.94 |
+
+(These runs used exports whose folder names were task ids, and some ids reveal the answer. Exports
+are now opaque; see the report.)
 
 ## Quickstart
 
