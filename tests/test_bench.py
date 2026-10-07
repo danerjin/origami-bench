@@ -117,3 +117,21 @@ def test_anthropic_tool_loop_with_fake_client(monkeypatch):
     tool_result = seen[1][-1]["content"][0]
     assert tool_result["type"] == "tool_result" and tool_result["content"].strip() == "42"
     assert grade(task, res.text)["solved"]
+
+
+def test_export_hides_task_ids(tmp_path):
+    import json
+
+    from creasebench.export import export, id_map_path
+    from creasebench.tasks import load_tasks
+
+    tasks = load_tasks("tasks", ids=["adv-bug-global-bird-2x2", "af-ref-waterbomb_base"])
+    out = tmp_path / "eval"
+    folders = export(tasks, out)
+    names = {p.name for p in out.iterdir()}
+    assert names == set(folders.values()) and not any(t.id in names for t in tasks)
+    for p in out.rglob("*"):  # nothing an agent can read names the task
+        if p.is_file() and p.suffix in (".md", ".json"):
+            assert not any(t.id in p.read_text() for t in tasks)
+    assert json.loads(id_map_path(out).read_text()) == folders
+    assert not str(id_map_path(out)).startswith(str(out) + "/")

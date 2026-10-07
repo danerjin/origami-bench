@@ -76,16 +76,20 @@ class HeuristicProvider(Provider):
 
 
 class FileProvider(Provider):
-    """Reads answers written by an external agent: ``<answers_dir>/<task_id>/answer.txt``."""
+    """Reads answers written by an external agent: ``<answers_dir>/<folder>/answer.txt``.
+
+    The folder is the task id, or the opaque name ``export`` recorded in ``<answers_dir>.ids.json``."""
 
     name = "file"
 
     def __init__(self, answers_dir: str):
         self.root = Path(answers_dir)
+        m = self.root.with_name(self.root.name + ".ids.json")
+        self.folders = json.loads(m.read_text()) if m.exists() else {}
 
     def run(self, task: Task, prompt: str, images: list[Path], sandbox: PythonSandbox | None,
             max_steps: int) -> RunResult:
-        p = self.root / task.id / "answer.txt"
+        p = self.root / self.folders.get(task.id, task.id) / "answer.txt"
         if not p.exists():
             return RunResult("", error="no answer file")
         return RunResult(p.read_text())
