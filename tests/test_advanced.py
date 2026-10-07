@@ -84,3 +84,42 @@ def test_mirror_tiling_certifies_and_reads():
     assert cp is not None and cp.num_creases() >= 30
     rep = verify(cp)
     assert rep.foldable and len(max(extract_trees(rep.folded), key=lambda t: t.total_length()).leaves) > 4
+
+
+def test_prune_stubs_drops_short_leaves_only():
+    import networkx as nx
+
+    from creasebench.advanced import prune_stubs
+
+    g = nx.Graph()
+    for i in range(4):
+        g.add_edge("h", f"c{i}", length=0.5)
+    for i in range(16):
+        g.add_edge("h", f"s{i}", length=0.0625)
+    g.add_edge("h", "ctr", length=0.207)
+    p = prune_stubs(g)
+    assert sorted(round(l, 3) for *_, l in p.edges(data="length")) == [0.207, 0.5, 0.5, 0.5, 0.5]
+
+
+def test_task_split_rules():
+    from creasebench.tasks import Task, task_split
+
+    big = {"edges_assignment": ["M"] * 120}
+    assert task_split(Task("x", "analytic", "easy", "")) == "warmup"
+    assert task_split(Task("x", "solve", "hard", "", inputs={"crease_pattern": big},
+                           reference={"family": "solve"}, meta={"tier": "advanced"})) == "hard"
+    assert task_split(Task("x", "read", "hard", "", inputs={"crease_pattern": big},
+                           reference={"family": "read-tech"}, meta={"tier": "advanced"})) == "core"
+    star = {"edges": [["h", f"l{i}", 1] for i in range(4)]}
+    assert task_split(Task("x", "design", "hard", "", inputs={"tree": star},
+                           reference={"family": "design"}, meta={"tier": "advanced"})) == "core"
+
+
+def test_style_grid_window():
+    from types import SimpleNamespace
+
+    from creasebench.advanced import _style_ok
+
+    rep = SimpleNamespace(box_pleat=True, grid=2)
+    assert _style_ok(rep, {"kind": "box_pleat", "max_grid": 16})
+    assert not _style_ok(rep, {"kind": "box_pleat", "min_grid": 8, "max_grid": 16})

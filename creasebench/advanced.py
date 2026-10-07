@@ -44,6 +44,34 @@ def answer_tree(d: Any) -> nx.Graph:
 
 
 # ----------------------------------------------------------------------------- reading
+STUB_FRAC = 0.15  # same cut as simplified_tree: shorter leaves are not flaps
+
+
+def prune_stubs(g: nx.Graph, frac: float = STUB_FRAC) -> nx.Graph:
+    """Drop leaf edges shorter than ``frac`` x the longest leaf edge (pleat ridges and
+    projection stubs that are not flaps), then merge the degree-2 nodes left behind."""
+    g = g.copy()
+
+    def leaf_edges():
+        return [(n, p, g.edges[n, p]["length"]) for n in g if g.degree(n) == 1 for p in g.neighbors(n)]
+
+    while True:
+        le = leaf_edges()
+        if len(le) <= 2:
+            break
+        longest = max(l for *_, l in le)
+        short = [n for n, _, l in le if l < frac * longest]
+        if not short or len(le) - len(short) < 2:
+            break
+        g.remove_nodes_from(short)
+        for n in [n for n in g if g.degree(n) == 2]:
+            a, b = list(g.neighbors(n))
+            if not g.has_edge(a, b):
+                g.add_edge(a, b, length=g.edges[n, a]["length"] + g.edges[n, b]["length"])
+                g.remove_node(n)
+    return g
+
+
 def grade_read_tree(task, ans: dict) -> dict:
     ref = nx.Graph()
     for u, v, l in task.reference["tree"]["edges"]:
@@ -52,6 +80,8 @@ def grade_read_tree(task, ans: dict) -> dict:
         got = answer_tree(ans["tree"])
     except (KeyError, ValueError, TypeError) as e:
         return {"score": 0.0, "solved": False, "error": f"bad tree: {e}"}
+    # short stubs are not graded either way: neither reporting nor omitting them costs points
+    ref, got = prune_stubs(ref), prune_stubs(got)
     n_ref = sum(1 for n in ref if ref.degree(n) == 1)
     n_got = sum(1 for n in got if got.degree(n) == 1)
     leaf_ok = n_ref == n_got
@@ -229,15 +259,19 @@ def grade_design(task, ans: dict) -> dict:
     return out
 
 
+def _grid_ok(rep: "style.StyleReport", req: dict) -> bool:
+    grid = rep.grid or 10 ** 9
+    return grid <= req.get("max_grid", 10 ** 9) and grid >= req.get("min_grid", 0)
+
+
 def _style_ok(rep: "style.StyleReport", req: dict) -> bool:
     kind = req["kind"]
     if kind == "box_pleat":
-        return rep.box_pleat and (req.get("max_grid") is None or (rep.grid or 10 ** 9) <= req["max_grid"])
+        return rep.box_pleat and _grid_ok(rep, req)
     if kind == "angles_22_5":
         return rep.angles_22_5
     if kind == "pythagorean_stretch":
-        return rep.pythagorean_stretch and (req.get("max_grid") is None
-                                             or (rep.grid or 10 ** 9) <= req["max_grid"])
+        return rep.pythagorean_stretch and _grid_ok(rep, req)
     if kind == "hex":
         return rep.hex
     raise ValueError(kind)

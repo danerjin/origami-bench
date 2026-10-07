@@ -17,7 +17,7 @@ from pathlib import Path
 from .graders import grade
 from .prompts import build_prompt
 from .providers import PythonSandbox, make_provider
-from .tasks import Task, load_tasks
+from .tasks import Task, load_tasks, task_split
 
 
 def run_one(task: Task, provider, args) -> dict:
@@ -34,7 +34,7 @@ def run_one(task: Task, provider, args) -> dict:
         if sandbox is not None:
             sandbox.close()
     g = grade(task, res.text)
-    rec = {"id": task.id, "tier": task.meta.get("tier", "basic"), "track": task.track,
+    rec = {"id": task.id, "tier": task.meta.get("tier", "basic"), "split": task_split(task), "track": task.track,
            "family": task.reference.get("family"), "difficulty": task.difficulty, "score": g["score"],
            "efficiency": g.get("efficiency"),
            "solved": bool(g.get("solved")), "grade": g, "response": res.text, "error": res.error,
@@ -65,6 +65,17 @@ def summarize(records: list[dict]) -> str:
         effs = [r["efficiency"] for r in rs if r.get("efficiency") is not None]
         eff = f"{sum(min(e, 1.0) for e in effs) / len(effs):.3f}" if effs else "-"
         lines.append(f"| {tier} | {track} | {diff} | {len(rs)} | {mean:.3f} | {solved}/{len(rs)} | {eff} |")
+    splits = defaultdict(list)
+    for r in records:
+        if r.get("split"):
+            splits[r["split"]].append(r)
+    if splits:
+        lines += ["", "| split | n | mean score | solved |", "|---|---|---|---|"]
+        for sp in ("hard", "core", "warmup"):
+            rs = splits.get(sp)
+            if rs:
+                lines.append(f"| {sp} | {len(rs)} | {sum(r['score'] for r in rs) / len(rs):.3f} | "
+                             f"{sum(r['solved'] for r in rs)}/{len(rs)} |")
     judged = [r["judge"]["judge_score"] for r in records if r.get("judge") and r["judge"].get("judge_score") is not None]
     if judged:
         lines.append(f"\nSemantic judge (n={len(judged)}): mean {sum(judged) / len(judged):.3f}")

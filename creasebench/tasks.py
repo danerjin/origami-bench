@@ -42,6 +42,41 @@ class Task:
         self.root = directory
 
 
+HARD_MIN_CREASES = 100  # analysis tasks on patterns this large are in the hard split
+HARD_MIN_LEAVES = 6  # design / packing targets with this many flaps are in the hard split
+
+
+def _num_creases(task: "Task") -> int:
+    if task.meta.get("num_creases"):
+        return int(task.meta["num_creases"])
+    cp = task.inputs.get("crease_pattern") or {}
+    return sum(1 for a in cp.get("edges_assignment", []) if a != "B")
+
+
+def _num_leaves(task: "Task") -> int:
+    tree = task.inputs.get("tree") or {}
+    deg: dict = {}
+    for e in tree.get("edges", []):
+        for n in e[:2]:
+            deg[n] = deg.get(n, 0) + 1
+    return sum(1 for d in deg.values() if d == 1)
+
+
+def task_split(task: "Task") -> str:
+    """Reporting split: ``warmup`` (basic tier), ``hard`` (big patterns, many-flap targets) or
+    ``core`` (the rest of the advanced tier). The headline number is the ``hard`` split."""
+    if task.meta.get("split"):
+        return task.meta["split"]
+    if task.meta.get("tier", "basic") != "advanced":
+        return "warmup"
+    family = (task.reference or {}).get("family")
+    if family in ("pack", "read-tech", "read-color"):
+        return "core"  # an optimizer or a direct analysis answers these at any size
+    if task.track == "design":
+        return "hard" if _num_leaves(task) >= HARD_MIN_LEAVES else "core"
+    return "hard" if _num_creases(task) >= HARD_MIN_CREASES else "core"
+
+
 def load_task(path: str | Path) -> Task:
     path = Path(path)
     if path.is_dir():
