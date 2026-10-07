@@ -220,12 +220,19 @@ def _simplify(g: nx.Graph, value: np.ndarray) -> nx.Graph:
                 g.remove_node(drop)
                 changed = True
                 break
+    # Contract only *regular* degree-2 nodes (one neighbour below, one above). After tie
+    # merging a degree-2 node can be a local extremum; contracting it would add a rise and a
+    # fall into one edge, longer than the base's extent along the axis (an unsound distance).
+    eps = MIN_EDGE
     for node in list(g.nodes):
         if g.degree(node) == 2:
             a, b = list(g.neighbors(node))
             if g.has_edge(a, b):
                 continue
-            g.add_edge(a, b, length=g.edges[node, a]["length"] + g.edges[node, b]["length"])
+            lo, hi = sorted((value[a], value[b]))
+            if not (lo - eps <= value[node] <= hi + eps):
+                continue
+            g.add_edge(a, b, length=abs(float(value[a] - value[b])))
             g.remove_node(node)
     return g
 
@@ -261,9 +268,13 @@ def candidate_axes(folded: FoldedState, max_axes: int = 16) -> list[float]:
         ang = round(math.degrees(math.atan2(d[1], d[0])) % 180.0, 1) % 180.0
         for a2 in (ang, (ang + 90.0) % 180.0):
             weight[a2] = weight.get(a2, 0.0) + L
-    if not weight:
-        return [0.0, 45.0, 90.0, 135.0]
-    return [a for a, _ in sorted(weight.items(), key=lambda kv: -kv[1])[:max_axes]]
+    axes = [a for a, _ in sorted(weight.items(), key=lambda kv: -kv[1])[:max_axes]]
+    # the lattice directions are always tried: a base built only from diagonal creases (a
+    # stacked map fold, for example) lies along an axis that no crease points in
+    for a in (0.0, 45.0, 90.0, 135.0):
+        if a not in axes:
+            axes.append(a)
+    return axes
 
 
 def extract_trees(folded: FoldedState, axes: list[float] | None = None) -> list[BaseTree]:
