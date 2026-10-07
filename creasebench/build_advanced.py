@@ -77,6 +77,13 @@ def base_tree(rep, stub_frac: float = 0.2):
                                      -len(t.leaves)))
 
 
+def target_tree(rep):
+    """Tree used to derive design targets and colour tips: any axis works there (the
+    reference only has to realize the target), so keep the widest projection, which gives
+    targets with more flaps."""
+    return max(extract_trees(rep.folded), key=lambda t: t.total_length())
+
+
 def _save(task: Task, out: Path, cp: CreasePattern | None = None, unassigned=False) -> Task:
     d = out / task.track / task.id
     task.meta["tier"] = "advanced"
@@ -179,7 +186,7 @@ def read_color_task(src, out: Path) -> Task | None:
     if len(src["cp"].faces) > 250:
         return None  # uniqueness of colours can only be proven for smaller patterns
     rep = verify(src["cp"])
-    tree = base_tree(rep)
+    tree = target_tree(rep)
     polys = [p.buffer(-1e-7) for p in rep.folded.face_polygons()]
     colors, tips = {}, {}
     for k, leaf in enumerate(tree.leaves):
@@ -290,7 +297,7 @@ def simplified_tree(cp: CreasePattern, min_frac: float = 0.15, max_leaves: int =
     import networkx as nx
 
     rep = verify(cp)
-    tree = base_tree(rep)
+    tree = target_tree(rep)
     g = tree.graph.copy()
     longest = max(l for *_, l in g.edges(data="length"))
 
