@@ -123,3 +123,31 @@ def test_style_grid_window():
     rep = SimpleNamespace(box_pleat=True, grid=2)
     assert _style_ok(rep, {"kind": "box_pleat", "max_grid": 16})
     assert not _style_ok(rep, {"kind": "box_pleat", "min_grid": 8, "max_grid": 16})
+
+
+def test_big_trees_are_big():
+    from creasebench.trees import BIG_TREES
+
+    for name, spec in BIG_TREES.items():
+        n = len(TargetTree.from_json({"edges": spec["edges"]}).leaves)
+        assert 14 <= n <= 24, (name, n)
+
+
+def test_tilings_have_no_read_tree_task():
+    from creasebench.build_advanced import is_tiling
+
+    assert is_tiling({"name": "bird-2x2"}) and is_tiling({"name": "tiling-3"})
+    assert not is_tiling({"name": "bird-border"}) and not is_tiling({"name": "bp-lizard-32"})
+
+
+def test_design_reports_square_packing_milestone():
+    from creasebench.advanced import grade_design
+    from creasebench.tasks import Task
+
+    star4 = {"edges": [["c", x, 1] for x in "abde"]}
+    task = Task("x", "design", "hard", "", inputs={"tree": star4},
+                reference={"family": "design", "bound": 0.5, "packing_bound_linf": 0.5})
+    bird = bases22.bird_base()
+    g = grade_design(task, {"creases": [[*p, *q, a] for p, q, a in bird.segments()]})
+    assert g["solved"] and abs(g["scale"] - 0.5) < 1e-6
+    assert g["beats_square_packing"] is False  # reaching the square packing is not beating it

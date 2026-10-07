@@ -218,6 +218,10 @@ def grade_design(task, ans: dict) -> dict:
     bound = ref["bound"]
     eff = m / bound if bound > 0 else 0.0
     out.update(efficiency=eff, bound=bound, mapping=a["fit"].mapping, axis_deg=a["fit"].axis_deg)
+    if ref.get("packing_bound_linf"):
+        # milestone, not scored: a box-pleating-style square packing is the easy way to a valid
+        # base; beating its best scale needs genuine circle/river packing
+        out["beats_square_packing"] = bool(a["fit"].scale > ref["packing_bound_linf"] * (1 + 1e-6))
     factors = [min(1.0, eff)]
     passed = [eff >= ref.get("solve_efficiency", 0.6)]
     if m <= 0:

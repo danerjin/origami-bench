@@ -1,4 +1,4 @@
-# CreaseBench specification (v0.2)
+# CreaseBench specification (v0.3)
 
 ## 1. Motivation
 
@@ -178,8 +178,14 @@ column so the main score stays deterministic.
 - **Uniaxial bases.** For a uniaxial base folded with its flaps along the axis, this tree is
   exactly Lang's tree. For example, the bird base gives four flaps of length 0.5, the optimum
   for a 4-star.
-- **Axis.** Candidate axes are the dominant folded crease directions. Reading tasks use the
-  axis with the longest tree; design grading uses the axis that best fits the target.
+- **Axis.** Candidate axes are the dominant folded crease directions. Design grading uses the
+  axis that best fits the target.
+  - **Reading tasks** use the axis with the largest total length of real flaps: leaf edges of
+    at least 20% of the longest flap seen on any axis. This counts flaps, not the projection
+    stubs that a tilted axis adds.
+  - **Read-tree grading** ignores leaf stubs shorter than 15% of the longest flap, on both
+    sides.
+  - **Tilings** (2×2 module tilings) are not uniaxial bases, so they have no read-tree task.
 
 ### 7.3 Scale and efficiency (`treefit.py`, `packing.py`)
 - **Scale m.** m is the largest value for which an injective leaf map φ exists with
@@ -190,6 +196,12 @@ column so the main score stays deterministic.
   is NP-hard to compute. The bound is raised to a reference design's scale when one is better.
 - **Efficiency** is m divided by the best known value, capped at 1. Values above 1 are recorded
   as "beats reference".
+- **Square-packing milestone (not scored).** Each design task also stores the best L∞ (square)
+  packing scale. The grade reports `beats_square_packing` when m exceeds it.
+  - A box-pleating-like square packing is the cheap route to a valid base. One example is
+    stacking the sheet with folds through every layer, which agents discovered on their own.
+  - Beating that scale needs genuine circle/river packing.
+  - In the Opus 5.5 pilot, no design reached it.
 - **Solving a design task** requires efficiency ≥ 0.6, plus every technique, color, graft and
   layer requirement.
 
@@ -241,3 +253,21 @@ column so the main score stays deterministic.
   allowed, as in tree theory.
 - Color reading is restricted to patterns with at most 250 faces, where uniqueness can be
   proven with the Python SAT model.
+
+### 7.8 Splits and hardening (v0.3)
+- **Reporting splits** (`tasks.task_split`), with `hard` as the headline number:
+  - `warmup` is the basic tier.
+  - `hard` is design targets with at least 6 flaps, plus solve, read-tree and af tasks on
+    patterns of at least 100 creases.
+  - `core` is everything else in the advanced tier. pack, read-tech and read-color are always
+    `core`, because an optimizer or a direct analysis answers them at any size.
+- **Larger targets.** `trees.BIG_TREES` adds 14-24 flap animals with uneven lengths: a stag
+  beetle, a mantis, a lobster, a centipede, a pegasus and a tarantula.
+- **Style windows.** Box-pleating tasks state a grid range (`min_grid` to `max_grid`), so a
+  trivial coarse-grid answer no longer ties the reference. Two tasks require a Pythagorean
+  stretch.
+- **Considered and rejected: layer-count caps.**
+  - Measured layer counts do not separate cheap whole-stack designs (16-64 layers) from
+    reference designs (18-96).
+  - Those cheap designs are already scored below the square-packing bound.
+

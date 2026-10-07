@@ -21,7 +21,7 @@ from .render import render_cp
 from .tasks import Task
 from .tree import extract_trees
 from .treefit import TargetTree, best_fit
-from .trees import SEMANTIC_TREES
+from .trees import BIG_TREES, SEMANTIC_TREES
 from .verify import verify
 
 READ_TREE_PROMPT = ("Below is the crease pattern of a flat-foldable origami base (one uncut square; also shown "
@@ -159,6 +159,10 @@ def sources(log=print) -> list[dict]:
     return out
 
 
+def is_tiling(src) -> bool:
+    return src["name"].endswith("-2x2") or src["name"].startswith("tiling-")
+
+
 # ----------------------------------------------------------------------------- families
 def read_tree_task(src, out: Path) -> Task:
     rep = verify(src["cp"])
@@ -272,6 +276,7 @@ def design_task(tid: str, target_edges, subject: str, out: Path, *, reference_cp
         ref_scale = best_fit(extract_trees(rep.folded), target).scale
         bound = max(bound, ref_scale)
     reference = {"family": "design", "bound": bound, "packing_bound_l2": bound if ref_scale is None else None,
+                 "packing_bound_linf": packing_bound(target, "linf", starts=60)["scale"],
                  "reference_scale": ref_scale, "solve_efficiency": 0.6}
     if reference_cp is not None:
         reference["solution"] = segs_json(reference_cp)
@@ -337,7 +342,8 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
     by = {s["name"]: s for s in srcs}
     log("advanced: reading tasks")
     for s in srcs:
-        tasks.append(read_tree_task(s, out))
+        if not is_tiling(s):  # a tiling is not a uniaxial base: its "tree" depends on an arbitrary axis
+            tasks.append(read_tree_task(s, out))
         tasks.append(solve_task(s, out))
     for s in srcs:
         if s["kind"] in ("bp", "bp-studio", "treemaker") or s["name"] in ("bird-2x2", "bird-border"):
@@ -369,6 +375,9 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
         tasks.append(design_task(f"adv-design-{name}", spec["edges"], spec["description"], out,
                                  reference_cp=ref["cp"] if ref else None,
                                  meta={"subject": name, "reference": ref["meta"] if ref else None}))
+    for name, spec in BIG_TREES.items():
+        tasks.append(design_task(f"adv-design-{name}", spec["edges"], spec["description"], out,
+                                 meta={"subject": name, "size": "big"}))
     for name in ("bird-2x2", "tiling-1", "bird-border"):
         if name in by:
             edges, _ = simplified_tree(by[name]["cp"])
@@ -381,20 +390,26 @@ def build_advanced(out: Path, seed: int = 0, log=print) -> list[Task]:
                              extra="Every crease must lie at a multiple of 22.5 degrees.", meta={"style": "22.5"}))
     tasks.append(design_task("adv-style-bp-lizard", SEMANTIC_TREES["lizard"]["edges"],
                              SEMANTIC_TREES["lizard"]["description"], out,
-                             style_req={"kind": "box_pleat", "max_grid": 32},
-                             extra="The crease pattern must be box-pleated on a grid of at most 32 x 32.",
+                             style_req={"kind": "box_pleat", "min_grid": 8, "max_grid": 32},
+                             extra="The crease pattern must be box-pleated on an N x N grid with 8 <= N <= 32.",
                              meta={"style": "box_pleat"}))
     for name, grid in (("bp-lizard-32", 32), ("bp-tight-0-00", 24), ("bp-three-flap-16", 16)):
         if name in by:
             src = by[name]
             edges = [[f"n{u}", f"n{v}", float(l)] for u, v, l in src["meta"]["tree"]]
+            lo = grid // 2  # a coarse grid cannot place the flaps; stops trivial 2-grid answers
             tasks.append(design_task(
                 f"adv-style-{name}", edges, "a box-pleated base (tree lengths in grid units)", out,
-                reference_cp=src["cp"], style_req={"kind": "box_pleat", "max_grid": grid},
-                extra=f"The crease pattern must be box-pleated on a grid of at most {grid} x {grid}.",
+                reference_cp=src["cp"], style_req={"kind": "box_pleat", "min_grid": lo, "max_grid": grid},
+                extra=f"The crease pattern must be box-pleated on an N x N grid with {lo} <= N <= {grid}.",
                 meta={"style": "box_pleat", "source": name}))
     tasks.append(design_task("adv-style-stretch-beetle", SEMANTIC_TREES["beetle"]["edges"],
                              SEMANTIC_TREES["beetle"]["description"], out,
+                             style_req={"kind": "pythagorean_stretch", "max_grid": 48},
+                             extra="Use box pleating with at least one Pythagorean stretch (grid at most 48).",
+                             meta={"style": "stretch"}))
+    tasks.append(design_task("adv-style-stretch-lizard", SEMANTIC_TREES["lizard"]["edges"],
+                             SEMANTIC_TREES["lizard"]["description"], out,
                              style_req={"kind": "pythagorean_stretch", "max_grid": 48},
                              extra="Use box pleating with at least one Pythagorean stretch (grid at most 48).",
                              meta={"style": "stretch"}))
