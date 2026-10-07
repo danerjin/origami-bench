@@ -130,3 +130,81 @@ Mean score by family:
 
 Raw results: `results/opus-5.5-closed/` and `results/opus-5.5-agentic/`. Each holds
 `results.jsonl` with the full replies and grade details, plus `summary.md`.
+
+## Follow-up: the hard split (14 tasks the pilot did not sample)
+
+The pilot was near saturation, so the next run covered the hardest committed tasks. Setup and
+caveats are as above: one sample per task, isolation by instruction only. The read-tree grader
+now ignores leaf stubs shorter than 15% of the longest flap, on both sides.
+
+The 14 tasks:
+
+- **Designs (8):** the bound-only semantic designs (beetle, scorpion, spider, deer, crab,
+  dragon, BP lizard, stretch beetle; 6-12 flaps).
+- **Composites (2):** the graft and colour/22.5° composite tasks.
+- **Solves (2):** a 305-crease BP lizard and a 154-crease GOPS stretch.
+- **Tree readings (2):** a Kamiya stretch and a bird 2×2 tiling.
+
+| | closed | agentic |
+|---|---|---|
+| mean score (14 tasks) | **0.643** | **0.652** |
+| solved | 9/14 | 11/14 |
+| designs (10), mean score | 0.632 | 0.595 |
+| six semantic animals, mean efficiency | 0.647 | 0.710 |
+| analysis (4: two solves, two tree readings) | 0.669 | 0.794 |
+
+| task | closed | agentic | notes |
+|---|---|---|---|
+| adv-design-beetle | 0.758 | 0.758 | |
+| adv-design-scorpion | 0.438 | 0.618 | agentic: annealing search over pleat grids, 158 creases |
+| adv-design-spider | 0.703 | 0.795 | agentic: 342 creases |
+| adv-design-deer | 0.703 | 0.685 | |
+| adv-design-crab | 0.780 | 0.780 | |
+| adv-design-dragon | 0.503 | 0.622 | |
+| adv-style-bp-lizard (BP, grid ≤ 32) | 0.750 | 0.900 | |
+| adv-style-stretch-beetle (must use a Pythagorean stretch) | 0.000 | 0.000 | neither design contains a stretch; agentic tried 3-4-5 layouts but found no flat-foldable assignment and fell back |
+| adv-composite-bird-border (22.5° + colour) | 0.821 | 0.796 | |
+| adv-graft-bird-border | 0.866 | 0.000 | agentic: three mountains around two equal 22.5° sectors violate the crimp (big-little-big) rule; the agent's own solver missed it |
+| adv-solve-bp-lizard-32 (305 creases) | 1.000 | 1.000 | |
+| adv-solve-bp-stretch-gops-14 (154 creases) | 0.500 | 1.000 | closed: locally valid, but no global layer order exists |
+| adv-read-tree-bp-stretch-kamiya-13 | 1.000 | 1.000 | |
+| adv-read-tree-bird-2x2 | 0.175 | 0.175 | the tiling has no single base axis, so this reference is debatable (see below) |
+
+What this shows:
+
+1. **The benchmark has headroom; the pilot subset did not.**
+   - **Score drop:** on the hard split the score falls from 0.96 to about 0.65.
+   - **Design gap:** design efficiency on 9-12 flap animals sits at 0.44-0.80 of the best known
+     packing, versus 0.9-1.0 on 3-6 flap targets.
+   - **Constraint failures:** constrained techniques fail outright. Both settings got the
+     Pythagorean stretch task wrong, and the closed run broke the global layer order on a
+     154-crease solve.
+2. **A recurring agent strategy: "fold the whole stack" designs.**
+   - **The strategy:** agents accordion-pleat the entire sheet in x and y, then fold the stack
+     diagonally. That turns lattice points into flap tips, and every fold goes through all
+     layers, which guarantees a valid layer order.
+   - **It is graded honestly:** these designs fold, and the grader measures them correctly. Across
+     every axis and every leaf pair, tree distances never exceed paper distances. They reach
+     about 0.6-0.8 of the packing bound.
+   - **Why it matters:** this is a cheap general strategy that is not real tree-theory design.
+     Hardening should make it uncompetitive, for example with layer-count caps or larger
+     targets, rather than ban it.
+3. **Agentic help is mixed.**
+   - **Where code helped:** the large solve, the scorpion and dragon searches, and the BP lizard.
+   - **Where it hurt:** one agent trusted its own incomplete flat-foldability checker and
+     submitted a pattern with a crimp violation.
+4. **Weak task:** `adv-read-tree-bird-2x2` (and the other 2×2 tilings) are not uniaxial bases.
+   Their "tree" depends on an arbitrary axis choice, so they should move to `core` or be
+   dropped from read-tree.
+
+**Decision (per the plan): targeted hardening, not a rewrite.** The hard split scores about
+0.65, which is between the "fix only saturating families" band (0.4-0.6) and the "harden
+everything" threshold (0.8). So:
+
+- make the `hard` split the headline;
+- drop tilings from read-tree;
+- add larger (14-24 flap) semantic targets with layer caps, so whole-stack pleating stops
+  competing;
+- give style tasks a minimum grid.
+
+Raw results: `results/opus-5.5-hard-closed/` and `results/opus-5.5-hard-agentic/`.
