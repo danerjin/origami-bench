@@ -70,13 +70,13 @@ Claude Opus 5.5 results so far are in [docs/eval-opus-5.5-2026-10.md](docs/eval-
 
 | | closed | agentic |
 |---|---|---|
-| 24-task pilot | 0.96 | 0.92 |
-| hard split, all 47 tasks | 0.74 | 0.77 |
+| hard split, all 47 tasks | 0.70 | 0.80 |
 | hard-split designs (23) | 0.58 | 0.59 |
-| hard-split analysis (24) | 0.90 | 0.94 |
+| hard-split analysis (24) | 0.82 | 1.00 |
+| 24-task pilot (current graders) | 0.87 | 0.91 |
 
-(These runs used exports whose folder names were task ids, and some ids reveal the answer. Exports
-are now opaque; see the report.)
+The analysis tasks were re-run with opaque task folders. Earlier exports named each folder after its task id, and some ids
+reveal the answer, which mainly inflated closed-book defect finding. The report gives the before/after comparison.
 
 ## Quickstart
 
@@ -103,7 +103,7 @@ pattern. Model code runs in a local subprocess, so use a container.
 
 ```bash
 python -m creasebench.export --out eval/ --ids adv-design-lizard adv-pack-l2-lizard [--agentic]
-# ... agent writes eval/<task_id>/answer.txt ...
+# ... agent writes eval/<folder>/answer.txt (opaque folder names; the map is eval.ids.json) ...
 python -m creasebench.run --provider file --answers eval/ --ids adv-design-lizard adv-pack-l2-lizard
 ```
 

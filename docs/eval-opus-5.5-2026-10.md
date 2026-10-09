@@ -335,4 +335,57 @@ The agentic setting solved 13 of 14 large read-tree and solve tasks perfectly. T
 - **Fixed.** `creasebench.export` now uses opaque folder names (`task-<hash>`). The id map is written outside the export directory, and a test checks that no exported file names its task.
 - **Effect on the hard split.** Five hard-split tasks have answer-revealing ids. Without them, the hard split scores 0.712 closed and 0.762 agentic, against 0.742 / 0.766 with them.
 - **Other runs.** The pilot's basic af/di tasks and its read-tech, read-color and tm read-tree tasks were affected the same way. Treat those scores as upper bounds.
-- **Re-running.** A clean re-run of the affected analysis tasks needs only the new export.
+- **Re-run.** Done; see "Clean re-run of the id-leaky tasks" below.
+
+## Clean re-run of the id-leaky tasks
+
+All 34 evaluated tasks whose id says something about the content were re-run with the opaque export (`task-<hash>` folders,
+id map kept outside the export) in both settings, using the same prompts and rules. That covers every advanced analysis task
+(af, bug, read-tree, read-tech, read-color, solve) plus `af-ref-waterbomb_base`, `af-bad-global-0` and `di-ref-fish_base`.
+Results are in `results/opus-5.5-clean-{closed,agentic}`. In the combined numbers below the clean result replaces the leaky one
+for each of these ids; everything else (designs, pack, `dt-*`, `af-gen-*`, `di-gen-*`) is unchanged.
+
+| family (n) | closed leaky | closed clean | agentic leaky | agentic clean |
+|---|---|---|---|---|
+| bug: find the injected defect (5) | 1.00 (5 solved) | **0.46** (1) | 0.80 (4) | 1.00 (5) |
+| read-tree (11) | 0.93 | 1.00 | 1.00 | 1.00 |
+| solve (11) | 0.81 | 0.85 | 0.95 | 1.00 |
+| read-tech (2) | 0.90 | 1.00 | 1.00 | 1.00 |
+| read-color (1) | 1.00 | 0.78 | 0.78 | 1.00 |
+| adv af (1) | 1.00 | 1.00 | 1.00 | 1.00 |
+| basic af/di (3) | 1.00 | 0.87 | 1.00 | 0.87 |
+| **all 34** | 0.911 | **0.854** | 0.949 | **0.988** |
+
+- **The leak mattered for closed-book defect finding, and almost nowhere else.**
+  - Closed bug tasks fell from 5/5 to 1/5. Without the name saying "global" or "flip", the closed-book agent claimed two
+    defective patterns were foldable (scored 0). For the global defect in the three-flap pattern and the nudged vertex in
+    gops-14, it said "not foldable" but marked the wrong vertices (0.60 and 0.68).
+  - `af-bad-global-0` fell from 1.0 to 0.6 in both settings: "not foldable" was correct, but the violation vertex was wrong.
+- **Agentic scores went up, not down** (0.949 → 0.988). The agent checks the pattern itself, so the name gave it little. It solved
+  all 5 bug tasks, including `bug-global-bird-2x2`, which its leaky run had scored 0. All 11 solves and all 24 hard analysis tasks
+  were perfect. One agent solved its layer order with the general-purpose `pysat` package. The rules allow it (no origami library),
+  but it is worth noting.
+- **Single-sample noise is as large as the leak everywhere except bug.** Several closed solves and tree readings went *up* clean:
+  - solve-bird-2x2 and solve-gops-13: 0.5 → 1;
+  - read-tree star4-r6: 0.6 → 1;
+  - read-tree tm-lizard: 0.65 → 1.
+  
+  Closed solve-star4-16 went down, 1.0 → 0.39, from a Maekawa violation. So per-task differences outside the bug family say more
+  about run-to-run variance than about the leak.
+
+### Final numbers (clean answers for all leaky ids)
+
+| | closed | agentic |
+|---|---|---|
+| **hard split, all 47 tasks** | **0.703** (was 0.742) | **0.798** (was 0.766) |
+| hard-split designs (23) | 0.581 | 0.588 |
+| hard-split analysis (24) | 0.820 (was 0.897) | 1.000 (was 0.938) |
+| 24-task pilot, current graders | 0.872 (was 0.917) | 0.910 (was 0.917) |
+
+The pilot's leaky figures here are re-graded with the current graders. They differ from the 0.957 / 0.920 reported at the top of
+this document, which used the graders as they were before the fixes.
+
+**Takeaway.** With nothing leaking, the gap between the two settings is real: **0.70 closed against 0.80 agentic** on the hard
+split. It comes entirely from analysis. Agentic large-pattern analysis is now saturated at 1.000. Closed-book defect finding
+and solving on 100-300 crease patterns are not. Design, at about 0.59 in both settings, remains the open problem, and it was
+never affected by the leak.
