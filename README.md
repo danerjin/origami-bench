@@ -70,13 +70,15 @@ Claude Opus 5.5 results so far are in [docs/eval-opus-5.5-2026-10.md](docs/eval-
 
 | | closed | agentic |
 |---|---|---|
-| hard split, all 47 tasks | 0.70 | 0.80 |
+| hard split, all 47 tasks | 0.68 | 0.79 |
 | hard-split designs (23) | 0.58 | 0.59 |
-| hard-split analysis (24) | 0.82 | 1.00 |
-| 24-task pilot (current graders) | 0.87 | 0.91 |
+| hard-split analysis (24) | 0.78 | 0.98 |
+| 24-task pilot (current graders) | 0.86 | 0.90 |
 
-The analysis tasks were re-run with opaque task folders. Earlier exports named each folder after its task id, and some ids
-reveal the answer, which mainly inflated closed-book defect finding. The report gives the before/after comparison.
+The analysis tasks were re-run twice with opaque task folders, and the table uses the mean of those two clean samples.
+Earlier exports named each folder after its task id, and some ids reveal the answer. That mainly inflated closed-book
+defect finding: 5/5 solved with the leak, 2/10 without. Design numbers are single-sample. The report gives the
+per-family comparison and the run-to-run noise.
 
 ## Quickstart
 

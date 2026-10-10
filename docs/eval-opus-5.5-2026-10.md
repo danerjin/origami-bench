@@ -389,3 +389,67 @@ this document, which used the graders as they were before the fixes.
 split. It comes entirely from analysis. Agentic large-pattern analysis is now saturated at 1.000. Closed-book defect finding
 and solving on 100-300 crease patterns are not. Design, at about 0.59 in both settings, remains the open problem, and it was
 never affected by the leak.
+
+### Second clean sample
+
+Each task in the clean re-run was run only once, and per-task swings looked as large as the leak itself. So the same 34
+tasks were run a second time. This run used a fresh opaque export with a new random salt, so the folder names are new; the
+prompts and rules were unchanged. The results are in `results/opus-5.5-clean2-{closed,agentic}`.
+
+| family (n) | closed leaky | closed clean 1 / 2 | closed solved (of 2n) | agentic leaky | agentic clean 1 / 2 | agentic solved (of 2n) |
+|---|---|---|---|---|---|---|
+| bug (5) | 1.00 | 0.46 / 0.20 | **2/10** | 0.80 | 1.00 / 0.80 | 9/10 |
+| read-tree (11) | 0.93 | 1.00 / 0.89 | 20/22 | 1.00 | 1.00 / 0.96 | 20/22 |
+| solve (11) | 0.81 | 0.85 / 0.86 | 16/22 | 0.95 | 1.00 / 1.00 | 22/22 |
+| read-tech (2) | 0.90 | 1.00 / 0.90 | 3/4 | 1.00 | 1.00 / 1.00 | 4/4 |
+| read-color (1) | 1.00 | 0.78 / 1.00 | 1/2 | 0.78 | 1.00 / 0.78 | 1/2 |
+| adv af (1) | 1.00 | 1.00 / 0.80 | 1/2 | 1.00 | 1.00 / 1.00 | 2/2 |
+| basic af/di (3) | 1.00 | 0.87 / 0.87 | 4/6 | 1.00 | 0.87 / 0.87 | 4/6 |
+| **all 34** | 0.911 | 0.854 / 0.780 | | 0.949 | 0.988 / 0.938 | |
+
+**Run-to-run noise.**
+
+| | closed | agentic |
+|---|---|---|
+| mean per-task difference between the two clean samples | 0.17 | 0.05 |
+| tasks whose two clean scores differ by more than 0.1 | 12 of 34 | 3 of 34 |
+
+Single closed-book scores on these tasks are not reliable on their own. Examples:
+- solve star4-16: 0.39, then 1.0;
+- read-tree gops-14: 1.0, then 0.16 (wrong leaf count);
+- solve kamiya-13: 1.0, then 0.5 (no layer order exists).
+
+Agentic scores are much more stable.
+
+**What survives two samples.**
+
+- **Closed-book defect finding is where the leak mattered.**
+  - With the leaky ids it solved 5 of 5 bug tasks. With clean ids it solved **2 of 10**.
+  - In 6 of the 10 clean attempts it said a defective pattern folds flat (2 in the first sample, 4 in the second). The second sample did this even on bug-flip-bird-2x2 and bug-global-three-flap-16, which the leaky run had solved.
+  - Agentic defect finding solved 9 of 10, and its one miss was `bug-global-bird-2x2` again. The agent's own layer check accepted a pattern that has no valid layer order, as in the leaky run. So this task is genuinely hard, and the leak is not what drives it.
+- **Everywhere else the leak effect is within noise.**
+  - Agentic solve was 22/22 clean, against 0.95 leaky. Agentic read-tree, read-tech and af are at or near 1.0 in every run.
+  - The closed solve family mean barely moves (0.81 leaky, 0.85 and 0.86 clean).
+- **Remaining agentic misses:**
+  - `af-bad-global-0`: 0.6 in all four clean runs. The agent says "not foldable" correctly but names the wrong violation vertex.
+  - `read-tree-tm-lizard`: 0.60 once, from a wrong topology on the TreeMaker base.
+  - `read-color-bird-border`: 0.78 once.
+
+### Final numbers (two-sample mean of the clean runs for the 34 ids)
+
+| | closed | agentic |
+|---|---|---|
+| **hard split, all 47 tasks** | **0.681** | **0.787** |
+| hard-split designs (23) | 0.581 | 0.588 |
+| hard-split analysis (24) | 0.778 | 0.978 |
+| 24-task pilot, current graders | 0.861 | 0.897 |
+
+These replace the single-sample figures above (0.703 closed / 0.798 agentic).
+
+The conclusion is unchanged and now rests on two samples:
+- Without the leak, the two settings are about 0.11 apart on the hard split.
+- All of that gap is in analysis, mainly closed-book defect finding and solving.
+- Agentic analysis is close to saturated.
+- Design, at about 0.59 in both settings, is the open problem.
+
+The design scores are still single-sample. Closed-book analysis has a noise floor of about 0.17 per task, which suggests per-design numbers should also be read with care.
