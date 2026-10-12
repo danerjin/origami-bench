@@ -307,7 +307,7 @@ def main(argv=None) -> None:
     ap.add_argument("--out", default="tasks")
     ap.add_argument("--seed", type=int, default=0,
                     help="0 reproduces the public seed set; any other value builds a fresh private split")
-    ap.add_argument("--tiers", default="basic,advanced", help="comma list of basic,advanced")
+    ap.add_argument("--tiers", default="basic,advanced,expert", help="comma list of basic,advanced,expert")
     args = ap.parse_args(argv)
     tiers = args.tiers.split(",")
     global SEED_OFFSET
@@ -329,10 +329,17 @@ def main(argv=None) -> None:
         from .build_advanced import build_advanced
 
         for sub in ("read", "solve", "pack", "design"):
-            shutil.rmtree(out / sub, ignore_errors=True)
+            for d in (out / sub).glob("adv-*"):
+                shutil.rmtree(d)
         for d in (out / "analytic").glob("adv-*"):
             shutil.rmtree(d)
         tasks += build_advanced(out, seed=args.seed)
+    if "expert" in tiers:
+        from .expert.build import build_expert
+
+        for d in out.glob("*/expert-*"):
+            shutil.rmtree(d)
+        tasks += build_expert(out, seed=args.seed)
     from .providers.baselines import UnfoldedProvider
 
     for t in tasks:  # record the trivial baseline's raw score so grading can rescale it to 0

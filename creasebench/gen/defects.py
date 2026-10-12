@@ -59,3 +59,35 @@ def global_conflict(cp: CreasePattern, rng: random.Random, tries: int = 200) -> 
         if rep.layers is not None and rep.layers.status == "none":
             return cand, {"kind": "global_conflict", "violation_vertices": []}
     return None
+
+
+def compose_defects(cp: CreasePattern, rng: random.Random, n_flips: int = 3, with_global: bool = True,
+                    min_sep: float = 0.08, timeout: float = 300) -> tuple[CreasePattern, dict] | None:
+    """Several defects at once (for repair tasks): ``n_flips`` single M/V flips at well-separated
+    creases, plus optionally one locally invisible global conflict. Returns the defective pattern
+    and the indices of every changed crease (the original assignment is one valid repair)."""
+    base = cp
+    changed: list[int] = []
+    if with_global:
+        res = global_conflict(cp, rng)
+        if res is None:
+            return None
+        base, _ = res
+        changed = [i for i, (a, b) in enumerate(zip(cp.assignments, base.assignments)) if a != b]
+    mids = {i: cp.vertices[list(cp.edges[i])].mean(axis=0) for i in cp.crease_indices()}
+    asg = list(base.assignments)
+    pool = [i for i in cp.crease_indices() if i not in changed]
+    rng.shuffle(pool)
+    flips = 0
+    for i in pool:
+        if flips >= n_flips:
+            break
+        if all(np.linalg.norm(mids[i] - mids[c]) >= min_sep for c in changed):
+            asg[i] = "M" if asg[i] == "V" else "V"
+            changed.append(i)
+            flips += 1
+    out = _with_assignments(cp, asg)
+    rep = verify(out, timeout=timeout)
+    if rep.foldable:
+        return None
+    return out, {"kind": "composed", "changed_edges": sorted(int(c) for c in changed), "n_edits": len(changed)}

@@ -33,6 +33,12 @@ from .verify import verify
 DESIGN_TIMEOUT = 180.0
 
 
+def _timeout(task) -> float:
+    """Verifier budget: expert tasks carry a longer one, so a correct large answer is never
+    failed as undetermined (the oracle answer is certified within the same budget)."""
+    return float(task.reference.get("verify_timeout", DESIGN_TIMEOUT))
+
+
 def _answer_cp(ans: dict) -> CreasePattern:
     from .graders import answer_cp
 
@@ -151,7 +157,7 @@ def grade_solve(task, ans: dict) -> dict:
                 "missing": len(norm(gk) - norm(ak)), "extra": len(norm(ak) - norm(gk))}
     if "U" in cp.assignments:
         return {"score": 0.0, "solved": False, "error": "some creases left unassigned"}
-    rep = verify(cp, timeout=DESIGN_TIMEOUT)
+    rep = verify(cp, timeout=_timeout(task))
     if rep.foldable:
         return {"score": 1.0, "solved": True}
     local_ok = 1 - len(rep.local.bad_vertices()) / max(1, sum(1 for _ in cp.vertices))
@@ -209,7 +215,7 @@ def grade_design(task, ans: dict) -> dict:
         return {"score": 0.0, "solved": False, "error": f"invalid answer: {e}"}
     if cp.num_creases() == 0:
         return {"score": 0.0, "solved": False, "error": "no creases"}
-    a = analyze_design(cp, target)
+    a = analyze_design(cp, target, timeout=_timeout(task))
     out = {k: v for k, v in a.items() if k not in ("rep", "fit", "tree")}
     if "fit" not in a:
         out.update(score=0.0, solved=False, error=f"not flat-foldable: {a['verify']['reason']}")
@@ -224,6 +230,8 @@ def grade_design(task, ans: dict) -> dict:
         out["beats_square_packing"] = bool(a["fit"].scale > ref["packing_bound_linf"] * (1 + 1e-6))
     factors = [min(1.0, eff)]
     passed = [eff >= ref.get("solve_efficiency", 0.6)]
+    if ref.get("require_beats_square"):
+        passed.append(out.get("beats_square_packing", False))
     if m <= 0:
         out.update(score=0.0, solved=False, error="the folded base does not realize the target tree")
         return out
@@ -301,7 +309,71 @@ def _colors_ok(a: dict, colors: dict) -> tuple[bool, dict]:
     return ok, detail
 
 
+# ----------------------------------------------------------------------------- repair (expert)
+def _edge_keys(cp: CreasePattern) -> dict:
+    out = {}
+    for (u, v), a in zip(cp.edges, cp.assignments):
+        k = tuple(sorted((tuple(np.round(cp.vertices[u], 5)), tuple(np.round(cp.vertices[v], 5)))))
+        out[k] = a
+    return out
+
+
+def grade_repair(task, ans: dict) -> dict:
+    """A defective pattern (several wrong M/V assignments) must be repaired: same geometry, every
+    crease M/V, it must fold flat, and at most ``max_edits`` assignments may differ from the given
+    pattern. Any repair meeting that is accepted (it need not be the original assignment)."""
+    try:
+        cp = _answer_cp(ans)
+    except Exception as e:  # noqa: BLE001
+        return {"score": 0.0, "solved": False, "error": f"invalid answer: {e}"}
+    given = CreasePattern.from_fold(task.inputs["crease_pattern"], rebuild=True)
+    gk, ak = _edge_keys(given), _edge_keys(cp)
+    if set(gk) != set(ak):
+        return {"score": 0.0, "solved": False, "error": "crease geometry differs from the given pattern",
+                "missing": len(set(gk) - set(ak)), "extra": len(set(ak) - set(gk))}
+    if any(a not in ("M", "V", "B") for a in ak.values()):
+        return {"score": 0.0, "solved": False, "error": "every crease must be M or V"}
+    edits = sum(1 for k, a in ak.items() if a != gk[k] and a != "B")
+    limit = int(task.reference["max_edits"])
+    out = {"edits": edits, "max_edits": limit}
+    if edits > limit:
+        return {**out, "score": 0.0, "solved": False, "error": f"{edits} creases changed, at most {limit} allowed"}
+    rep = verify(cp, timeout=_timeout(task))
+    if not rep.foldable:
+        return {**out, "score": 0.0, "solved": False, "error": rep.reason}
+    return {**out, "score": 1.0, "solved": True}
+
+
+# ----------------------------------------------------------------------------- inverse (expert)
+def grade_inverse(task, ans: dict) -> dict:
+    """Reconstruct a crease pattern from its folded base alone. It must fold flat, realize the
+    stick-figure tree at the reference scale (lengths within ``scale_tol``), and its folded
+    outline must match the given one (IoU after rigid alignment, incl. reflection)."""
+    from .compare import as_geometry, silhouette_iou
+
+    ref = task.reference
+    target = TargetTree.from_json(task.inputs["tree"])
+    try:
+        cp = _answer_cp(ans)
+    except Exception as e:  # noqa: BLE001
+        return {"score": 0.0, "solved": False, "error": f"invalid answer: {e}"}
+    if cp.num_creases() == 0:
+        return {"score": 0.0, "solved": False, "error": "no creases"}
+    a = analyze_design(cp, target, timeout=_timeout(task))
+    if "fit" not in a:
+        return {"score": 0.0, "solved": False, "error": f"not flat-foldable: {a['verify']['reason']}"}
+    scale_ratio = a["scale"] / ref["reference_scale"]
+    iou = silhouette_iou(a["rep"].folded.silhouette(), as_geometry(task.inputs["folded_outline"]),
+                         rot_step_deg=1.0)["iou"]
+    tree_ok = scale_ratio >= 1 - ref.get("scale_tol", 0.02)
+    sil_ok = iou >= ref.get("min_iou", 0.97)
+    return {"score": 0.5 * min(1.0, scale_ratio) + 0.5 * iou, "solved": bool(tree_ok and sil_ok),
+            "scale_ratio": scale_ratio, "silhouette_iou": iou, "num_creases": cp.num_creases()}
+
+
 GRADERS = {
+    "repair": grade_repair,
+    "inverse": grade_inverse,
     "read-tree": grade_read_tree,
     "read-tech": grade_read_tech,
     "read-color": grade_read_color,

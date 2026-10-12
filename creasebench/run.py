@@ -70,12 +70,14 @@ def summarize(records: list[dict]) -> str:
         if r.get("split"):
             splits[r["split"]].append(r)
     if splits:
-        lines += ["", "| split | n | mean score | solved |", "|---|---|---|---|"]
-        for sp in ("hard", "core", "warmup"):
+        # headline: pass rate (a task counts only when fully solved); mean partial credit is secondary
+        lines += ["", "| split | n | pass rate | solved | mean score |", "|---|---|---|---|---|"]
+        for sp in ("expert", "hard", "core", "warmup"):
             rs = splits.get(sp)
             if rs:
-                lines.append(f"| {sp} | {len(rs)} | {sum(r['score'] for r in rs) / len(rs):.3f} | "
-                             f"{sum(r['solved'] for r in rs)}/{len(rs)} |")
+                ns = sum(r["solved"] for r in rs)
+                lines.append(f"| {sp} | {len(rs)} | {ns / len(rs):.3f} | {ns}/{len(rs)} | "
+                             f"{sum(r['score'] for r in rs) / len(rs):.3f} |")
     judged = [r["judge"]["judge_score"] for r in records if r.get("judge") and r["judge"].get("judge_score") is not None]
     if judged:
         lines.append(f"\nSemantic judge (n={len(judged)}): mean {sum(judged) / len(judged):.3f}")

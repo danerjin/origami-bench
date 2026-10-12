@@ -185,3 +185,66 @@ def test_tree_distances_sound_and_lattice_axes():
     _assert_tree_distances_sound(bases22.bird_base())
     for name in ("fish_base", "waterbomb_base"):
         _assert_tree_distances_sound(getattr(R, name)())
+
+
+def test_require_beats_square_is_a_pass_condition():
+    from creasebench.advanced import grade_design
+    from creasebench.tasks import Task
+
+    star4 = {"edges": [["c", x, 1] for x in "abde"]}
+    task = Task("x", "design", "hard", "", inputs={"tree": star4},
+                reference={"family": "design", "bound": 0.5, "packing_bound_linf": 0.5,
+                           "require_beats_square": True})
+    bird = bases22.bird_base()
+    g = grade_design(task, {"creases": [[*p, *q, a] for p, q, a in bird.segments()]})
+    assert not g["solved"]  # the bird base only reaches the square packing
+
+
+def _fold_dict(cp):
+    from creasebench.build_advanced import fold_input
+
+    return fold_input(cp)
+
+
+def test_repair_accepts_any_minimal_repair_and_rejects_too_many_edits():
+    from creasebench.advanced import grade_repair
+    from creasebench.gen.defects import _with_assignments
+    from creasebench.tasks import Task
+
+    bird = bases22.bird_base()
+    idx = bird.crease_indices()
+    bad = list(bird.assignments)
+    for i in idx[:2]:
+        bad[i] = "M" if bad[i] == "V" else "V"
+    bad_cp = _with_assignments(bird, bad)
+    task = Task("x", "solve", "hard", "", inputs={"crease_pattern": _fold_dict(bad_cp)},
+                reference={"family": "repair", "max_edits": 2})
+    segs = lambda cp: [[*p, *q, a] for p, q, a in cp.segments() if a != "B"]  # noqa: E731
+    assert grade_repair(task, {"creases": segs(bird)})["solved"]
+    assert not grade_repair(task, {"creases": segs(bad_cp)})["solved"]  # unchanged: does not fold
+    # the globally flipped pattern (all M<->V) also folds, but needs far too many edits
+    flipped = _with_assignments(bird, [{"M": "V", "V": "M"}.get(a, a) for a in bird.assignments])
+    g = grade_repair(task, {"creases": segs(flipped)})
+    assert not g["solved"] and g["edits"] > 2
+    # any other minimal repair is fine too: here, the 2 edits relative to the defective input
+    task.reference["max_edits"] = 1
+    assert not grade_repair(task, {"creases": segs(bird)})["solved"]
+
+
+def test_composed_defects_break_foldability():
+    from creasebench.gen.defects import compose_defects
+
+    cp = bases22.certify_tiling(bases22.mirror_cells("bird", 2))
+    res = compose_defects(cp, random.Random(3), n_flips=2, with_global=False, timeout=60)
+    assert res is not None
+    bad, info = res
+    assert info["n_edits"] == 2 and not verify(bad).foldable
+
+
+def test_expert_split_is_reported_as_pass_rate():
+    from creasebench.run import summarize
+
+    recs = [{"id": f"t{i}", "tier": "advanced", "split": "expert", "track": "design", "difficulty": "hard",
+             "score": 0.9, "solved": i == 0, "efficiency": 0.9} for i in range(4)]
+    s = summarize(recs)
+    assert "| expert | 4 | 0.250 | 1/4 | 0.900 |" in s

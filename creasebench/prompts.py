@@ -101,6 +101,17 @@ Report the tree of the folded base (all leaves, including short ones; lengths to
 {"creases": [[x1, y1, x2, y2, "M" | "V"], ...]}
 ```
 Every crease of the input must appear with an assignment, and nothing else may be added.""",
+    "repair": """Answer format: the SAME creases, each assigned M or V.
+```json
+{"creases": [[x1, y1, x2, y2, "M" | "V"], ...]}
+```
+Every crease of the input must appear exactly once, nothing may be added, and at most the stated number of
+assignments may differ from the input.""",
+    "inverse": """Answer format: the complete crease pattern of the unit square.
+```json
+{"creases": [[x1, y1, x2, y2, "M" | "V"], ...]}
+```
+Paper edges may be omitted (they are added automatically).""",
     "pack": """Answer format:
 ```json
 {"positions": {"leaf_name": [x, y], ...}, "scale": m}
