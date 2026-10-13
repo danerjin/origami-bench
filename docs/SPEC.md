@@ -1,4 +1,4 @@
-# CreaseBench specification (v0.3)
+# CreaseBench specification (v0.4)
 
 ## 1. Motivation
 
@@ -277,3 +277,41 @@ column so the main score stays deterministic.
   - The largest certified pattern is still 305 creases. Extending pleat completion to these
     layouts is the next step for bigger solve and read-tree instances.
 
+
+### 7.9 Expert split (v0.4)
+
+The hard split had saturated on its analysis half: the agentic setting scored 0.98 with clean task ids. Partial credit
+also carried its headline: proportional efficiency, 0.5 for a locally valid solve, and 0.6 for "not foldable" with the
+wrong vertices. The **expert** split (`meta["split"] = "expert"`, built by `creasebench/expert/build.py`) is scored
+**pass/fail**, and its pass rate is the headline number. `run.summarize` reports a pass rate for every split, with mean
+partial credit as a secondary column.
+
+**The rule that keeps it honest.** Every expert task has a reference answer that passes its own grader within the same
+verifier budget (`verify_timeout = 900 s`). The oracle self-check in `build.py` enforces this, with no "bound only"
+exemptions. Tasks are hard because they demand expert-level results, not because they are impossible or ambiguous.
+
+References are generated offline into `tasks/expert_cache/`:
+- `expert.refgen`: TreeMaker, then M/V completion, then verify, then tree fit;
+- `expert.megagen`: mirror tilings with the map-fold assignment, and random 22.5° tilings;
+- `expert.gridgen`: lattice square packing, then BP Studio, then verify.
+
+| family | task | passes when |
+|---|---|---|
+| `expert-design-*` | design a base for a 14–27 flap tree | it folds and realizes the tree at ≥ 0.95 × the certified TreeMaker reference's scale |
+| `expert-thin-*` | the same, plus a thickness limit | additionally, no point has more layers than the reference |
+| `expert-read-tree-*` | read the tree of a TreeMaker base (non-lattice geometry) | exact tree |
+| `expert-inverse-*` | reconstruct the CP from the folded outline, an x-ray image and the tree | it folds, scale ≥ 0.98 × reference, folded-outline IoU ≥ 0.97 |
+| `expert-regions-*` | which flap does each marked region become? | every label right, up to automorphisms of the target tree (consistent mirror swaps accepted) |
+| `expert-min-grid-*` | box-pleat a tree with integer flaps on the smallest known grid | it folds, is BP, and scale ≥ 1/N_ref |
+| `expert-repair-*` | repair 3–6 M/V flips plus a locally invisible global conflict | it folds, with at most the number of injected edits changed (any minimal repair accepted) |
+| `expert-solve-mirror-*` | assign a 600–900 crease pattern | it folds |
+
+**What was tried and left out:**
+- **Scale-texture grafting** (Kamiya-style scale panels made by strip grafts). It needs full-length cut lines that cross
+  only perpendicular creases, and only 1 of the 27 certified BP bases has one. The scales are instead modelled at tree
+  level (`scaled_dragon`, `scaled_wyrm`: rows of small dorsal flaps).
+- **Mega patterns above about 900 creases.** The verifier cannot check them within the grading budget.
+- **Designer CPs from raster images.** `creasebench/tools/trace.py` traces box-pleated images (red = mountain,
+  blue = valley) and repairs the trace with local checks. At 880 px, the dense texture panels (features about 4 px
+  apart) still fail local checks, so these CPs need higher-resolution sources. `creasebench/importers.py` reads ORIPA
+  `.cp` / `.opx` directly.
