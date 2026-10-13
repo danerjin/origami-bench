@@ -81,14 +81,17 @@ def _ref_fit(cp: CreasePattern, edges):
     return rep, fit
 
 
-def design(tid, edges, subject, out, cp, *, extra="", max_layers=None, meta=None, threshold=DESIGN_THRESHOLD,
-           style_req=None, prompt=None):
-    rep, fit = _ref_fit(cp, edges)
+def _bounds(edges) -> dict:
     target = TargetTree.from_json({"edges": edges})
+    return {"packing_bound_l2": packing_bound(target, "l2", starts=60)["scale"],
+            "packing_bound_linf": packing_bound(target, "linf", starts=60)["scale"]}
+
+
+def design(tid, edges, subject, out, cp, *, extra="", max_layers=None, meta=None, threshold=DESIGN_THRESHOLD,
+           style_req=None, prompt=None, ref_rep=None, bounds=None):
+    rep, fit = ref_rep or _ref_fit(cp, edges)
     ref = {"family": "design", "bound": fit.scale, "reference_scale": fit.scale, "solve_efficiency": threshold,
-           "packing_bound_l2": packing_bound(target, "l2", starts=60)["scale"],
-           "packing_bound_linf": packing_bound(target, "linf", starts=60)["scale"],
-           "verify_timeout": VERIFY_TIMEOUT, "solution": segs_json(cp)}
+           **(bounds or _bounds(edges)), "verify_timeout": VERIFY_TIMEOUT, "solution": segs_json(cp)}
     if max_layers:
         ref["max_layers"] = max_layers
     if style_req:
@@ -109,28 +112,12 @@ def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
     # ---------------------------------------------------------------- TreeMaker references
     tm = _load("tm-")
     log(f"expert: {len(tm)} certified TreeMaker references")
-    for d in tm:
-        name, r = d["name"], d["result"]
-        cp = _cp(r["segments"])
-        spec = alltrees[name]
-        t, rep = design(f"expert-design-{name}", spec["edges"], spec["description"], out, cp,
-                        meta={"subject": name, "leaves": _leaves(spec["edges"])})
-        tasks.append(t)
-        layers = layer_count(rep.folded)
-        tasks.append(design(f"expert-thin-{name}", spec["edges"], spec["description"], out, cp, max_layers=layers,
-                            extra=f"In addition, no point of the folded base may have more than {layers} layers "
-                                  f"of paper.", meta={"subject": name, "max_layers": layers})[0])
-        tree = base_tree(rep)
-        tj = tree.to_json()
-        rt = Task(f"expert-read-tree-{name}", "read", "hard", READ_TREE_PROMPT + " Pass/fail: exact tree.",
-                  inputs={"crease_pattern": fold_input(cp)},
-                  reference={"family": "read-tree", "tree": {"edges": tj["edges"]}},
-                  meta=_meta(source=f"tm-{name}", num_creases=cp.num_creases(), leaves=len(tree.leaves)))
-        tasks.append(_save(rt, out, cp))
-        tasks.append(inverse_task(f"expert-inverse-{name}", spec["edges"], cp, rep, out))
-        rt = region_task(f"expert-regions-{name}", spec["edges"], cp, rep, out, rng)
-        if rt is not None:
-            tasks.append(rt)
+    from concurrent.futures import ProcessPoolExecutor
+
+    with ProcessPoolExecutor(max_workers=4) as ex:
+        for got in ex.map(_tm_tasks, [(d, str(out), seed) for d in tm]):
+            tasks += got
+            log(f"expert: {got[0].meta.get('subject')} -> {len(got)} tasks")
 
     # ---------------------------------------------------------------- minimal-grid box pleating
     for d in _load("grid-"):
@@ -180,6 +167,41 @@ def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
                  meta=_meta(source=d["name"], num_creases=cp.num_creases()))
         tasks.append(_save(t, out, cp, unassigned=True))
     log(f"expert: {len(tasks)} tasks")
+    return tasks
+
+
+def _tm_tasks(args) -> list[Task]:
+    """All tasks built on one certified TreeMaker reference (verified once)."""
+    from ..trees import BIG_TREES, EXPERT_TREES, SEMANTIC_TREES
+
+    d, out, seed = args
+    out = Path(out)
+    name, r = d["name"], d["result"]
+    rng = random.Random(f"{seed}-{name}")
+    spec = {**SEMANTIC_TREES, **BIG_TREES, **EXPERT_TREES}[name]
+    cp = _cp(r["segments"])
+    rep, fit = _ref_fit(cp, spec["edges"])
+    bounds = _bounds(spec["edges"])
+    tasks = []
+    t, _ = design(f"expert-design-{name}", spec["edges"], spec["description"], out, cp, ref_rep=(rep, fit),
+                  bounds=bounds, meta={"subject": name, "leaves": _leaves(spec["edges"])})
+    tasks.append(t)
+    layers = layer_count(rep.folded)
+    tasks.append(design(f"expert-thin-{name}", spec["edges"], spec["description"], out, cp, max_layers=layers,
+                        ref_rep=(rep, fit), bounds=bounds,
+                        extra=f"In addition, no point of the folded base may have more than {layers} layers "
+                              f"of paper.", meta={"subject": name, "max_layers": layers})[0])
+    tree = base_tree(rep)
+    tj = tree.to_json()
+    rt = Task(f"expert-read-tree-{name}", "read", "hard", READ_TREE_PROMPT + " Pass/fail: exact tree.",
+              inputs={"crease_pattern": fold_input(cp)},
+              reference={"family": "read-tree", "tree": {"edges": tj["edges"]}},
+              meta=_meta(subject=name, source=f"tm-{name}", num_creases=cp.num_creases(), leaves=len(tree.leaves)))
+    tasks.append(_save(rt, out, cp))
+    tasks.append(inverse_task(f"expert-inverse-{name}", spec["edges"], cp, rep, out))
+    rg = region_task(f"expert-regions-{name}", spec["edges"], cp, rep, out, rng)
+    if rg is not None:
+        tasks.append(rg)
     return tasks
 
 

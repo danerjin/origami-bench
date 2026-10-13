@@ -277,6 +277,11 @@ def build_design_text(out: Path) -> list[Task]:
 
 
 # ----------------------------------------------------------------- oracle answers
+def _oracle_grade(task: Task):
+    ans = oracle_answer(task)
+    return grade(task, ans) if ans else None
+
+
 def oracle_answer(task: Task) -> str:
     fam = task.reference.get("family")
     if fam == "read-tree":
@@ -310,8 +315,15 @@ def main(argv=None) -> None:
     ap.add_argument("--seed", type=int, default=0,
                     help="0 reproduces the public seed set; any other value builds a fresh private split")
     ap.add_argument("--tiers", default="basic,advanced,expert", help="comma list of basic,advanced,expert")
+    ap.add_argument("--skip-oracle", action="store_true", help="build only; check later with --oracle-only")
+    ap.add_argument("--oracle-only", nargs="*", metavar="ID_PREFIX",
+                    help="no build: re-run the oracle self-check on saved tasks (optionally only these id prefixes)")
     args = ap.parse_args(argv)
     tiers = args.tiers.split(",")
+    if args.oracle_only is not None:
+        from .tasks import load_tasks
+
+        return _oracle_check(load_tasks(args.out, ids=args.oracle_only or None), Path(args.out))
     global SEED_OFFSET
     SEED_OFFSET = 1_000_000 * args.seed
     out = Path(args.out)
@@ -350,13 +362,22 @@ def main(argv=None) -> None:
         t.reference.pop("baseline_score", None)
         t.reference["baseline_score"] = round(grade(t, UnfoldedProvider().run(t, "", [], None, 0).text)["score"], 6)
         t.save(t.root)
+    if args.skip_oracle:
+        print(f"built {len(tasks)} tasks into {out}/ (oracle check skipped)")
+        return
+    _oracle_check(tasks, out)
+
+
+def _oracle_check(tasks, out) -> None:
     bad = []
-    for t in tasks:
-        ans = oracle_answer(t)
-        if not ans:
+    from concurrent.futures import ProcessPoolExecutor
+
+    with ProcessPoolExecutor(max_workers=4) as ex:  # expert references take minutes each to verify
+        grades = list(ex.map(_oracle_grade, tasks))
+    for t, g in zip(tasks, grades):
+        if g is None:
             print(f"--   {t.id:32} {t.difficulty:6} (no reference design; bound only)")
             continue
-        g = grade(t, ans)
         if t.reference.get("family") == "design":
             # reference designs need not reach the packing bound; they must solve the task
             status = "ok" if g.get("solved") else "FAIL"
