@@ -18,7 +18,7 @@ from pathlib import Path
 CACHE = Path(__file__).resolve().parents[2] / "tasks" / "expert_cache"
 
 
-def certify_treemaker(edges, seeds=(1, 2, 3, 4), timeout=240.0, verify_timeout=900.0, log=print):
+def certify_treemaker(edges, seeds=(1, 2, 3, 4), timeout=240.0, verify_timeout=900.0, max_corner_sets=6, log=print):
     from ..cp import CreasePattern
     from ..gen import treemaker
     from ..tree import extract_trees
@@ -30,7 +30,8 @@ def certify_treemaker(edges, seeds=(1, 2, 3, 4), timeout=240.0, verify_timeout=9
     for seed in seeds:
         t0 = time.time()
         try:
-            r = treemaker.generate(edges, timeout=timeout, corners="auto", seed=seed, restarts=8)
+            r = treemaker.generate(edges, timeout=timeout, corners="auto", seed=seed, restarts=8,
+                                   max_corner_sets=max_corner_sets)
         except Exception as e:  # noqa: BLE001
             log(f"  seed {seed}: treemaker failed: {e}")
             continue
@@ -58,20 +59,22 @@ def certify_treemaker(edges, seeds=(1, 2, 3, 4), timeout=240.0, verify_timeout=9
     return best
 
 
-def main(names):
+def main(names, retry=False):
     from ..trees import BIG_TREES, SEMANTIC_TREES, EXPERT_TREES
 
     allt = {**SEMANTIC_TREES, **BIG_TREES, **EXPERT_TREES}
     CACHE.mkdir(parents=True, exist_ok=True)
     for name in names or list(allt):
         f = CACHE / f"tm-{name}.json"
-        if f.exists():
+        if f.exists() and not (retry and json.loads(f.read_text())["result"] is None):
             print(name, "cached"); continue
         print(name, flush=True)
-        best = certify_treemaker(allt[name]["edges"], log=lambda s: print(s, flush=True))
+        kw = dict(seeds=range(5, 11), max_corner_sets=14, timeout=400.0) if retry else {}
+        best = certify_treemaker(allt[name]["edges"], log=lambda s: print(s, flush=True), **kw)
         f.write_text(json.dumps({"name": name, "edges": allt[name]["edges"], "result": best}))
         print(name, "->", None if best is None else f"scale {best['scale']:.4f}", flush=True)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    args = sys.argv[1:]
+    main([a for a in args if a != "--retry"], retry="--retry" in args)

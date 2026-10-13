@@ -12,15 +12,14 @@ from .refgen import CACHE
 
 # integer trees (node 0 = body); lengths in grid units. Uneven flaps make the packing non-trivial.
 GRID_TREES = {
+    # star and two-hub trees (the shapes BP Studio's pleat completion handles), uneven integer flaps
     "lizard": [(0, 1, 8), (0, 2, 8), (0, 3, 8), (0, 4, 16), (4, 5, 8), (4, 6, 8), (4, 7, 8)],
-    "beetle": [(0, 1, 3), (0, 2, 3), (0, 3, 5), (0, 4, 5), (0, 9, 2), (9, 5, 5), (9, 6, 5), (9, 7, 4), (9, 8, 4)],
-    "deer": [(0, 1, 4), (1, 2, 3), (1, 3, 3), (1, 4, 2), (0, 5, 6), (0, 6, 6), (0, 7, 5), (7, 8, 6), (7, 9, 6),
-             (7, 10, 3)],
-    "crab": [(0, i, 4) for i in range(1, 9)] + [(0, 9, 6), (0, 10, 6)],
-    "bird": [(0, 1, 4), (0, 2, 9), (0, 3, 9), (0, 4, 5), (0, 5, 3), (0, 6, 3)],
-    "frog": [(0, 1, 4), (0, 2, 4), (0, 3, 3), (0, 7, 3), (7, 4, 7), (7, 5, 7), (0, 6, 2)],
-    "spider6": [(0, i, 6) for i in range(1, 7)] + [(0, 7, 3)],
-    "scorpion": [(0, 1, 5), (0, 2, 5), (0, 3, 3), (0, 4, 3), (0, 5, 3), (0, 6, 3), (0, 7, 10)],
+    "star5": [(0, 1, 7), (0, 2, 5), (0, 3, 5), (0, 4, 3), (0, 5, 6)],
+    "star6": [(0, 1, 6), (0, 2, 6), (0, 3, 4), (0, 4, 4), (0, 5, 3), (0, 6, 5)],
+    "hub2a": [(0, 7, 3), (0, 1, 5), (0, 2, 5), (0, 3, 4), (7, 4, 6), (7, 5, 6), (7, 6, 2)],
+    "hub2b": [(0, 7, 2), (0, 1, 7), (0, 2, 4), (7, 3, 5), (7, 4, 5), (7, 5, 3)],
+    "hub2c": [(0, 7, 4), (0, 1, 6), (0, 2, 6), (0, 3, 2), (7, 4, 4), (7, 5, 4), (7, 6, 5)],
+    "star7": [(0, 1, 5), (0, 2, 5), (0, 3, 4), (0, 4, 4), (0, 5, 3), (0, 6, 3), (0, 7, 6)],
 }
 
 
@@ -35,7 +34,7 @@ def main():
             continue
         t0 = time.time()
         print(name, flush=True)
-        r = certified_min_grid(edges, log=lambda s: print(s, flush=True))
+        r = certified_min_grid(edges, tries_per_grid=25, slack=4, log=lambda s: print(s, flush=True))
         if r is None:
             f.write_text(json.dumps({"name": name, "edges": edges, "result": None}))
             continue
