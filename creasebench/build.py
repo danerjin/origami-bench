@@ -316,6 +316,7 @@ def main(argv=None) -> None:
                     help="0 reproduces the public seed set; any other value builds a fresh private split")
     ap.add_argument("--tiers", default="basic,advanced,expert", help="comma list of basic,advanced,expert")
     ap.add_argument("--skip-oracle", action="store_true", help="build only; check later with --oracle-only")
+    ap.add_argument("--resume", action="store_true", help="expert: keep already-built per-tree task folders")
     ap.add_argument("--oracle-only", nargs="*", metavar="ID_PREFIX",
                     help="no build: re-run the oracle self-check on saved tasks (optionally only these id prefixes)")
     args = ap.parse_args(argv)
@@ -351,9 +352,10 @@ def main(argv=None) -> None:
     if "expert" in tiers:
         from .expert.build import build_expert
 
-        for d in out.glob("*/expert-*"):
-            shutil.rmtree(d)
-        tasks += build_expert(out, seed=args.seed)
+        if not args.resume:
+            for d in out.glob("*/expert-*"):
+                shutil.rmtree(d)
+        tasks += build_expert(out, seed=args.seed, resume=args.resume)
     from .providers.baselines import UnfoldedProvider
 
     for t in tasks:  # record the trivial baseline's raw score so grading can rescale it to 0

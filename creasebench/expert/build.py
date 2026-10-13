@@ -102,7 +102,7 @@ def design(tid, edges, subject, out, cp, *, extra="", max_layers=None, meta=None
     return _save(t, out), rep
 
 
-def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
+def build_expert(out: Path, seed: int = 0, log=print, resume: bool = False) -> list[Task]:
     from ..trees import BIG_TREES, EXPERT_TREES, SEMANTIC_TREES
 
     rng = random.Random(seed)
@@ -115,9 +115,9 @@ def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
     from concurrent.futures import ProcessPoolExecutor
 
     with ProcessPoolExecutor(max_workers=4) as ex:
-        for got in ex.map(_tm_tasks, [(d, str(out), seed) for d in tm]):
+        for d, got in zip(tm, ex.map(_tm_tasks, [(d, str(out), seed, resume) for d in tm])):
             tasks += got
-            log(f"expert: {got[0].meta.get('subject')} -> {len(got)} tasks")
+            log(f"expert: {d['name']} -> {len(got)} tasks")
 
     # ---------------------------------------------------------------- minimal-grid box pleating
     for d in _load("grid-"):
@@ -174,13 +174,27 @@ def _tm_tasks(args) -> list[Task]:
     """All tasks built on one certified TreeMaker reference (verified once)."""
     from ..trees import BIG_TREES, EXPERT_TREES, SEMANTIC_TREES
 
-    d, out, seed = args
+    d, out, seed, resume = args
     out = Path(out)
     name, r = d["name"], d["result"]
     rng = random.Random(f"{seed}-{name}")
     spec = {**SEMANTIC_TREES, **BIG_TREES, **EXPERT_TREES}[name]
-    cp = _cp(r["segments"])
-    rep, fit = _ref_fit(cp, spec["edges"])
+    if resume and all(any(Path(out).glob(f"*/{f}-{name}")) for f in
+                      ("expert-design", "expert-thin", "expert-read-tree", "expert-inverse")):
+        from ..tasks import load_task
+
+        return [load_task(p / "task.json") for p in sorted(Path(out).glob(f"*/expert-*-{name}"))]
+    rep = fit = cp = None
+    for tol in (1e-9, 1e-7, 1e-6):  # cached coordinates are rounded; re-planarize tolerantly
+        cp = CreasePattern.from_segments([[*s[:4], s[4]] for s in r["segments"]], tol=tol)
+        try:
+            rep, fit = _ref_fit(cp, spec["edges"])
+            break
+        except AssertionError:
+            rep = None
+    if rep is None:
+        print(f"expert: reference for {name} does not re-verify from the cache; skipped", flush=True)
+        return []
     bounds = _bounds(spec["edges"])
     tasks = []
     t, _ = design(f"expert-design-{name}", spec["edges"], spec["description"], out, cp, ref_rep=(rep, fit),
