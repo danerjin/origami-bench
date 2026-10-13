@@ -200,4 +200,23 @@ EXPERT_TREES: dict[str, dict] = {
                         for i in (1, 2, 3) for s in "lr"), [])
                  + [["thorax", "petiole", 1], ["petiole", "gaster", 3]],
     },
+    "scaled_dragon": {
+        "description": "a scaled dragon: horned head with whiskers, four legs with three toes each, a long tail, "
+                       "and a row of eight small dorsal scales along the spine (each scale is its own small flap)",
+        "edges": [["neck", "head", 2], ["head", "jaw", 1.5]] + _sym("head", "horn", 2) + _sym("head", "whisker", 1.5)
+                 + [["neck", "spine1", 1]] + _chain([f"spine{i}" for i in range(1, 9)], 1)
+                 + [[f"spine{i}", f"scale{i}", 0.6] for i in range(1, 9)]
+                 + [["spine2", "fl", 2.5], ["spine2", "fr", 2.5], ["spine7", "hl", 2.5], ["spine7", "hr", 2.5]]
+                 + _fan("fl", "fl_toe", [0.75] * 3) + _fan("fr", "fr_toe", [0.75] * 3)
+                 + _fan("hl", "hl_toe", [0.75] * 3) + _fan("hr", "hr_toe", [0.75] * 3)
+                 + [["spine8", "tail", 5]],
+    },
+    "scaled_wyrm": {
+        "description": "a wingless wyrm: a head with two horns, two forelegs, and twelve dorsal scales along a long "
+                       "body ending in a tail fin",
+        "edges": [["neck", "head", 1.5]] + _sym("head", "horn", 1.5) + [["neck", "b1", 0.75]]
+                 + _chain([f"b{i}" for i in range(1, 13)], 0.75)
+                 + [[f"b{i}", f"scale{i}", 0.5] for i in range(1, 13)]
+                 + _sym("b2", "foreleg", 2.5) + [["b12", "tail", 3], ["tail", "fin_l", 1], ["tail", "fin_r", 1]],
+    },
 }

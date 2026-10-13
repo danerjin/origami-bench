@@ -162,3 +162,4 @@ def border_graft(base: CreasePattern, w: float, fold_old_border: bool = False,
         segs += [(corners[i], corners[(i + 1) % 4], "U") for i in range(4)]
     cp = CreasePattern.from_segments(segs, tol=1e-9)
     return complete_assignment(cp, timeout=timeout)
+
