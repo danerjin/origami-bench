@@ -248,3 +248,33 @@ def test_expert_split_is_reported_as_pass_rate():
              "score": 0.9, "solved": i == 0, "efficiency": 0.9} for i in range(4)]
     s = summarize(recs)
     assert "| expert | 4 | 0.250 | 1/4 | 0.900 |" in s
+
+
+def test_oripa_cp_import_roundtrip(tmp_path):
+    from creasebench.importers import load_crease_pattern
+
+    bird = bases22.bird_base()
+    lines = []
+    for p, q, a in bird.segments(include_border=True):
+        t = {"B": 1, "M": 2, "V": 3}[a]
+        # ORIPA convention: centred at 0, side 400, y down
+        lines.append(f"{t} {p[0]*400-200} {-(p[1]*400-200)} {q[0]*400-200} {-(q[1]*400-200)}")
+    lines.append("4 -200 0 200 0")  # aux line, ignored
+    f = tmp_path / "bird.cp"
+    f.write_text("\n".join(lines))
+    cp = load_crease_pattern(f)
+    assert cp.num_creases() == bird.num_creases()
+    assert verify(cp).foldable
+
+
+def test_regions_grader_accepts_mirror_labelling():
+    from creasebench.advanced import grade_regions
+    from creasebench.tasks import Task
+
+    tree = {"edges": [["b", "leg_l", 2], ["b", "leg_r", 2], ["b", "head", 1], ["b", "tail", 3]]}
+    task = Task("x", "read", "hard", "", inputs={"tree": tree},
+                reference={"family": "regions", "regions": {"A": "leg_l", "B": "tail"}})
+    assert grade_regions(task, {"regions": {"A": "leg_l", "B": "tail"}})["solved"]
+    assert grade_regions(task, {"regions": {"A": "leg_r", "B": "tail"}})["solved"]  # mirror image
+    assert not grade_regions(task, {"regions": {"A": "head", "B": "tail"}})["solved"]
+    assert not grade_regions(task, {"regions": {"A": "leg_l", "B": "leg_r"}})["solved"]

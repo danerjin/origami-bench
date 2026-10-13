@@ -371,7 +371,34 @@ def grade_inverse(task, ans: dict) -> dict:
             "scale_ratio": scale_ratio, "silhouette_iou": iou, "num_creases": cp.num_creases()}
 
 
+# ----------------------------------------------------------------------------- regions (expert)
+def grade_regions(task, ans: dict) -> dict:
+    """Region -> flap labels. Correct iff some automorphism of the (length-weighted) target tree maps
+    the reference labelling onto the answer, so consistent mirror swaps count as right."""
+    ref = task.reference["regions"]
+    got = ans.get("regions") or {}
+    if not isinstance(got, dict) or set(got) != set(ref):
+        return {"score": 0.0, "solved": False, "error": f"answer must label exactly the regions {sorted(ref)}"}
+    tree = nx.Graph()
+    for a, b, l in task.inputs["tree"]["edges"]:
+        tree.add_edge(str(a), str(b), length=float(l))
+    leaves = {n for n in tree if tree.degree(n) == 1}
+    if any(str(v) not in leaves for v in got.values()) or len(set(map(str, got.values()))) != len(got):
+        return {"score": 0.0, "solved": False, "error": "labels must be distinct flap (leaf) names of the tree"}
+    pin = {ref[r]: str(got[r]) for r in ref}  # reference leaf -> answered leaf
+    g1, g2 = tree.copy(), tree.copy()
+    for n in g1:
+        g1.nodes[n]["pin"] = pin.get(n)
+    for n in g2:
+        g2.nodes[n]["name"] = n
+    ok = nx.is_isomorphic(g1, g2, node_match=lambda a, b: a["pin"] is None or a["pin"] == b["name"],
+                          edge_match=lambda e1, e2: abs(e1["length"] - e2["length"]) <= 1e-9 * max(1, e1["length"]))
+    exact = sum(str(got[r]) == ref[r] for r in ref) / len(ref)
+    return {"score": 1.0 if ok else 0.5 * exact, "solved": bool(ok), "exact_fraction": exact}
+
+
 GRADERS = {
+    "regions": grade_regions,
     "repair": grade_repair,
     "inverse": grade_inverse,
     "read-tree": grade_read_tree,

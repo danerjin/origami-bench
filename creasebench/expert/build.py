@@ -128,6 +128,9 @@ def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
                   meta=_meta(source=f"tm-{name}", num_creases=cp.num_creases(), leaves=len(tree.leaves)))
         tasks.append(_save(rt, out, cp))
         tasks.append(inverse_task(f"expert-inverse-{name}", spec["edges"], cp, rep, out))
+        rt = region_task(f"expert-regions-{name}", spec["edges"], cp, rep, out, rng)
+        if rt is not None:
+            tasks.append(rt)
 
     # ---------------------------------------------------------------- minimal-grid box pleating
     for d in _load("grid-"):
@@ -178,6 +181,25 @@ def build_expert(out: Path, seed: int = 0, log=print) -> list[Task]:
         tasks.append(_save(t, out, cp, unassigned=True))
     log(f"expert: {len(tasks)} tasks")
     return tasks
+
+
+def region_task(tid, edges, cp, rep, out, rng, k=6):
+    from ..render import render_cp
+    from .regions import REGIONS_PROMPT, region_boxes
+
+    fit = best_fit(extract_trees(rep.folded), TargetTree.from_json({"edges": edges}))
+    boxes, answer = region_boxes(cp, fit.mapping, rng, k=k)
+    if len(boxes) < 3:
+        return None
+    t = Task(tid, "read", "hard", REGIONS_PROMPT.format(k=len(boxes), labels=", ".join(boxes)),
+             inputs={"crease_pattern": fold_input(cp), "tree": {"edges": edges}, "regions": boxes},
+             reference={"family": "regions", "regions": answer},
+             meta=_meta(num_creases=cp.num_creases()))
+    t = _save(t, out)
+    render_cp(cp, t.root / "cp.png", title="Crease pattern with marked regions", boxes=boxes)
+    t.images = ["cp.png"]
+    t.save(t.root)
+    return t
 
 
 def _leaves(edges) -> int:

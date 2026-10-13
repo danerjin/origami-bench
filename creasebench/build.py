@@ -285,6 +285,8 @@ def oracle_answer(task: Task) -> str:
         ans = dict(task.reference["tech"])
     elif fam == "read-color":
         ans = {"colors": task.reference["colors"]}
+    elif fam == "regions":
+        ans = {"regions": task.reference["regions"]}
     elif fam == "pack":
         ans = {"positions": task.reference["solution"]}
     elif fam in ("solve", "design"):

@@ -101,6 +101,11 @@ Report the tree of the folded base (all leaves, including short ones; lengths to
 {"creases": [[x1, y1, x2, y2, "M" | "V"], ...]}
 ```
 Every crease of the input must appear with an assignment, and nothing else may be added.""",
+    "regions": """Answer format:
+```json
+{"regions": {"A": "flap_name", "B": "flap_name", ...}}
+```
+Use the flap (leaf) names of the given tree; each region gets a different flap.""",
     "repair": """Answer format: the SAME creases, each assigned M or V.
 ```json
 {"creases": [[x1, y1, x2, y2, "M" | "V"], ...]}

@@ -36,11 +36,17 @@ def _finish(fig, path: str | Path | None) -> bytes:
     return data
 
 
-def render_cp(cp: CreasePattern, path=None, title: str | None = None, label_vertices: bool = False) -> bytes:
+def render_cp(cp: CreasePattern, path=None, title: str | None = None, label_vertices: bool = False,
+              boxes: dict | None = None) -> bytes:
+    """``boxes``: optional {label: [x0, y0, x1, y1]} regions drawn as labelled rectangles."""
     fig, ax = plt.subplots(figsize=(6, 6))
     for (u, v), a in zip(cp.edges, cp.assignments):
         p, q = cp.vertices[u], cp.vertices[v]
         ax.plot([p[0], q[0]], [p[1], q[1]], **STYLE[a])
+    for label, (x0, y0, x1, y1) in (boxes or {}).items():
+        ax.add_patch(plt.Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=2.2, ec="black"))
+        ax.annotate(str(label), (x0, y1), fontsize=12, weight="bold", xytext=(2, -13), textcoords="offset points",
+                    bbox=dict(fc="white", ec="none", alpha=0.8, pad=0.5))
     if label_vertices:
         for i, (x, y) in enumerate(cp.vertices):
             ax.annotate(str(i), (x, y), fontsize=7, color="#444", xytext=(2, 2), textcoords="offset points")
