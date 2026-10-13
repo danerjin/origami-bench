@@ -1,0 +1,1 @@
+{"name": "scorpion", "edges": [["prosoma", "left_pincer", 3], ["prosoma", "right_pincer", 3], ["prosoma", "a", 1], ["a", "leg1_l", 2], ["a", "leg1_r", 2], ["a", "b", 1], ["b", "leg2_l", 2], ["b", "leg2_r", 2], ["b", "c", 1], ["c", "leg3_l", 2], ["c", "leg3_r", 2], ["c", "d", 1], ["d", "leg4_l", 2], ["d", "leg4_r", 2], ["d", "stinger", 5]], "result": null}
