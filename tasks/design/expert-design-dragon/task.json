@@ -2,7 +2,7 @@
  "id": "expert-design-dragon",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a dragon: head with two horns, two wings, four legs, long tail). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.06530 (one unit of tree length -> 0.06530 of the paper side).",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a dragon: head with two horns, two wings, four legs, long tail). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0687332 (one unit of tree length -> 0.0687332 of the paper side).",
  "inputs": {
   "tree": {
    "edges": [
@@ -74,7 +74,7 @@
   "family": "design",
   "bound": 0.06873327581,
   "reference_scale": 0.06873327581,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.06695948019195351,
   "packing_bound_linf": 0.058806490010383884,
   "verify_timeout": 900.0,

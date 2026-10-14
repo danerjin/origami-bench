@@ -2,7 +2,7 @@
  "id": "expert-regions-tarantula",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 14 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -2187,6 +2187,54 @@
     0.3148,
     0.2755,
     0.4348
+   ],
+   "G": [
+    0.912,
+    0.9755,
+    1.0,
+    1.0
+   ],
+   "H": [
+    0.4827,
+    0.51,
+    0.6027,
+    0.63
+   ],
+   "I": [
+    0.0,
+    0.0,
+    0.0497,
+    0.051
+   ],
+   "J": [
+    0.9456,
+    0.0,
+    1.0,
+    0.0729
+   ],
+   "K": [
+    0.938,
+    0.3992,
+    1.0,
+    0.5192
+   ],
+   "L": [
+    0.1943,
+    0.226,
+    0.3143,
+    0.346
+   ],
+   "M": [
+    0.7326,
+    0.1748,
+    0.8526,
+    0.2948
+   ],
+   "N": [
+    0.2286,
+    0.6744,
+    0.3486,
+    0.7944
    ]
   }
  },
@@ -2201,7 +2249,15 @@
    "C": "leg8",
    "D": "chelicera_r",
    "E": "pedipalp_r",
-   "F": "spinneret_r"
+   "F": "spinneret_r",
+   "G": "leg6",
+   "H": "leg4",
+   "I": "leg5",
+   "J": "leg2",
+   "K": "leg3",
+   "L": "spinneret_l",
+   "M": "chelicera_l",
+   "N": "pedipalp_l"
   }
  },
  "meta": {

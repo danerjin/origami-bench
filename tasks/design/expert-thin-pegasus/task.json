@@ -2,7 +2,7 @@
  "id": "expert-thin-pegasus",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a pegasus: head with two ears and a muzzle, wings with three primary feathers each, four legs, a tail). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.04111 (one unit of tree length -> 0.04111 of the paper side). In addition, no point of the folded base may have more than 62 layers of paper.",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a pegasus: head with two ears and a muzzle, wings with three primary feathers each, four legs, a tail). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0432756 (one unit of tree length -> 0.0432756 of the paper side). In addition, no point of the folded base may have more than 62 layers of paper.",
  "inputs": {
   "tree": {
    "edges": [
@@ -109,7 +109,7 @@
   "family": "design",
   "bound": 0.043275616607,
   "reference_scale": 0.043275616607,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.04530610439349936,
   "packing_bound_linf": 0.03700179603767078,
   "verify_timeout": 900.0,

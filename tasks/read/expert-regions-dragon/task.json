@@ -2,7 +2,7 @@
  "id": "expert-regions-dragon",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 10 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -1895,6 +1895,30 @@
     0.9162,
     0.0874,
     1.0
+   ],
+   "G": [
+    0.0,
+    0.0,
+    0.0412,
+    0.0294
+   ],
+   "H": [
+    0.9632,
+    0.0,
+    1.0,
+    0.0929
+   ],
+   "I": [
+    0.3582,
+    0.0,
+    0.4782,
+    0.0346
+   ],
+   "J": [
+    0.9331,
+    0.4407,
+    1.0,
+    0.5607
    ]
   }
  },
@@ -1909,7 +1933,11 @@
    "C": "hind_l",
    "D": "horn_r",
    "E": "jaw",
-   "F": "wing_l"
+   "F": "wing_l",
+   "G": "wing_r",
+   "H": "front_r",
+   "I": "front_l",
+   "J": "hind_r"
   }
  },
  "meta": {

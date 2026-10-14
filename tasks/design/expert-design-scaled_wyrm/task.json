@@ -2,7 +2,7 @@
  "id": "expert-design-scaled_wyrm",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a wingless wyrm: a head with two horns, two forelegs, and twelve dorsal scales along a long body ending in a tail fin). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.05788 (one unit of tree length -> 0.05788 of the paper side).",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a wingless wyrm: a head with two horns, two forelegs, and twelve dorsal scales along a long body ending in a tail fin). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0609262 (one unit of tree length -> 0.0609262 of the paper side).",
  "inputs": {
   "tree": {
    "edges": [
@@ -174,7 +174,7 @@
   "family": "design",
   "bound": 0.060926259322,
   "reference_scale": 0.060926259322,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.05555555555427231,
   "packing_bound_linf": 0.03905928638627221,
   "verify_timeout": 900.0,

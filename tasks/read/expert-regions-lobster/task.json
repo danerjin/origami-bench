@@ -2,7 +2,7 @@
  "id": "expert-regions-lobster",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 17 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -3088,6 +3088,72 @@
     0.9657,
     1.0,
     1.0
+   ],
+   "G": [
+    0.7062,
+    0.0944,
+    0.8262,
+    0.2144
+   ],
+   "H": [
+    0.0,
+    0.3805,
+    0.0892,
+    0.5005
+   ],
+   "I": [
+    0.3687,
+    0.2349,
+    0.4887,
+    0.3549
+   ],
+   "J": [
+    0.0859,
+    0.5598,
+    0.2059,
+    0.6798
+   ],
+   "K": [
+    0.5535,
+    0.0,
+    0.6735,
+    0.0486
+   ],
+   "L": [
+    0.5244,
+    0.6899,
+    0.6444,
+    0.8099
+   ],
+   "M": [
+    0.0,
+    0.9703,
+    0.049,
+    1.0
+   ],
+   "N": [
+    0.4063,
+    0.0,
+    0.5263,
+    0.0956
+   ],
+   "O": [
+    0.9269,
+    0.2703,
+    1.0,
+    0.3903
+   ],
+   "P": [
+    0.6289,
+    0.8263,
+    0.7489,
+    0.9463
+   ],
+   "Q": [
+    0.9507,
+    0.6533,
+    1.0,
+    0.7733
    ]
   }
  },
@@ -3102,7 +3168,18 @@
    "C": "leg4",
    "D": "leg6",
    "E": "claw_r",
-   "F": "leg8"
+   "F": "leg8",
+   "G": "leg3",
+   "H": "antennule_l",
+   "I": "claw_l",
+   "J": "antennule_r",
+   "K": "leg2",
+   "L": "fan_l",
+   "M": "antenna_r",
+   "N": "leg1",
+   "O": "leg5",
+   "P": "fan_m",
+   "Q": "leg7"
   }
  },
  "meta": {

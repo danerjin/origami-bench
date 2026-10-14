@@ -2,7 +2,7 @@
  "id": "expert-regions-mantis",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 14 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -2707,6 +2707,54 @@
     0.5375,
     0.3198,
     0.6575
+   ],
+   "G": [
+    0.9132,
+    0.6029,
+    1.0,
+    0.7229
+   ],
+   "H": [
+    0.9382,
+    0.0,
+    1.0,
+    0.0547
+   ],
+   "I": [
+    0.0,
+    0.0,
+    0.0421,
+    0.0435
+   ],
+   "J": [
+    0.0,
+    0.9286,
+    0.093,
+    1.0
+   ],
+   "K": [
+    0.545,
+    0.0,
+    0.665,
+    0.0824
+   ],
+   "L": [
+    0.8158,
+    0.2546,
+    0.9358,
+    0.3746
+   ],
+   "M": [
+    0.5027,
+    0.9492,
+    0.6227,
+    1.0
+   ],
+   "N": [
+    0.0,
+    0.3876,
+    0.0797,
+    0.5076
    ]
   }
  },
@@ -2721,7 +2769,15 @@
    "C": "hindwing_r",
    "D": "forewing_r",
    "E": "cercus_r",
-   "F": "antenna_r"
+   "F": "antenna_r",
+   "G": "hindwing_l",
+   "H": "hind_l",
+   "I": "raptor_r",
+   "J": "raptor_l",
+   "K": "mid_l",
+   "L": "mid_r",
+   "M": "cercus_l",
+   "N": "antenna_l"
   }
  },
  "meta": {

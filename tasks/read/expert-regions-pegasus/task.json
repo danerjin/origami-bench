@@ -2,7 +2,7 @@
  "id": "expert-regions-pegasus",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 14 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -3087,6 +3087,54 @@
     0.3517,
     0.0424,
     0.4717
+   ],
+   "G": [
+    0.5554,
+    0.0,
+    0.6754,
+    0.0808
+   ],
+   "H": [
+    0.0,
+    0.0,
+    0.0631,
+    0.037
+   ],
+   "I": [
+    0.8658,
+    0.5078,
+    0.9858,
+    0.6278
+   ],
+   "J": [
+    0.0,
+    0.9533,
+    0.0326,
+    1.0
+   ],
+   "K": [
+    0.3551,
+    0.7357,
+    0.4751,
+    0.8557
+   ],
+   "L": [
+    0.1688,
+    0.2953,
+    0.2888,
+    0.4153
+   ],
+   "M": [
+    0.4667,
+    0.9123,
+    0.5867,
+    1.0
+   ],
+   "N": [
+    0.0,
+    0.5563,
+    0.0757,
+    0.6763
    ]
   }
  },
@@ -3101,7 +3149,15 @@
    "C": "muzzle",
    "D": "ear_r",
    "E": "hind_r",
-   "F": "prim_l3"
+   "F": "prim_l3",
+   "G": "hind_l",
+   "H": "front_l",
+   "I": "ear_l",
+   "J": "front_r",
+   "K": "prim_r2",
+   "L": "prim_l2",
+   "M": "prim_r3",
+   "N": "prim_l1"
   }
  },
  "meta": {

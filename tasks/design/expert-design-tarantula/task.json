@@ -2,7 +2,7 @@
  "id": "expert-design-tarantula",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a tarantula: eight long legs, pedipalps, chelicerae, spinnerets on a big abdomen). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.04903 (one unit of tree length -> 0.04903 of the paper side).",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a tarantula: eight long legs, pedipalps, chelicerae, spinnerets on a big abdomen). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0516059 (one unit of tree length -> 0.0516059 of the paper side).",
  "inputs": {
   "tree": {
    "edges": [
@@ -89,7 +89,7 @@
   "family": "design",
   "bound": 0.051605940684,
   "reference_scale": 0.051605940684,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.058740287730917114,
   "packing_bound_linf": 0.04984602328645021,
   "verify_timeout": 900.0,

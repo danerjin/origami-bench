@@ -2,7 +2,7 @@
  "id": "expert-thin-lobster",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a lobster: two big claws, long antennae, antennules, eight walking legs, a three-lobed tail fan). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.04304 (one unit of tree length -> 0.04304 of the paper side). In addition, no point of the folded base may have more than 100 layers of paper.",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a lobster: two big claws, long antennae, antennules, eight walking legs, a three-lobed tail fan). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0453081 (one unit of tree length -> 0.0453081 of the paper side). In addition, no point of the folded base may have more than 100 layers of paper.",
  "inputs": {
   "tree": {
    "edges": [
@@ -109,7 +109,7 @@
   "family": "design",
   "bound": 0.045308098411,
   "reference_scale": 0.045308098411,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.048587386820885446,
   "packing_bound_linf": 0.03987593531077288,
   "verify_timeout": 900.0,

@@ -2,7 +2,7 @@
  "id": "expert-regions-scaled_wyrm",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 18 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -6110,6 +6110,78 @@
     0.2922,
     0.2329,
     0.4122
+   ],
+   "G": [
+    0.0,
+    0.3547,
+    0.088,
+    0.4747
+   ],
+   "H": [
+    0.9491,
+    0.9131,
+    1.0,
+    1.0
+   ],
+   "I": [
+    0.4722,
+    0.6415,
+    0.5922,
+    0.7615
+   ],
+   "J": [
+    0.0,
+    0.238,
+    0.0587,
+    0.358
+   ],
+   "K": [
+    0.9199,
+    0.5926,
+    1.0,
+    0.7126
+   ],
+   "L": [
+    0.0628,
+    0.1129,
+    0.1828,
+    0.2329
+   ],
+   "M": [
+    0.355,
+    0.5418,
+    0.475,
+    0.6618
+   ],
+   "N": [
+    0.1975,
+    0.0,
+    0.3175,
+    0.0703
+   ],
+   "O": [
+    0.9473,
+    0.0,
+    1.0,
+    0.0467
+   ],
+   "P": [
+    0.5081,
+    0.0,
+    0.6281,
+    0.0318
+   ],
+   "Q": [
+    0.5822,
+    0.9196,
+    0.7022,
+    1.0
+   ],
+   "R": [
+    0.3632,
+    0.0883,
+    0.4832,
+    0.2083
    ]
   }
  },
@@ -6124,7 +6196,19 @@
    "C": "scale10",
    "D": "foreleg_l",
    "E": "fin_l",
-   "F": "scale3"
+   "F": "scale3",
+   "G": "scale5",
+   "H": "fin_r",
+   "I": "scale7",
+   "J": "scale4",
+   "K": "scale12",
+   "L": "scale2",
+   "M": "scale6",
+   "N": "scale1",
+   "O": "foreleg_r",
+   "P": "horn_r",
+   "Q": "scale11",
+   "R": "horn_l"
   }
  },
  "meta": {

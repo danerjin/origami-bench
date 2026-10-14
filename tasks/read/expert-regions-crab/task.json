@@ -2,7 +2,7 @@
  "id": "expert-regions-crab",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 12 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -1829,6 +1829,42 @@
     0.9154,
     1.0,
     1.0
+   ],
+   "G": [
+    0.9381,
+    0.0,
+    1.0,
+    0.0528
+   ],
+   "H": [
+    0.5691,
+    0.6205,
+    0.6891,
+    0.7405
+   ],
+   "I": [
+    0.0,
+    0.9515,
+    0.034,
+    1.0
+   ],
+   "J": [
+    0.7138,
+    0.2434,
+    0.8338,
+    0.3634
+   ],
+   "K": [
+    0.0,
+    0.0,
+    0.0403,
+    0.0475
+   ],
+   "L": [
+    0.2536,
+    0.341,
+    0.3736,
+    0.461
    ]
   }
  },
@@ -1843,7 +1879,13 @@
    "C": "right_eye",
    "D": "left_eye",
    "E": "leg7",
-   "F": "leg8"
+   "F": "leg8",
+   "G": "leg6",
+   "H": "leg2",
+   "I": "left_claw",
+   "J": "leg5",
+   "K": "right_claw",
+   "L": "leg1"
   }
  },
  "meta": {

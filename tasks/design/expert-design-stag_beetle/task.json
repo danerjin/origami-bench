@@ -2,7 +2,7 @@
  "id": "expert-design-stag_beetle",
  "track": "design",
  "difficulty": "hard",
- "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a stag beetle: long mandibles, antennae, palps, six legs, two elytra (wings), abdomen). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.04317 (one unit of tree length -> 0.04317 of the paper side).",
+ "prompt": "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below (the stick figure of a stag beetle: long mandibles, antennae, palps, six legs, two elytra (wings), abdomen). This is graded pass/fail: the base must fold flat and realize the tree at a scale of at least 0.0454431 (one unit of tree length -> 0.0454431 of the paper side).",
  "inputs": {
   "tree": {
    "edges": [
@@ -104,7 +104,7 @@
   "family": "design",
   "bound": 0.045443139502,
   "reference_scale": 0.045443139502,
-  "solve_efficiency": 0.95,
+  "solve_efficiency": 0.999999,
   "packing_bound_l2": 0.05392065338905818,
   "packing_bound_linf": 0.047612047724512184,
   "verify_timeout": 900.0,

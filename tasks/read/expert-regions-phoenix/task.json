@@ -2,7 +2,7 @@
  "id": "expert-regions-phoenix",
  "track": "read",
  "difficulty": "hard",
- "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 6 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, also drawn on the image. Each region contains the tip of exactly one flap. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
+ "prompt": "Below is the crease pattern of a flat-foldable origami base (one uncut square), the stick-figure tree it realizes (with named flaps), and 27 rectangular regions of the unfolded paper, labelled A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AA, also drawn on the image. Each region contains the tip of exactly one flap, and every flap tip is marked. For every region, say which flap of the tree it becomes. Pass/fail: all regions must be right (mirror-image answers, e.g. left/right swapped consistently, are accepted when the tree is symmetric).",
  "inputs": {
   "crease_pattern": {
    "vertices_coords": [
@@ -6442,6 +6442,132 @@
     0.569,
     1.0,
     0.689
+   ],
+   "G": [
+    0.1076,
+    0.8466,
+    0.2276,
+    0.9666
+   ],
+   "H": [
+    0.4677,
+    0.928,
+    0.5877,
+    1.0
+   ],
+   "I": [
+    0.0704,
+    0.4425,
+    0.1904,
+    0.5625
+   ],
+   "J": [
+    0.9058,
+    0.0,
+    1.0,
+    0.0838
+   ],
+   "K": [
+    0.1351,
+    0.121,
+    0.2551,
+    0.241
+   ],
+   "L": [
+    0.5342,
+    0.5166,
+    0.6542,
+    0.6366
+   ],
+   "M": [
+    0.6265,
+    0.8854,
+    0.7465,
+    1.0
+   ],
+   "N": [
+    0.3359,
+    0.775,
+    0.4559,
+    0.895
+   ],
+   "O": [
+    0.6093,
+    0.1495,
+    0.7293,
+    0.2695
+   ],
+   "P": [
+    0.002,
+    0.4853,
+    0.062,
+    0.5453
+   ],
+   "Q": [
+    0.0306,
+    0.8045,
+    0.1506,
+    0.9245
+   ],
+   "R": [
+    0.0,
+    0.5734,
+    0.0735,
+    0.6934
+   ],
+   "S": [
+    0.3036,
+    0.0162,
+    0.4236,
+    0.1362
+   ],
+   "T": [
+    0.7508,
+    0.5048,
+    0.8708,
+    0.6248
+   ],
+   "U": [
+    0.0,
+    0.4245,
+    0.0251,
+    0.5445
+   ],
+   "V": [
+    0.2302,
+    0.9381,
+    0.3502,
+    1.0
+   ],
+   "W": [
+    0.9375,
+    0.9317,
+    1.0,
+    1.0
+   ],
+   "X": [
+    0.4866,
+    0.3381,
+    0.6066,
+    0.4581
+   ],
+   "Y": [
+    0.0,
+    0.664,
+    0.0911,
+    0.784
+   ],
+   "Z": [
+    0.5645,
+    0.0,
+    0.6845,
+    0.0756
+   ],
+   "AA": [
+    0.2882,
+    0.3697,
+    0.4082,
+    0.4897
    ]
   }
  },
@@ -6456,7 +6582,28 @@
    "C": "toe_l3",
    "D": "tail1",
    "E": "tail7",
-   "F": "prim_r4"
+   "F": "prim_r4",
+   "G": "crest2",
+   "H": "prim_l5",
+   "I": "toe_r2",
+   "J": "tail3",
+   "K": "beak",
+   "L": "prim_r2",
+   "M": "crest3",
+   "N": "prim_l2",
+   "O": "prim_r5",
+   "P": "toe_l2",
+   "Q": "crest1",
+   "R": "toe_r1",
+   "S": "tail2",
+   "T": "prim_r3",
+   "U": "toe_l1",
+   "V": "prim_l4",
+   "W": "tail5",
+   "X": "prim_r1",
+   "Y": "toe_r3",
+   "Z": "tail6",
+   "AA": "prim_l3"
   }
  },
  "meta": {
