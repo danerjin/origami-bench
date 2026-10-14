@@ -37,12 +37,16 @@ def _finish(fig, path: str | Path | None) -> bytes:
 
 
 def render_cp(cp: CreasePattern, path=None, title: str | None = None, label_vertices: bool = False,
-              boxes: dict | None = None) -> bytes:
-    """``boxes``: optional {label: [x0, y0, x1, y1]} regions drawn as labelled rectangles."""
-    fig, ax = plt.subplots(figsize=(6, 6))
+              boxes: dict | None = None, size: float = 6, lw_scale: float = 1.0) -> bytes:
+    """``boxes``: optional {label: [x0, y0, x1, y1]} regions drawn as labelled rectangles. ``size`` (inches at
+    100 dpi) and ``lw_scale`` give high-resolution renders for image-only tasks."""
+    fig, ax = plt.subplots(figsize=(size, size))
     for (u, v), a in zip(cp.edges, cp.assignments):
         p, q = cp.vertices[u], cp.vertices[v]
-        ax.plot([p[0], q[0]], [p[1], q[1]], **STYLE[a])
+        st = dict(STYLE[a])
+        st["lw"] = st.get("lw", st.get("linewidth", 1.0)) * lw_scale
+        st.pop("linewidth", None)
+        ax.plot([p[0], q[0]], [p[1], q[1]], **st)
     for label, (x0, y0, x1, y1) in (boxes or {}).items():
         ax.add_patch(plt.Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=2.2, ec="black"))
         ax.annotate(str(label), (x0, y1), fontsize=12, weight="bold", xytext=(2, -13), textcoords="offset points",

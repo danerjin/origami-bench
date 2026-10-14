@@ -278,3 +278,37 @@ def test_regions_grader_accepts_mirror_labelling():
     assert grade_regions(task, {"regions": {"A": "leg_r", "B": "tail"}})["solved"]  # mirror image
     assert not grade_regions(task, {"regions": {"A": "head", "B": "tail"}})["solved"]
     assert not grade_regions(task, {"regions": {"A": "leg_l", "B": "leg_r"}})["solved"]
+
+
+def test_global_only_defects_pass_local_tests_but_do_not_fold():
+    from creasebench.foldability import check_local
+    from creasebench.gen.defects import compose_global
+
+    cp = bases22.certify_tiling(bases22.mirror_cells("bird", 2))
+    res = None
+    for seed in range(6):
+        res = compose_global(cp, random.Random(seed), n_conflicts=2, min_sep=0.1, timeout=60)
+        if res is not None:
+            break
+    assert res is not None
+    bad, info = res
+    assert check_local(bad).ok and not verify(bad).foldable
+    assert info["n_edits"] == len(info["changed_edges"]) >= 4
+
+
+def test_region_boxes_mark_every_tip_separately():
+    import numpy as np
+
+    from creasebench.expert.regions import region_boxes
+
+    cp = bases22.certify_tiling(bases22.mirror_cells("bird", 2))
+    rng = random.Random(0)
+    corners = [i for i, p in enumerate(cp.vertices) if p[0] in (0, 1) and p[1] in (0, 1)]
+    close = [i for i, p in enumerate(cp.vertices) if 0 < p[0] < 0.2 and 0 < p[1] < 0.2][:1]
+    tips = {f"leaf{j}": v for j, v in enumerate(corners + close)}
+    boxes, answer = region_boxes(cp, tips, rng)
+    assert set(answer.values()) == set(tips)
+    for lab, (x0, y0, x1, y1) in boxes.items():
+        inside = [l for l, v in tips.items()
+                  if x0 - 1e-9 <= cp.vertices[v][0] <= x1 + 1e-9 and y0 - 1e-9 <= cp.vertices[v][1] <= y1 + 1e-9]
+        assert inside == [answer[lab]]

@@ -2,14 +2,17 @@
 
 Families (all ``meta["split"] = "expert"``):
 
-* ``expert-design-*``      design a base for a 14-27 flap tree at >= 95% of a certified TreeMaker
-                           reference's scale (universal-molecule packing);
+* ``expert-design-*``      design a base for a 14-27 flap tree at a scale that matches or beats a
+                           certified TreeMaker reference (universal-molecule packing);
 * ``expert-thin-*``        the same, and the base may be no thicker (max paper layers) than the reference;
-* ``expert-read-tree-*``   exact tree of a certified TreeMaker base (non-lattice geometry, many flaps);
+* ``expert-read-tree-*``   exact tree of a certified TreeMaker base, given ONLY as an image (no coordinates);
+* ``expert-regions-*``     name the flap of every marked tip region of a TreeMaker base;
 * ``expert-inverse-*``     reconstruct a crease pattern from its folded base alone (outline + x-ray image + tree);
-* ``expert-min-grid-*``    a box-pleated base on the smallest grid known (certified BP Studio layout);
-* ``expert-repair-*``      repair several M/V defects (flips + a locally invisible global conflict);
-* ``expert-solve-mega-*``  assign 600-1100 crease patterns (2x2 mirror tilings of BP designs, random 22.5 tilings).
+* ``expert-repair-*``      repair several locally invisible M/V defects (every vertex passes Maekawa/Kawasaki;
+                           only the global layer order is broken).
+
+Calibration round 1 (docs/eval-opus-5.5-2026-10.md) dropped min-grid (only tiny trees certify) and the mirror
+mega-solve (a 2x2 mirror tiling is a map fold) and hardened repair, regions, read-tree and the design bar.
 
 References are generated offline (``python -m creasebench.expert.refgen`` / ``megagen`` / ``gridgen``) and
 cached under ``tasks/expert_cache``; this builder only reads the cache.
@@ -21,7 +24,7 @@ import json
 import random
 from pathlib import Path
 
-from ..build_advanced import READ_TREE_PROMPT, SOLVE_PROMPT, _save, base_tree, fold_input, segs_json
+from ..build_advanced import _save, base_tree, fold_input, segs_json
 from ..cp import CreasePattern
 from ..packing import packing_bound
 from ..render import render_folded
@@ -32,29 +35,31 @@ from ..verify import verify
 from .refgen import CACHE
 
 VERIFY_TIMEOUT = 900.0  # graders and oracle self-check share this budget
-DESIGN_THRESHOLD = 0.95
+DESIGN_THRESHOLD = 1.0 - 1e-6  # match or beat the certified reference
+MIN_REF_RATIO = 0.7  # design/thin need a reference this close to the L2 packing bound
 
 EXPERT_DESIGN_PROMPT = (
     "Design a crease pattern for ONE uncut unit square whose flat-folded base realizes the target tree below "
     "(the stick figure of {subject}). This is graded pass/fail: the base must fold flat and realize the tree "
-    "at a scale of at least {thr:.5f} (one unit of tree length -> {thr:.5f} of the paper side). {extra}")
+    "at a scale of at least {thr:.7f} (one unit of tree length -> {thr:.7f} of the paper side). {extra}")
 REPAIR_PROMPT = (
-    "The crease pattern below was flat-foldable, but {k} of its mountain/valley assignments have been changed "
-    "(some changes break Maekawa/Kawasaki-style local conditions, at least one only breaks the global layer "
-    "order). Repair it: return a full M/V assignment of the SAME creases that folds flat, changing at most {k} "
-    "assignments relative to the given pattern. Pass/fail.")
+    "The crease pattern below was flat-foldable, but {k} of its mountain/valley assignments have been changed. "
+    "Every vertex still satisfies Maekawa's and Kawasaki's theorems (and every other local test): the changes "
+    "only break the GLOBAL layer order, so no flat folded state exists. Repair it: return a full M/V assignment "
+    "of the SAME creases that folds flat, changing at most {k} assignments relative to the given pattern. "
+    "Pass/fail.")
 INVERSE_PROMPT = (
     "Below is a flat-folded origami base, folded from ONE uncut unit square: its outline (`folded_outline`, "
     "coordinates in units of the paper side), an x-ray image of the folded state (all layers drawn "
     "translucently), and the stick-figure tree it realizes. Reconstruct the crease pattern. Pass/fail: your "
     "pattern must fold flat, realize the tree at a scale of at least {thr:.5f}, and its folded outline must "
     "match the given one (IoU >= {iou} after the best rotation/reflection/translation).")
-MIN_GRID_PROMPT = (
-    "Design a BOX-PLEATED crease pattern (every crease at 0/45/90/135 degrees) for ONE uncut unit square whose "
-    "flat-folded base realizes the tree below, with tree lengths in grid units: a flap of length L uses L grid "
-    "squares. Pass/fail: the scale must be at least 1/{n} (i.e. the layout must fit an N x N grid with N <= {n}; "
-    "the best layout we know needs exactly {n}).")
-MEGA_SOLVE_PROMPT = SOLVE_PROMPT + " The pattern has {n} creases. Pass/fail."
+READ_TREE_IMAGE_PROMPT = (
+    "The image `cp.png` shows the crease pattern of a flat-foldable origami base (one uncut unit square; red solid "
+    "= mountain, blue dashed = valley, axes in units of the paper side). No coordinates are given: read the "
+    "pattern from the image. Report the stick-figure tree of the folded base: its flaps, branch points and the "
+    "length of every segment (in units of the paper side). Pass/fail: exact tree (lengths within the usual "
+    "tolerance).")
 
 
 def _cp(segments) -> CreasePattern:
@@ -119,32 +124,19 @@ def build_expert(out: Path, seed: int = 0, log=print, resume: bool = False) -> l
             tasks += got
             log(f"expert: {d['name']} -> {len(got)} tasks")
 
-    # ---------------------------------------------------------------- minimal-grid box pleating
-    for d in _load("grid-"):
-        r = d["result"]
-        cp = _cp(r["segments"])
-        edges = [[f"n{u}", f"n{v}", float(l)] for u, v, l in d["edges"]]
-        n = r["n_ref"]
-        t, _ = design(f"expert-min-grid-{d['name']}", edges, "", out, cp, threshold=1.0 - 1e-6,
-                      style_req={"kind": "box_pleat"}, prompt=MIN_GRID_PROMPT.format(n=n),
-                      meta={"n_ref": n, "n_pack": r["n_pack"]})
-        t.reference["bound"] = t.reference["reference_scale"]
-        t.save(t.root)
-        tasks.append(t)
-
     # ---------------------------------------------------------------- repair
     bp = Path(__file__).resolve().parents[1] / "gen" / "bpstudio" / "samples" / "certified"
     repair_srcs = [(f"bp-{n}", CreasePattern.from_fold(json.loads((bp / f"{n}.fold").read_text()), rebuild=True), k)
-                   for n, k in (("lizard_32", 4), ("random_0_18", 4), ("random_0_00", 3), ("tight_0_00", 3))]
+                   for n, k in (("lizard_32", 3), ("random_0_18", 3), ("random_0_00", 3), ("tight_0_00", 3))]
     mega = _load("mega-")
     for d in mega:
-        repair_srcs.append((d["name"], _cp(d["segments"]), 6))
+        repair_srcs.append((d["name"], _cp(d["segments"]), 4))
     for name, cp, k in repair_srcs:
         res = None
         for _ in range(5):
-            from ..gen.defects import compose_defects
+            from ..gen.defects import compose_global
 
-            res = compose_defects(cp, rng, n_flips=k, with_global=True, timeout=VERIFY_TIMEOUT)
+            res = compose_global(cp, rng, n_conflicts=k, timeout=VERIFY_TIMEOUT)
             if res is not None:
                 break
         if res is None:
@@ -158,14 +150,6 @@ def build_expert(out: Path, seed: int = 0, log=print, resume: bool = False) -> l
                  meta=_meta(source=name, num_creases=cp.num_creases()))
         tasks.append(_save(t, out, bad))
 
-    # ---------------------------------------------------------------- mega solve
-    for d in mega:
-        cp = _cp(d["segments"])
-        t = Task(f"expert-solve-{d['name']}", "solve", "hard", MEGA_SOLVE_PROMPT.format(n=cp.num_creases()),
-                 inputs={"crease_pattern": fold_input(cp, unassigned=True)},
-                 reference={"family": "solve", "solution": segs_json(cp), "verify_timeout": VERIFY_TIMEOUT},
-                 meta=_meta(source=d["name"], num_creases=cp.num_creases()))
-        tasks.append(_save(t, out, cp, unassigned=True))
     log(f"expert: {len(tasks)} tasks")
     return tasks
 
@@ -197,21 +181,33 @@ def _tm_tasks(args) -> list[Task]:
         return []
     bounds = _bounds(spec["edges"])
     tasks = []
+    strong = fit.scale >= MIN_REF_RATIO * bounds["packing_bound_l2"]
+    if not strong:
+        print(f"expert: {name} reference reaches only {fit.scale / bounds['packing_bound_l2']:.2f} of the L2 "
+              f"packing bound; no design/thin tasks (the bar would be beatable)", flush=True)
     t, _ = design(f"expert-design-{name}", spec["edges"], spec["description"], out, cp, ref_rep=(rep, fit),
-                  bounds=bounds, meta={"subject": name, "leaves": _leaves(spec["edges"])})
-    tasks.append(t)
+                  bounds=bounds, meta={"subject": name, "leaves": _leaves(spec["edges"])}) if strong else (None, None)
+    if t is not None:
+        tasks.append(t)
     layers = layer_count(rep.folded)
-    tasks.append(design(f"expert-thin-{name}", spec["edges"], spec["description"], out, cp, max_layers=layers,
+    if strong:
+        tasks.append(design(f"expert-thin-{name}", spec["edges"], spec["description"], out, cp, max_layers=layers,
                         ref_rep=(rep, fit), bounds=bounds,
                         extra=f"In addition, no point of the folded base may have more than {layers} layers "
                               f"of paper.", meta={"subject": name, "max_layers": layers})[0])
     tree = base_tree(rep)
     tj = tree.to_json()
-    rt = Task(f"expert-read-tree-{name}", "read", "hard", READ_TREE_PROMPT + " Pass/fail: exact tree.",
-              inputs={"crease_pattern": fold_input(cp)},
+    rt = Task(f"expert-read-tree-{name}", "read", "hard", READ_TREE_IMAGE_PROMPT, inputs={},
               reference={"family": "read-tree", "tree": {"edges": tj["edges"]}},
-              meta=_meta(subject=name, source=f"tm-{name}", num_creases=cp.num_creases(), leaves=len(tree.leaves)))
-    tasks.append(_save(rt, out, cp))
+              meta=_meta(subject=name, source=f"tm-{name}", num_creases=cp.num_creases(), leaves=len(tree.leaves),
+                         image_only=True))
+    rt = _save(rt, out)
+    from ..render import render_cp
+
+    render_cp(cp, rt.root / "cp.png", title="Crease pattern", size=24, lw_scale=1.5)
+    rt.images = ["cp.png"]
+    rt.save(rt.root)
+    tasks.append(rt)
     tasks.append(inverse_task(f"expert-inverse-{name}", spec["edges"], cp, rep, out))
     rg = region_task(f"expert-regions-{name}", spec["edges"], cp, rep, out, rng)
     if rg is not None:
@@ -219,20 +215,20 @@ def _tm_tasks(args) -> list[Task]:
     return tasks
 
 
-def region_task(tid, edges, cp, rep, out, rng, k=6):
+def region_task(tid, edges, cp, rep, out, rng, k=None):
     from ..render import render_cp
     from .regions import REGIONS_PROMPT, region_boxes
 
     fit = best_fit(extract_trees(rep.folded), TargetTree.from_json({"edges": edges}))
     boxes, answer = region_boxes(cp, fit.mapping, rng, k=k)
-    if len(boxes) < 3:
+    if len(boxes) < (k or len(fit.mapping)):  # every tip must be marked
         return None
     t = Task(tid, "read", "hard", REGIONS_PROMPT.format(k=len(boxes), labels=", ".join(boxes)),
              inputs={"crease_pattern": fold_input(cp), "tree": {"edges": edges}, "regions": boxes},
              reference={"family": "regions", "regions": answer},
              meta=_meta(num_creases=cp.num_creases()))
     t = _save(t, out)
-    render_cp(cp, t.root / "cp.png", title="Crease pattern with marked regions", boxes=boxes)
+    render_cp(cp, t.root / "cp.png", title="Crease pattern with marked regions", boxes=boxes, size=12)
     t.images = ["cp.png"]
     t.save(t.root)
     return t

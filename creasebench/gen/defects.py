@@ -61,6 +61,46 @@ def global_conflict(cp: CreasePattern, rng: random.Random, tries: int = 200) -> 
     return None
 
 
+def compose_global(cp: CreasePattern, rng: random.Random, n_conflicts: int = 3, min_sep: float = 0.15,
+                   tries: int = 400, timeout: float = 300) -> tuple[CreasePattern, dict] | None:
+    """``n_conflicts`` locally invisible defects (for hard repair tasks): each flips 2-4 creases around one
+    face so every vertex still passes Maekawa/Kawasaki, and the faces are well separated. The result passes
+    the local tests everywhere but has no valid layer order; the original is one valid repair."""
+    eidx = cp.edge_index()
+    asg = list(cp.assignments)
+    centers: list[np.ndarray] = []
+    changed: list[int] = []
+    for _ in range(tries):
+        if len(centers) >= n_conflicts:
+            break
+        f = rng.randrange(len(cp.faces))
+        face = cp.faces[f]
+        c = cp.vertices[face].mean(axis=0)
+        if any(np.linalg.norm(c - o) < min_sep for o in centers):
+            continue
+        ring = [eidx[(min(a, b), max(a, b))] for a, b in zip(face, face[1:] + face[:1])]
+        ring = [e for e in ring if asg[e] in "MV" and e not in changed]
+        if len(ring) < 2:
+            continue
+        trial = list(asg)
+        pick = rng.sample(ring, rng.randint(2, min(4, len(ring))))
+        for e in pick:
+            trial[e] = "M" if trial[e] == "V" else "V"
+        if not check_local(_with_assignments(cp, trial)).ok:
+            continue
+        asg = trial
+        centers.append(c)
+        changed += pick
+    if len(centers) < n_conflicts:
+        return None
+    out = _with_assignments(cp, asg)
+    rep = verify(out, timeout=timeout)
+    if rep.foldable or rep.layers is None or rep.layers.status != "none":
+        return None
+    return out, {"kind": "global_only", "changed_edges": sorted(int(c) for c in changed),
+                 "n_edits": len(changed), "n_conflicts": n_conflicts}
+
+
 def compose_defects(cp: CreasePattern, rng: random.Random, n_flips: int = 3, with_global: bool = True,
                     min_sep: float = 0.08, timeout: float = 300) -> tuple[CreasePattern, dict] | None:
     """Several defects at once (for repair tasks): ``n_flips`` single M/V flips at well-separated
