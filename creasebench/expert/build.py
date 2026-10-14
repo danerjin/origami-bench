@@ -58,8 +58,8 @@ READ_TREE_IMAGE_PROMPT = (
     "The image `cp.png` shows the crease pattern of a flat-foldable origami base (one uncut unit square; red solid "
     "= mountain, blue dashed = valley, axes in units of the paper side). No coordinates are given: read the "
     "pattern from the image. Report the stick-figure tree of the folded base: its flaps, branch points and the "
-    "length of every segment (in units of the paper side). Pass/fail: exact tree (lengths within the usual "
-    "tolerance).")
+    "length of every segment (in units of the paper side). Pass/fail: exact tree, every segment length within "
+    "0.01 of the paper side (or 2%, whichever is larger).")
 
 
 def _cp(segments) -> CreasePattern:
