@@ -527,9 +527,11 @@ The inverse tasks were not changed by the hardening, so their round-1 answers we
 | design-crab | pass | fail: does not fold (vertex with 3 creases, odd degree) |
 | design-tarantula | pass (scale 0.0526) | fail (scale 0.0389, below reference) |
 | read-tree-dragon | pass | pass |
-| thin-tarantula | pass | pending (re-run after a container restart) |
+| thin-tarantula | pass | fail: folds, but scale 0.0500 is below the 0.0516 reference |
 
-Counting only tasks that pass in both samples, the agentic headline is 1/34 so far (read-tree-dragon), or 2/34 if thin-tarantula passes again: 3–6%, under the 10% target. The single-sample rate is 4/34 (11.8%).
+Counting only tasks that pass in both samples, the agentic headline is **1/34 (2.9%)**: read-tree-dragon. Closed-book
+is 0/34. Both are under the 10% target. The single-sample agentic rate, 4/34 (11.8%), is mostly variance: 3 of the 4
+passes did not repeat.
 
 `expert-analysis` split (reported separately):
 
