@@ -90,6 +90,17 @@ def fit_scale(base: BaseTree, target: TargetTree, node_budget: int = 200_000) ->
     iu = np.triu_indices(nt, 1)
     ju = np.triu_indices(nb, 1)
     cands = np.unique(np.round(np.outer(DB[ju], 1.0 / DT[iu]).ravel(), 12))
+    # value symmetry: base leaves with identical distances to every other base leaf (the 8 legs of a spider
+    # base, short stubs) are interchangeable while unused, so each search node tries one per class. Without
+    # this the search spends its budget on k! equivalent orderings and reports a valid design as infeasible.
+    cls = list(range(nb))
+    for a_ in range(nb):
+        for b_ in range(a_):
+            if cls[b_] == b_:
+                others = [k for k in range(nb) if k not in (a_, b_)]
+                if np.allclose(DB[a_, others], DB[b_, others], atol=1e-9):
+                    cls[a_] = b_
+                    break
 
     def feasible(m: float):
         # compat[i][j] : (nb x nb) boolean, base pair (a, b) allowed for target pair (i, j)
@@ -106,7 +117,11 @@ def fit_scale(base: BaseTree, target: TargetTree, node_budget: int = 200_000) ->
             if not free:
                 return True
             i = min(free, key=lambda k: int((doms[k] & ~used).sum()))
+            seen = set()
             for a in np.flatnonzero(doms[i] & ~used):
+                if cls[a] in seen:
+                    continue
+                seen.add(cls[a])
                 nodes[0] += 1
                 new = list(doms)
                 dead = False

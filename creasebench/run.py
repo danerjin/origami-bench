@@ -72,7 +72,7 @@ def summarize(records: list[dict]) -> str:
     if splits:
         # headline: pass rate (a task counts only when fully solved); mean partial credit is secondary
         lines += ["", "| split | n | pass rate | solved | mean score |", "|---|---|---|---|---|"]
-        for sp in ("expert", "hard", "core", "warmup"):
+        for sp in ("expert", "expert-analysis", "hard", "core", "warmup"):
             rs = splits.get(sp)
             if rs:
                 ns = sum(r["solved"] for r in rs)

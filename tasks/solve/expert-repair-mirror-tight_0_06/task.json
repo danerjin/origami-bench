@@ -10660,7 +10660,7 @@
   "verify_timeout": 900.0
  },
  "meta": {
-  "split": "expert",
+  "split": "expert-analysis",
   "source": "mirror-tight_0_06",
   "num_creases": 616,
   "tier": "advanced"

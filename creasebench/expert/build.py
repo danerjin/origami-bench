@@ -36,6 +36,9 @@ from .refgen import CACHE
 
 VERIFY_TIMEOUT = 900.0  # graders and oracle self-check share this budget
 DESIGN_THRESHOLD = 1.0 - 1e-6  # match or beat the certified reference
+# regions and repair are reported apart from the headline: in calibration agents solved them by distance
+# matching and by writing their own layer-order solvers, so they measure analysis, not expert design
+ANALYSIS_SPLIT = "expert-analysis"
 MIN_REF_RATIO = 0.7  # design/thin need a reference this close to the L2 packing bound
 
 EXPERT_DESIGN_PROMPT = (
@@ -147,7 +150,7 @@ def build_expert(out: Path, seed: int = 0, log=print, resume: bool = False) -> l
                  inputs={"crease_pattern": fold_input(bad)},
                  reference={"family": "repair", "max_edits": info["n_edits"], "solution": segs_json(cp),
                             "defects": info, "verify_timeout": VERIFY_TIMEOUT},
-                 meta=_meta(source=name, num_creases=cp.num_creases()))
+                 meta=_meta(split=ANALYSIS_SPLIT, source=name, num_creases=cp.num_creases()))
         tasks.append(_save(t, out, bad))
 
     log(f"expert: {len(tasks)} tasks")
@@ -219,14 +222,18 @@ def region_task(tid, edges, cp, rep, out, rng, k=None):
     from ..render import render_cp
     from .regions import REGIONS_PROMPT, region_boxes
 
-    fit = best_fit(extract_trees(rep.folded), TargetTree.from_json({"edges": edges}))
-    boxes, answer = region_boxes(cp, fit.mapping, rng, k=k)
+    trees = extract_trees(rep.folded)
+    fit = best_fit(trees, TargetTree.from_json({"edges": edges}))
+    # every flap tip of the base, named or not, so no box holds a second tip
+    tips = next(({n for n in t.graph if t.graph.degree(n) == 1} for t in trees
+                 if set(fit.mapping.values()) <= {n for n in t.graph if t.graph.degree(n) == 1}), set())
+    boxes, answer = region_boxes(cp, fit.mapping, rng, k=k, others=tips)
     if len(boxes) < (k or len(fit.mapping)):  # every tip must be marked
         return None
     t = Task(tid, "read", "hard", REGIONS_PROMPT.format(k=len(boxes), labels=", ".join(boxes)),
              inputs={"crease_pattern": fold_input(cp), "tree": {"edges": edges}, "regions": boxes},
              reference={"family": "regions", "regions": answer},
-             meta=_meta(num_creases=cp.num_creases()))
+             meta=_meta(split=ANALYSIS_SPLIT, num_creases=cp.num_creases()))
     t = _save(t, out)
     render_cp(cp, t.root / "cp.png", title="Crease pattern with marked regions", boxes=boxes, size=12)
     t.images = ["cp.png"]

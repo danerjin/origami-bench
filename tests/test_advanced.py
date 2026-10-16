@@ -312,3 +312,38 @@ def test_region_boxes_mark_every_tip_separately():
         inside = [l for l, v in tips.items()
                   if x0 - 1e-9 <= cp.vertices[v][0] <= x1 + 1e-9 and y0 - 1e-9 <= cp.vertices[v][1] <= y1 + 1e-9]
         assert inside == [answer[lab]]
+
+
+def test_regions_and_repair_are_reported_outside_the_expert_headline():
+    import glob
+    import json
+
+    from creasebench.tasks import Task, task_split
+
+    t = Task("x", "read", "hard", "", meta={"split": "expert-analysis", "tier": "advanced"})
+    assert task_split(t) == "expert-analysis"
+    for f in glob.glob("tasks/*/expert-*/task.json"):
+        d = json.load(open(f))
+        fam = d["reference"].get("family")
+        assert d["meta"]["split"] == ("expert-analysis" if fam in ("regions", "repair") else "expert"), f
+
+
+def test_fit_scale_finds_designs_with_many_interchangeable_flaps():
+    # a spider: 8 identical legs plus short flaps; the base has many decoy leaves. Without symmetry breaking
+    # the 8! leg orderings exhaust the search budget and a valid design is reported at a fraction of its scale.
+    import networkx as nx
+
+    from creasebench.tree import BaseTree
+    from creasebench.treefit import TargetTree, fit_scale
+
+    edges = [["c", f"leg{i}", 4] for i in range(8)] + [["c", "p1", 2], ["c", "p2", 2], ["c", "h1", 1], ["c", "h2", 1]]
+    target = TargetTree.from_json({"edges": edges})
+    g = nx.Graph()
+    for i in range(8):
+        g.add_edge(0, 100 + i, length=4.0)
+    for i, l in enumerate([2, 2, 1, 1]):
+        g.add_edge(0, 200 + i, length=float(l))
+    for i in range(10):  # decoys: short stubs that cannot host a real flap
+        g.add_edge(0, 300 + i, length=0.3)
+    f = fit_scale(BaseTree(g, 90.0), target, node_budget=20_000)
+    assert abs(f.scale - 1.0) < 1e-9
