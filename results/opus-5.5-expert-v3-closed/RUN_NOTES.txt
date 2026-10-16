@@ -1,0 +1,5 @@
+closed/task-27e88c1337 used Grep on its own prompt.md (closed rule bend)
+agentic/task-854c17a4e5 used ~27 commands (limit ~20) and scipy
+round2 closed repair-mirror (616 creases) used Grep on own prompt.md
+agentic expert-design-tarantula (task-dbbae67977): used pysat; folds flat, grader scale 0.02632 = exactly half the claimed 1/19 -> check axis/extraction before final report
+round2 agentic expert-thin-stag_beetle used scipy SLSQP
