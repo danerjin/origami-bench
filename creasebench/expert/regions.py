@@ -44,6 +44,7 @@ def region_boxes(cp, tips: dict, rng: random.Random, k: int | None = None, half:
             dx, dy = (rng.uniform(-0.6, 0.6) * h for _ in range(2))
             x0, y0 = max(0.0, p[0] - h + dx), max(0.0, p[1] - h + dy)
             x1, y1 = min(1.0, p[0] + h + dx), min(1.0, p[1] + h + dy)
+            x0, y0, x1, y1 = (round(v, 4) for v in (x0, y0, x1, y1))  # check the box exactly as published
             inside = [o for o, q in pts.items() if x0 - 1e-9 <= q[0] <= x1 + 1e-9 and y0 - 1e-9 <= q[1] <= y1 + 1e-9]
             stray = any(x0 - 1e-9 <= q[0] <= x1 + 1e-9 and y0 - 1e-9 <= q[1] <= y1 + 1e-9 for q in extra)
             if inside == [leaf] and not stray:

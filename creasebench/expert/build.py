@@ -224,9 +224,9 @@ def region_task(tid, edges, cp, rep, out, rng, k=None):
 
     trees = extract_trees(rep.folded)
     fit = best_fit(trees, TargetTree.from_json({"edges": edges}))
-    # every flap tip of the base, named or not, so no box holds a second tip
-    tips = next(({n for n in t.graph if t.graph.degree(n) == 1} for t in trees
-                 if set(fit.mapping.values()) <= {n for n in t.graph if t.graph.degree(n) == 1}), set())
+    # every flap tip of the base along any candidate axis, named or not, so no box holds a second tip
+    # however the base is read
+    tips = {n for t in trees for n in t.graph if t.graph.degree(n) == 1}
     boxes, answer = region_boxes(cp, fit.mapping, rng, k=k, others=tips)
     if len(boxes) < (k or len(fit.mapping)):  # every tip must be marked
         return None
