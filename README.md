@@ -48,10 +48,13 @@ than a proven optimum.
 | advanced | `pack` | 6 | circle (L2) and box-pleating (L∞) packing of semantic trees |
 | advanced | `design` | 26 | semantic trees (lizard, beetle, scorpion, spider, deer, bird, crab, dragon) and six 14-24 flap animals (stag beetle, mantis, lobster, centipede, pegasus, tarantula); trees of generated bases; 22.5°, box-pleat (grid window `min..max`) and Pythagorean-stretch styles; border grafting; colour change; composite |
 
-**Splits.** Results are reported per split, and **`hard` is the headline number**:
+**Splits.** Results are reported per split. **`expert` is the headline number** (pass/fail); `hard` was the
+headline before v0.4 and is still reported:
 
 | Split | n | Contents |
 |---|---|---|
+| `expert` | 34 | pass/fail: design (8) and thin design (8) for 14–27 flap trees against certified TreeMaker references, image-only read-tree (9), inverse folding (9) |
+| `expert-analysis` | 11 | pass/fail, reported outside the headline: regions (6), repair of locally invisible global conflicts (5) |
 | `hard` | 47 | design targets with at least 6 flaps; solve, read-tree and af on patterns of at least 100 creases |
 | `core` | 44 | the rest of the advanced tier, including pack, read-tech and read-color at any size |
 | `warmup` | 49 | the basic tier |

@@ -295,16 +295,28 @@ References are generated offline into `tasks/expert_cache/`:
 - `expert.megagen`: mirror tilings with the map-fold assignment, and random 22.5° tilings;
 - `expert.gridgen`: lattice square packing, then BP Studio, then verify.
 
+The headline `expert` split has four families, all pass/fail:
+
 | family | task | passes when |
 |---|---|---|
-| `expert-design-*` | design a base for a 14–27 flap tree | it folds and realizes the tree at ≥ 0.95 × the certified TreeMaker reference's scale |
+| `expert-design-*` | design a base for a 14–27 flap tree | it folds and realizes the tree at a scale matching or beating the certified TreeMaker reference (≥ 1 − 1e-6 × ref) |
 | `expert-thin-*` | the same, plus a thickness limit | additionally, no point has more layers than the reference |
-| `expert-read-tree-*` | read the tree of a TreeMaker base (non-lattice geometry) | exact tree |
+| `expert-read-tree-*` | read the tree of a TreeMaker base from a rendered image only (no coordinates) | exact topology, every segment length within 0.01 of the paper side or 2% |
 | `expert-inverse-*` | reconstruct the CP from the folded outline, an x-ray image and the tree | it folds, scale ≥ 0.98 × reference, folded-outline IoU ≥ 0.97 |
-| `expert-regions-*` | which flap does each marked region become? | every label right, up to automorphisms of the target tree (consistent mirror swaps accepted) |
-| `expert-min-grid-*` | box-pleat a tree with integer flaps on the smallest known grid | it folds, is BP, and scale ≥ 1/N_ref |
-| `expert-repair-*` | repair 3–6 M/V flips plus a locally invisible global conflict | it folds, with at most the number of injected edits changed (any minimal repair accepted) |
-| `expert-solve-mirror-*` | assign a 600–900 crease pattern | it folds |
+
+Design and thin tasks are built only when the certified reference reaches at least `MIN_REF_RATIO = 0.7` of the
+circle-packing bound, so a weak reference cannot make the bar trivial (this excludes phoenix).
+
+Two analysis families are reported separately as `expert-analysis` (`meta["split"] = "expert-analysis"`). Agentic
+models largely solve them with their own search code, so they would mask the design result in the headline:
+
+| family | task | passes when |
+|---|---|---|
+| `expert-regions-*` | which flap does each marked box become? every flap tip is marked, and each box holds exactly one tip of the folded base along any candidate axis | every label right, up to automorphisms of the target tree |
+| `expert-repair-*` | repair 3–4 locally invisible global conflicts (every vertex passes Maekawa/Kawasaki; only the layer order fails) | it folds, with at most the number of injected edits changed |
+
+Earlier v0.4 drafts also had `expert-min-grid-*` and `expert-solve-mirror-*`; both were removed when the split was
+hardened (see `docs/eval-opus-5.5-2026-10.md`, "Expert split").
 
 **What was tried and left out:**
 - **Scale-texture grafting** (Kamiya-style scale panels made by strip grafts). It needs full-length cut lines that cross
