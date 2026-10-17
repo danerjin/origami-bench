@@ -114,6 +114,11 @@ python -m creasebench.run --provider file --answers eval/ --ids adv-design-lizar
 
 The export contains only the prompt, images and inputs, never reference answers.
 
+**Human question booklet.** `python -m creasebench.booklet --out booklet/` prints every task as a numbered
+PDF question (`booklet/creasebench-questions.pdf`). It draws target trees and crease patterns that are
+otherwise given only as JSON, and writes the full inputs to `booklet/inputs/Qnnn/`. The question-to-task-id
+map is in `booklet/key.json`; keep it away from solvers, because ids can name the answer.
+
 ## Where the crease patterns come from
 
 Every shipped crease pattern is **generated**. Origami designers hold copyright on their crease
