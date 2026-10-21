@@ -561,3 +561,40 @@ The session and weekly usage limits stopped about 22 round-2 runs partway throug
 a clean folder after the limit reset. One second-sample run was lost to a container restart and re-run. Results are
 in `results/opus-5.5-expert-v3-{closed,agentic}/`. Second samples are in `results/opus-5.5-expert-v3-agentic/sample2/`.
 Superseded partial and pre-fix grades are in `results/opus-5.5-expert-v2-*`.
+
+### Smaller models on the expert split
+
+Haiku and Sonnet ran the 34 headline tasks in both settings, one sample each. They used the same subagent templates and
+fresh opaque exports as the Opus runs, and the same final grader.
+
+| | Haiku, closed | Haiku, agentic | Sonnet, closed | Sonnet, agentic |
+|---|---|---|---|---|
+| **pass rate** | **0/34** | **0/34** | **0/34** | **0/34** |
+| mean partial credit: design + thin (16) | 0.033 | 0.046 | 0.000 | 0.145 |
+| mean partial credit: inverse (9) | 0.068 | 0.038 | 0.037 | 0.157 |
+| mean partial credit: read-tree (9) | 0.128 | 0.140 | 0.149 | 0.183 |
+
+No task passed in any setting. Most answers were explicit placeholders: a single fold, an empty pattern, or a guessed
+tree that the model itself labelled low-confidence. The closest misses were Sonnet with tools:
+- thin stag beetle at scale 0.0424, where the pass bar is 0.0454;
+- thin scaled wyrm at 0.0447 (bar 0.0609);
+- an inverse pegasus pattern scoring 0.78 partial credit.
+
+They built these from pleat grids and accordion folds, not tree-theory constructions.
+
+Run notes are in `results/haiku-expert-agentic/RUN_NOTES.txt`:
+- Nine Haiku runs made one unneeded call to the session-management tools available in the harness, such as listing
+  sessions. Each one said it ignored the output.
+- One Haiku run tried to create a session, and the harness denied it.
+
+None of these runs passed, so the breaches do not affect any result.
+
+The ordering is consistent across models:
+
+| model | closed | agentic, one sample | agentic, passed in both samples |
+|---|---|---|---|
+| Haiku | 0/34 | 0/34 | – |
+| Sonnet | 0/34 | 0/34 | – |
+| Opus | 0/34 | 4/34 | 1/34 |
+
+Results are in `results/{haiku,sonnet}-expert-{closed,agentic}/`.
